@@ -24,6 +24,25 @@ CoinCode is a premium, dark-themed crypto trading companion app built with React
 - **Login Screen**: A premium UI for user login. Features a dynamic interactive "Login" button that seamlessly shrinks into a loading spinner when pressed.
 - **State Management**: Integrated `Zustand` for lightweight, blazing-fast state management (`authStore`).
 
+## 🏗 Architecture & Folder Structure
+The project follows a clean, modular architecture to ensure scalability and maintainability:
+
+```
+src/
+├── app/             # App-wide configurations (Navigation, Global Providers, Fonts)
+├── components/      # Reusable UI components (Typography, CommonButton, CommonInput)
+├── screens/         # Feature screens separated by auth boundaries
+│   ├── public/      # Screens accessible without login (Login, Signup)
+│   └── private/     # Screens requiring authentication (Market, Scan, etc.)
+├── store/           # Global state management using Zustand (authStore, marketStore)
+├── services/        # API clients and WebSocket managers (SocketManager)
+└── theme/           # Theming engine, colors, and typography settings
+```
+
+- **Separation of Concerns**: Screens handle layout and flow, while complex logic and data reside in the `store/` and `services/`.
+- **Reusable Components**: The `components/common/` folder acts as an internal UI kit, ensuring design consistency (Buttons, Inputs, Text).
+- **Scalable Navigation**: Public and Private routes are separated at the `RootNavigator` level, ensuring secure authentication walls.
+
 ## 🛠 Tech Stack
 - **React Native** (v0.86)
 - **React Navigation** (Bottom Tabs & Native Stack)
