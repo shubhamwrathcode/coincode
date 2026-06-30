@@ -10,7 +10,10 @@ export const ImageAssets = {
     verifyPasskeyImg: require('../../assets/images/verifyPasskeyImg.png'),
     lock: require('../../assets/images/lock.png'),
     splash: require('../../assets/images/splash.png'),
-
-
+    EarnIcon: require('../../assets/images/EarnIcon.png'),
+    MarketIcon: require('../../assets/images/MarketIcon.png'),
+    TradeIcon: require('../../assets/images/TradeIcon.png'),
+    AssetsIcon: require('../../assets/images/AssetsIcon.png'),
+    landingpagedemo: require('../../assets/images/landingpagedemo.png'),
 
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { MarketScreen } from '../../screens/private/MarketScreen';
@@ -9,20 +10,24 @@ import { View } from 'react-native';
 import { Typography } from '../../components/common/Typography';
 import { useAuthStore } from '../../store/authStore';
 import { Dimensions, TouchableOpacity, StyleSheet, Animated as RNAnimated, Easing } from 'react-native';
-import { Home, List, TrendingUp, CreditCard, User } from 'lucide-react-native';
+import { Home } from 'lucide-react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import FastImage from 'react-native-fast-image';
+import { ImageAssets } from '../../components/common/ImageAssets';
 import SignupScreen from '../../screens/public/SignupScreen';
 import AuthOtpVerify from '../../screens/public/AuthOtpVerify';
+import SetPasswordScreen from '../../screens/public/SetPasswordScreen';
+import LandingPage from '../../screens/public/LandingPage';
 
 const { width } = Dimensions.get('window');
 
 const getIcon = (routeName: string, color: string, size: number) => {
   switch (routeName) {
-    case 'Market': return <Home color={color} size={size} />;
-    case 'Trade': return <List color={color} size={size} />;
-    case 'Futures': return <TrendingUp color={color} size={size} />;
-    case 'Wallet': return <CreditCard color={color} size={size} />;
-    case 'Profile': return <User color={color} size={size} />;
+    case 'Home': return <Home color={color} size={size} />;
+    case 'Market': return <FastImage source={ImageAssets.MarketIcon} style={{ width: size, height: size }} tintColor={color} resizeMode="contain" />;
+    case 'Trade': return <FastImage source={ImageAssets.TradeIcon} style={{ width: size, height: size }} tintColor={color} resizeMode="contain" />;
+    case 'Earn': return <FastImage source={ImageAssets.EarnIcon} style={{ width: size, height: size }} tintColor={color} resizeMode="contain" />;
+    case 'Assets': return <FastImage source={ImageAssets.AssetsIcon} style={{ width: size, height: size }} tintColor={color} resizeMode="contain" />;
     default: return <Home color={color} size={size} />;
   }
 };
@@ -81,10 +86,11 @@ const TabItem = ({ isFocused, routeName, onPress, onLongPress }: any) => {
 
 const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.outerContainer}>
-      <View style={[styles.container, { backgroundColor: colors.black, shadowColor: colors.black }]}>
+    <View style={[styles.outerContainer, { backgroundColor: colors.black, paddingBottom: insets.bottom ? 5 : 5 }]}>
+      <View style={styles.container}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const isFocused = state.index === index;
@@ -129,6 +135,7 @@ export type RootStackParamList = {
   AuthOtpVerify: undefined;
   SetPassword: undefined;
   MainTabs: undefined;
+  LandingPage: undefined;
 };
 
 declare global {
@@ -156,18 +163,44 @@ const MainTabs = () => {
         animation: 'shift',
       }}
     >
-      <Tab.Screen name="Market" component={MarketScreen} />
+      <Tab.Screen name="Home" component={MarketScreen} />
+      <Tab.Screen name="Market">
+        {() => <PlaceholderScreen title="Market" />}
+      </Tab.Screen>
       <Tab.Screen name="Trade">
         {() => <PlaceholderScreen title="Trade" />}
       </Tab.Screen>
-      <Tab.Screen name="Futures">
-        {() => <PlaceholderScreen title="Futures" />}
+      <Tab.Screen name="Earn">
+        {() => <PlaceholderScreen title="Earn" />}
       </Tab.Screen>
-      <Tab.Screen name="Wallet">
-        {() => <PlaceholderScreen title="Wallet" />}
+      <Tab.Screen name="Assets">
+        {() => <PlaceholderScreen title="Assets" />}
       </Tab.Screen>
-      <Tab.Screen name="Profile">
-        {() => <PlaceholderScreen title="Profile" />}
+    </Tab.Navigator>
+  );
+};
+
+const GuestTabs = () => {
+  return (
+    <Tab.Navigator
+      tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{
+        headerShown: false,
+        animation: 'shift',
+      }}
+    >
+      <Tab.Screen name="Home" component={LandingPage} />
+      <Tab.Screen name="Market">
+        {() => <PlaceholderScreen title="Market (Login Required)" />}
+      </Tab.Screen>
+      <Tab.Screen name="Trade">
+        {() => <PlaceholderScreen title="Trade (Login Required)" />}
+      </Tab.Screen>
+      <Tab.Screen name="Earn">
+        {() => <PlaceholderScreen title="Earn (Login Required)" />}
+      </Tab.Screen>
+      <Tab.Screen name="Assets">
+        {() => <PlaceholderScreen title="Assets (Login Required)" />}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -194,10 +227,12 @@ export const RootNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
         {!isAuthenticated ? (
           <>
+            <Stack.Screen name="LandingPage" component={GuestTabs} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
             <Stack.Screen name="AuthOtpVerify" component={AuthOtpVerify} />
-            <Stack.Screen name="SetPassword" component={require('../../screens/public/SetPasswordScreen').default} />
+            <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
+
           </>
         ) : (
           <>
@@ -212,27 +247,17 @@ export const RootNavigator = () => {
 const styles = StyleSheet.create({
   outerContainer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 0,
     width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 10,
+    backgroundColor: "red",
   },
   container: {
     flexDirection: 'row',
     height: 64,
-    borderRadius: 32,
-    width: width - 20, // Less gap on the sides of the screen
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 8, // Push icons towards the edges for more gap in between
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
+    justifyContent: 'space-around',
+    paddingHorizontal: 10,
   },
   touchable: {
     alignItems: 'center',
