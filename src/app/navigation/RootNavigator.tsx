@@ -126,7 +126,8 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => 
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
-  AuthOtpVerify: undefined,
+  AuthOtpVerify: undefined;
+  SetPassword: undefined;
   MainTabs: undefined;
 };
 
@@ -196,6 +197,7 @@ export const RootNavigator = () => {
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
             <Stack.Screen name="AuthOtpVerify" component={AuthOtpVerify} />
+            <Stack.Screen name="SetPassword" component={require('../../screens/public/SetPasswordScreen').default} />
           </>
         ) : (
           <>

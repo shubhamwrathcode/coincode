@@ -8,5 +8,9 @@ export const ImageAssets = {
     verifyEmailImg: require('../../assets/images/verifyEmailImg.png'),
     setPasswordImg: require('../../assets/images/setPasswordImg.png'),
     verifyPasskeyImg: require('../../assets/images/verifyPasskeyImg.png'),
+    lock: require('../../assets/images/lock.png'),
+    splash: require('../../assets/images/splash.png'),
+
+
 
 }
