@@ -1,5 +1,6 @@
 import React from 'react';
-import { SafeAreaView, ViewProps, StyleSheet, View } from 'react-native';
+import { ViewProps, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 
 interface ScreenProps extends ViewProps {

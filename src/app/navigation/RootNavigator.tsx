@@ -11,6 +11,8 @@ import { useAuthStore } from '../../store/authStore';
 import { Dimensions, TouchableOpacity, StyleSheet, Animated as RNAnimated, Easing } from 'react-native';
 import { Home, List, TrendingUp, CreditCard, User } from 'lucide-react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import SignupScreen from '../../screens/public/SignupScreen';
+import AuthOtpVerify from '../../screens/public/AuthOtpVerify';
 
 const { width } = Dimensions.get('window');
 
@@ -121,8 +123,21 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => 
   );
 };
 
+export type RootStackParamList = {
+  Login: undefined;
+  Signup: undefined;
+  AuthOtpVerify: undefined,
+  MainTabs: undefined;
+};
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList { }
+  }
+}
+
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const PlaceholderScreen = ({ title }: { title: string }) => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -177,9 +192,15 @@ export const RootNavigator = () => {
     <NavigationContainer theme={navigationTheme}>
       <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
         {!isAuthenticated ? (
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Signup" component={SignupScreen} />
+            <Stack.Screen name="AuthOtpVerify" component={AuthOtpVerify} />
+          </>
         ) : (
-          <Stack.Screen name="MainTabs" component={MainTabs} />
+          <>
+            <Stack.Screen name="MainTabs" component={MainTabs} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
