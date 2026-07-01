@@ -3,7 +3,6 @@ import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { MarketScreen } from '../../screens/private/MarketScreen';
 import { LoginScreen } from '../../screens/public/LoginScreen';
 import { useTheme } from '../../theme/ThemeProvider';
 import { View } from 'react-native';
@@ -12,12 +11,15 @@ import { useAuthStore } from '../../store/authStore';
 import { Dimensions, TouchableOpacity, StyleSheet, Animated as RNAnimated, Easing } from 'react-native';
 import { Home } from 'lucide-react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { BlurView } from '@react-native-community/blur';
 import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../components/common/ImageAssets';
 import SignupScreen from '../../screens/public/SignupScreen';
 import AuthOtpVerify from '../../screens/public/AuthOtpVerify';
 import SetPasswordScreen from '../../screens/public/SetPasswordScreen';
 import LandingPage from '../../screens/public/LandingPage';
+import { colors } from '../../theme/colors';
+import { fonts } from '../../theme/fonts';
 
 const { width } = Dimensions.get('window');
 
@@ -42,19 +44,19 @@ const TabItem = ({ isFocused, routeName, onPress, onLongPress }: any) => {
     RNAnimated.timing(activeVal, {
       toValue: isFocused ? 1 : 0,
       duration: 300,
-      easing: Easing.bezier(0.25, 0.1, 0.25, 1), // smooth ease-in-out
+      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       useNativeDriver: false,
     }).start();
   }, [isFocused]);
 
   const animatedWidth = activeVal.interpolate({
     inputRange: [0, 1],
-    outputRange: [45, 125], // increased active tab width
+    outputRange: [45, 110],
   });
 
   const animatedColor = activeVal.interpolate({
     inputRange: [0, 1],
-    outputRange: ['rgba(10,168,197,0)', 'rgba(10,168,197,0.15)'],
+    outputRange: ['transparent', colors.cyan],
   });
 
   const textOpacity = activeVal.interpolate({
@@ -64,7 +66,7 @@ const TabItem = ({ isFocused, routeName, onPress, onLongPress }: any) => {
 
   const textWidth = activeVal.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 75], // slightly wider text container
+    outputRange: [0, 52],
   });
 
   const textMargin = activeVal.interpolate({
@@ -75,8 +77,8 @@ const TabItem = ({ isFocused, routeName, onPress, onLongPress }: any) => {
   return (
     <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={styles.touchable}>
       <RNAnimated.View style={[styles.pill, { width: animatedWidth, backgroundColor: animatedColor }]}>
-        {getIcon(routeName, isFocused ? colors.cyan : colors.grey, 20)}
-        <RNAnimated.Text style={[{ color: colors.cyan, fontWeight: '600', overflow: 'hidden' }, { opacity: textOpacity, width: textWidth, marginLeft: textMargin }]} numberOfLines={1}>
+        {getIcon(routeName, isFocused ? colors.white : colors.grey, 22)}
+        <RNAnimated.Text style={[{ color: colors.white, fontFamily: fonts.semiBold, overflow: 'hidden' }, { opacity: textOpacity, width: textWidth, marginLeft: textMargin }]} numberOfLines={1}>
           {routeName}
         </RNAnimated.Text>
       </RNAnimated.View>
@@ -89,7 +91,25 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => 
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.outerContainer, { backgroundColor: colors.black, paddingBottom: insets.bottom ? 5 : 5 }]}>
+    <View style={[styles.outerContainer, {
+      paddingBottom: insets.bottom ? 5 : 5,
+    }]}>
+      <BlurView
+        style={[StyleSheet.absoluteFill, { borderTopLeftRadius: 20, borderTopRightRadius: 20 }]}
+        blurType="light"
+        blurAmount={15}
+        overlayColor="transparent"
+        reducedTransparencyFallbackColor="transparent"
+      />
+      <View style={[StyleSheet.absoluteFill, {
+        backgroundColor: 'rgba(0, 0, 0, 0.55)',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        borderColor: colors.inputBorderColor,
+        borderWidth: 1,
+        borderBottomWidth: 0,
+      }]} />
+
       <View style={styles.container}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
@@ -163,7 +183,7 @@ const MainTabs = () => {
         animation: 'shift',
       }}
     >
-      <Tab.Screen name="Home" component={MarketScreen} />
+      <Tab.Screen name="Home" component={LandingPage} />
       <Tab.Screen name="Market">
         {() => <PlaceholderScreen title="Market" />}
       </Tab.Screen>
@@ -249,7 +269,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    backgroundColor: "red",
+    backgroundColor: 'transparent',
   },
   container: {
     flexDirection: 'row',
@@ -270,6 +290,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 44,
     borderRadius: 22,
+
   },
 });
 

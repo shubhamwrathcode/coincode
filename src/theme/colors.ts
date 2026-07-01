@@ -9,7 +9,8 @@ export const colors = {
   inputBorderColor: '#151619',
   darkShadeColorText: '#6A7282',
   placeholderTextColor: "#4A5565",
-  backBtnBg: '#1A1C22'
+  backBtnBg: '#1A1C22',
+  searchBoxBorderColor: '#202023ff'
 
 };
 

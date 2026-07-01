@@ -15,5 +15,24 @@ export const ImageAssets = {
     TradeIcon: require('../../assets/images/TradeIcon.png'),
     AssetsIcon: require('../../assets/images/AssetsIcon.png'),
     landingpagedemo: require('../../assets/images/landingpagedemo.png'),
+    gridIcon: require('../../assets/images/gridIcon.png'),
+    bellIcon: require('../../assets/images/bellIcon.png'),
+    giftIcon: require('../../assets/images/giftIcon.png'),
+    verifyIdentity: require('../../assets/images/verifyIdentity.png'),
+    walletIcon: require('../../assets/images/walletIcon.png'),
+    swapIcon: require('../../assets/images/swapIcon.png'),
+    moreIcon: require('../../assets/images/moreIcon.png'),
+    spotIcon: require('../../assets/images/spotIcon.png'),
+    marginIcon: require('../../assets/images/marginIcon.png'),
+    event1: require('../../assets/images/event1.png'),
+    easyEarn: require('../../assets/images/easyEarn.png'),
+    tokenSplash: require('../../assets/images/tokenSplash.png'),
+    easyEarnPromo: require('../../assets/images/easyEarnPromo.png'),
+    earnCoin: require('../../assets/images/earnCoin.png'),
+    stakingHomeIcon: require('../../assets/images/stakingHomeIcon.png'),
+    newsImg: require('../../assets/images/newsImg.png'),
+
+
+
 
 }
