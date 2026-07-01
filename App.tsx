@@ -1,7 +1,9 @@
+import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
 import { AppProvider } from './src/app/providers/AppProvider';
 import { RootNavigator } from './src/app/navigation/RootNavigator';
 import { SplashScreen } from './src/screens/public/SplashScreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const AppContent = () => {
   const [isAppReady, setIsAppReady] = useState(false);
@@ -23,9 +25,11 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </GestureHandlerRootView>
   );
 };
 

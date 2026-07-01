@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Typography } from './Typography';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -6,9 +6,20 @@ import { fonts } from '../../theme/fonts';
 import { Search, User } from 'lucide-react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageAssets } from './ImageAssets';
+import { SearchModal } from './SearchModal';
 
 export const HomeHeader = () => {
     const { colors } = useTheme();
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [searchLayout, setSearchLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
+    const searchBarRef = useRef<View>(null);
+
+    const handleOpenSearch = () => {
+        searchBarRef.current?.measure((x, y, width, height, pageX, pageY) => {
+            setSearchLayout({ x: pageX, y: pageY, width, height });
+            setIsSearchVisible(true);
+        });
+    };
 
     return (
         <View style={styles.header}>
@@ -16,7 +27,12 @@ export const HomeHeader = () => {
                 <User color={colors.grey} size={20} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.searchContainer, { borderColor: colors.searchBoxBorderColor, backgroundColor: colors.inputBorderColor }]}>
+            <TouchableOpacity 
+                ref={searchBarRef as any}
+                style={[styles.searchContainer, { borderColor: colors.searchBoxBorderColor, backgroundColor: colors.inputBorderColor }]}
+                onPress={handleOpenSearch}
+                activeOpacity={0.8}
+            >
                 <Search color={colors.grey} size={18} />
                 <Typography color={colors.grey} size={14} style={{ marginLeft: 8, fontFamily: fonts.medium }}>
                     SOL/USDT
@@ -37,6 +53,11 @@ export const HomeHeader = () => {
                     </View>
                 </TouchableOpacity>
             </View>
+            <SearchModal 
+                isVisible={isSearchVisible} 
+                onClose={() => setIsSearchVisible(false)} 
+                originLayout={searchLayout}
+            />
         </View>
     );
 };

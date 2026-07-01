@@ -114,8 +114,8 @@ const GuestLanding = () => {
             </View>
             <View style={styles.bannerLeft}>
                 <Typography color={colors.cyan} size={12} style={{ fontFamily: fonts.medium }}>Trade 400+</Typography>
-                <Typography color={colors.white} size={28} style={{ fontFamily: fonts.bold, marginTop: 8 }}>Global</Typography>
-                <Typography color={colors.cyan} size={28} style={{ fontFamily: fonts.bold }}>Assets</Typography>
+                <Typography color={colors.white} size={25} style={{ fontFamily: fonts.bold, marginTop: 8 }}>Global</Typography>
+                <Typography color={colors.cyan} size={25} style={{ fontFamily: fonts.bold }}>Assets</Typography>
                 <Typography color={colors.darkShadeColorText} size={12} style={{ marginTop: 5, lineHeight: 18 }}>
                     Buy, sell and explore top{'\n'}crypto assets worldwide.
                 </Typography>
@@ -153,7 +153,7 @@ const GuestLanding = () => {
                                 });
                             }}
                         >
-                            <Typography color={isActive ? colors.white : colors.darkShadeColorText} size={15} style={{ fontFamily: isActive ? fonts.semiBold : fonts.medium }}>
+                            <Typography color={isActive ? colors.white : colors.darkShadeColorText} size={13} style={{ fontFamily: isActive ? fonts.semiBold : fonts.medium }}>
                                 {tab}
                             </Typography>
                         </TouchableOpacity>
@@ -185,7 +185,7 @@ const GuestLanding = () => {
                                 isActive ? { backgroundColor: 'rgba(10, 168, 197, 0.15)' } : { backgroundColor: 'transparent' },
                             ]}
                         >
-                            <Typography color={isActive ? colors.cyan : colors.darkShadeColorText} size={14} style={{ fontFamily: fonts.medium }}>
+                            <Typography color={isActive ? colors.cyan : colors.darkShadeColorText} size={12} style={{ fontFamily: fonts.medium }}>
                                 {tab}
                             </Typography>
                         </TouchableOpacity>
@@ -200,17 +200,17 @@ const GuestLanding = () => {
             <View style={styles.cryptoLeft}>
                 <FastImage source={{ uri: item.icon }} style={styles.cryptoIcon} resizeMode="contain" />
                 <View>
-                    <Typography color={colors.white} size={14} style={{ fontFamily: fonts.semiBold, marginBottom: 2 }}>{item.symbol}</Typography>
-                    <Typography color={colors.darkShadeColorText} size={13} style={{ fontFamily: fonts.medium }}>{item.name}</Typography>
+                    <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold, marginBottom: 1 }}>{item.symbol}</Typography>
+                    <Typography color={colors.darkShadeColorText} size={11} style={{ fontFamily: fonts.medium }}>{item.name}</Typography>
                 </View>
             </View>
             <View style={styles.cryptoMiddle}>
-                <Typography color={colors.white} size={14} style={{ fontFamily: fonts.semiBold, marginBottom: 2 }}>{item.price}</Typography>
-                <Typography color={colors.darkShadeColorText} size={13} style={{ fontFamily: fonts.medium }}>{item.priceUsd}</Typography>
+                <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold, marginBottom: 1 }}>{item.price}</Typography>
+                <Typography color={colors.darkShadeColorText} size={11} style={{ fontFamily: fonts.medium }}>{item.priceUsd}</Typography>
             </View>
             <View style={styles.cryptoRight}>
                 <View style={[styles.changeButton, { backgroundColor: '#2BC287' }]}>
-                    <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold }}>{item.change}</Typography>
+                    <Typography color={colors.white} size={11} style={{ fontFamily: fonts.semiBold }}>{item.change}</Typography>
                 </View>
             </View>
         </View>
@@ -218,7 +218,7 @@ const GuestLanding = () => {
 
     const renderFooter = () => (
         <TouchableOpacity style={styles.footerLink}>
-            <Typography color={colors.cyan} size={14} style={{ fontFamily: fonts.medium, textDecorationLine: "underline" }}>View More</Typography>
+            <Typography color={colors.cyan} size={13} style={{ fontFamily: fonts.medium, textDecorationLine: "underline" }}>View More</Typography>
         </TouchableOpacity>
     );
 
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     },
     mainTabsRow: {
         flexDirection: 'row',
-        marginBottom: 15,
+        marginBottom: 10,
     },
     mainTabItem: {
         marginRight: 14,
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
         gap: 10
     },
     subTabItem: {
-        paddingVertical: 6,
+        paddingVertical: 5,
         borderRadius: 20,
         paddingHorizontal: 10
     },
@@ -333,10 +333,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     cryptoIcon: {
-        width: 30,
-        height: 30,
-        borderRadius: 18,
-        marginRight: 12,
+        width: 26,
+        height: 26,
+        borderRadius: 13,
+        marginRight: 10,
     },
     cryptoMiddle: {
         alignItems: 'flex-end',
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         paddingVertical: 5,
         borderRadius: 4,
-        width: 75,
+        width: 65,
         alignItems: 'center',
         justifyContent: 'center',
     },
