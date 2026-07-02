@@ -55,7 +55,6 @@ const Sparkline = ({ isUp, color }: { isUp: boolean; color: string }) => {
         ? "0,20 10,15 20,18 30,5 40,10 50,2"
         : "0,5 10,10 20,7 30,20 40,15 50,22";
 
-    // Close the path for the filled polygon shadow (bottom right to bottom left)
     const polygonPoints = `${points} 50,25 0,25`;
     const gradientId = `grad_${isUp ? 'up' : 'down'}`;
 

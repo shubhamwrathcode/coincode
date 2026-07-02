@@ -31,6 +31,12 @@ export const ImageAssets = {
     earnCoin: require('../../assets/images/earnCoin.png'),
     stakingHomeIcon: require('../../assets/images/stakingHomeIcon.png'),
     newsImg: require('../../assets/images/newsImg.png'),
+    verifyKycModalImg: require('../../assets/images/verifyKycModalImg.png'),
+    FingerprintIcon: require('../../assets/images/FingerprintIcon.png'),
+    PassportIcon: require('../../assets/images/PassportIcon.png'),
+    LicenceIcon: require('../../assets/images/LicenceIcon.png'),
+    IDCardIcon: require('../../assets/images/IDCardIcon.png'),
+
 
 
 

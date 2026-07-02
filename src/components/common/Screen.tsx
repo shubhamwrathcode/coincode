@@ -18,9 +18,11 @@ export const Screen: React.FC<ScreenProps> = ({
   const Container = useSafeArea ? SafeAreaView : View;
 
   return (
-    <Container style={[styles.container, { backgroundColor: colors.black }, style]} {...props}>
-      {children}
-    </Container>
+    <View style={[{ flex: 1, backgroundColor: colors.black }, style]}>
+      <Container style={styles.container} {...props}>
+        {children}
+      </Container>
+    </View>
   );
 };
 

@@ -8,7 +8,11 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { fonts } from '../../theme/fonts';
 import { ImageAssets } from '../common/ImageAssets';
 
-export const VerifyBanner = () => {
+interface VerifyBannerProps {
+    onVerifyPress?: () => void;
+}
+
+export const VerifyBanner = ({ onVerifyPress }: VerifyBannerProps) => {
     const { colors } = useTheme();
 
     return (
@@ -43,7 +47,7 @@ export const VerifyBanner = () => {
                 </Typography>
                 <CommonButton
                     title="Verify Now →"
-                    onPress={() => { }}
+                    onPress={onVerifyPress || (() => {})}
                     style={{ width: 130, height: 34, marginTop: 8 }}
                     titleStyle={{ fontSize: 13, fontFamily: fonts.semiBold }}
                 />

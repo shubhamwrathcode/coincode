@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Typography } from '../../components/common/Typography';
@@ -13,19 +13,22 @@ import { PromoCards } from '../../components/dashboard/PromoCards';
 import { MarketOverview } from '../../components/dashboard/MarketOverview';
 import { EarnSection } from '../../components/dashboard/EarnSection';
 import { LatestNews } from '../../components/dashboard/LatestNews';
+import { IdentityVerificationSheet } from '../../components/dashboard/IdentityVerificationSheet';
 
 const UserDashboard = () => {
     const { colors } = useTheme();
+    const verifySheetRef = useRef<any>(null);
 
-
-
+    const handleOpenVerifySheet = () => {
+        verifySheetRef.current?.open();
+    };
     return (
         <View style={[styles.container, { backgroundColor: colors.black }]}>
             <SafeAreaView style={{ flex: 1 }} edges={['top']}>
                 <ScrollView contentContainerStyle={{ paddingBottom: 100, gap: 12 }} showsVerticalScrollIndicator={false}>
                     <HomeHeader />
                     <AccountSetupProgress />
-                    <VerifyBanner />
+                    <VerifyBanner onVerifyPress={handleOpenVerifySheet} />
                     <QuickLinks />
                     <EventsCard />
                     <PromoCards />
@@ -34,6 +37,7 @@ const UserDashboard = () => {
                     <LatestNews />
                 </ScrollView>
             </SafeAreaView>
+            <IdentityVerificationSheet sheetRef={verifySheetRef} />
         </View>
     );
 };

@@ -20,6 +20,7 @@ import SetPasswordScreen from '../../screens/public/SetPasswordScreen';
 import LandingPage from '../../screens/public/LandingPage';
 import { colors } from '../../theme/colors';
 import { fonts } from '../../theme/fonts';
+import KycStep1 from '../../screens/private/KycStep1';
 
 const { width } = Dimensions.get('window');
 
@@ -156,6 +157,7 @@ export type RootStackParamList = {
   SetPassword: undefined;
   MainTabs: undefined;
   LandingPage: undefined;
+  KycStep1: undefined
 };
 
 declare global {
@@ -244,7 +246,7 @@ export const RootNavigator = () => {
 
   return (
     <NavigationContainer theme={navigationTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
+      <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
         {!isAuthenticated ? (
           <>
             <Stack.Screen name="LandingPage" component={GuestTabs} />
@@ -257,6 +259,8 @@ export const RootNavigator = () => {
         ) : (
           <>
             <Stack.Screen name="MainTabs" component={MainTabs} />
+            <Stack.Screen name="KycStep1" component={KycStep1} />
+
           </>
         )}
       </Stack.Navigator>
