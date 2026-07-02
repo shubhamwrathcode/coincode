@@ -18,21 +18,18 @@ const KycStatus = () => {
     const navigation = useNavigation();
     const route = useRoute();
 
-    // You can pass { status: 'FAILED' } etc when navigating to this screen.
-    // Defaulting to SUCCESS for preview
     const status: KycStatusType = (route.params as any)?.status || 'SUCCESS';
-
     const getStatusConfig = () => {
         switch (status) {
             case 'SUCCESS':
                 return {
-                    color: '#22C55E', // Green
+                    color: '#22C55E',
                     icon: <FastImage source={ImageAssets.verification_success} style={{ width: 200, height: 200 }} resizeMode="contain" />,
                     badgeText: 'VERIFICATION SUCCESSFUL',
                     subtitle: 'Your identity has been verified successfully.',
                     cardTitle: 'Scanned or copied documents\nare not accepted.',
                     cardDesc: 'Please upload a clear photo of your original ID\ndocument.',
-                    cardIcon: <FileText color="#06B6D4" size={20} />, // Icon is cyan in screenshot
+                    cardIcon: <FileText color="#06B6D4" size={20} />,
                     btnTitle: 'Go to Home',
                     btnIcon: <LayoutGrid color={colors.white} size={18} />,
                     btnGradient: ['#15803D', '#22C55E', '#15803D'],
@@ -40,7 +37,7 @@ const KycStatus = () => {
                 };
             case 'PENDING':
                 return {
-                    color: '#F59E0B', // Orange
+                    color: '#F59E0B',
                     icon: <FastImage source={ImageAssets.verification_pending} style={{ width: 80, height: 80 }} resizeMode="contain" />,
                     badgeText: 'Pending',
                     subtitle: 'Your identity has been verified successfully.',
@@ -54,7 +51,7 @@ const KycStatus = () => {
                 };
             case 'FAILED':
                 return {
-                    color: '#EF4444', // Red
+                    color: '#EF4444',
                     icon: <FastImage source={ImageAssets.verification_reject} style={{ width: 80, height: 80 }} resizeMode="contain" />,
                     badgeText: 'Failed',
                     subtitle: 'Your identity has been verified successfully.',
@@ -229,7 +226,7 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         borderRadius: 20,
         borderWidth: 1,
-        backgroundColor: '#08090B', // match bg to cover circle border
+        backgroundColor: '#08090B',
         marginTop: 20,
     },
     badgeDot: {
