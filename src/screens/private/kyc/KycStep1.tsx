@@ -4,16 +4,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronLeft, X, ChevronDown, Shield, ArrowRight, Check } from 'lucide-react-native';
-import CountryPicker, { Country, CountryCode, Flag } from 'react-native-country-picker-modal';
-import { useTheme } from '../../theme/ThemeProvider';
-import { Typography } from '../../components/common/Typography';
-import { fonts } from '../../theme/fonts';
-import { CommonButton } from '../../components/common/CommonButton';
-import { Screen } from '../../components/common/Screen';
+import CountryPicker, { Country, CountryCode, DARK_THEME } from 'react-native-country-picker-modal';
+import { CommonInput } from '../../../components/common/CommonInput';
+import { KycProgressBar } from '../../../components/common/KycProgressBar';
+import { Typography } from '../../../components/common/Typography';
+import { fonts } from '../../../theme/fonts';
+import { CommonButton } from '../../../components/common/CommonButton';
+import { Screen } from '../../../components/common/Screen';
 import Svg, { Rect } from 'react-native-svg';
 import FastImage from 'react-native-fast-image';
-import { ImageAssets } from '../../components/common/ImageAssets';
-import { colors } from '../../theme/colors';
+import { ImageAssets } from '../../../components/common/ImageAssets';
+import { useTheme } from '../../../theme/ThemeProvider';
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
@@ -51,7 +52,7 @@ const MethodCard = ({ title, subtitle, icon, isSelected, onPress, colors }: Meth
     });
 
     return (
-        <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={{ marginTop: 20 }} onLayout={onLayout}>
+        <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={{ marginTop: 10 }} onLayout={onLayout}>
             <View style={[styles.methodCard, { backgroundColor: isSelected ? 'rgba(6, 182, 212, 0.12)' : '#111214' }]}>
                 <View style={[
                     styles.methodIconWrapper,
@@ -83,14 +84,14 @@ const MethodCard = ({ title, subtitle, icon, isSelected, onPress, colors }: Meth
             <View style={StyleSheet.absoluteFill} pointerEvents="none">
                 <Svg width={cardSize.width || 0} height={cardSize.height || 0}>
                     <AnimatedRect
-                        x={1}
-                        y={1}
-                        width={Math.max(0, cardSize.width - 2)}
-                        height={Math.max(0, cardSize.height - 2)}
+                        x={1.5}
+                        y={1.5}
+                        width={Math.max(0, cardSize.width - 3)}
+                        height={Math.max(0, cardSize.height - 3)}
                         rx={11}
                         ry={11}
                         stroke={colors.cyan}
-                        strokeWidth={1.2}
+                        strokeWidth={1.5}
                         fill="none"
                         strokeDasharray={`${FIXED_TOTAL_LENGTH} ${FIXED_TOTAL_LENGTH}`}
                         animatedProps={animatedProps}
@@ -104,7 +105,7 @@ const MethodCard = ({ title, subtitle, icon, isSelected, onPress, colors }: Meth
 const KycStep1 = () => {
     const { colors } = useTheme();
     const navigation = useNavigation();
-    const [selectedMethod, setSelectedMethod] = useState('id_card');
+    const [selectedMethod, setSelectedMethod] = useState('pan_card');
 
     // Country Picker State
     const [countryCode, setCountryCode] = useState<CountryCode>('IN');
@@ -130,20 +131,7 @@ const KycStep1 = () => {
                         <ChevronLeft color={colors.white} size={20} />
                     </TouchableOpacity>
 
-                    <View style={styles.progressContainer}>
-                        {[1, 2, 3].map((step) => (
-                            <View
-                                key={step}
-                                style={[
-                                    styles.progressSegment,
-                                    {
-                                        backgroundColor: step === 1 ? colors.cyan : '#2A2A2E',
-                                        width: step === 1 ? 80 : 40,
-                                    }
-                                ]}
-                            />
-                        ))}
-                    </View>
+                    <KycProgressBar currentStep={1} totalSteps={4} />
 
                     <View></View>
                 </View>
@@ -211,6 +199,15 @@ const KycStep1 = () => {
                     </Typography>
 
                     <MethodCard
+                        title="PAN Card"
+                        subtitle="Verify using your PAN card"
+                        icon={ImageAssets.IDCardIcon}
+                        isSelected={selectedMethod === 'pan_card'}
+                        onPress={() => setSelectedMethod('pan_card')}
+                        colors={colors}
+                    />
+
+                    <MethodCard
                         title="ID Card"
                         subtitle="Verify using your ID card"
                         icon={ImageAssets.IDCardIcon}
@@ -241,7 +238,7 @@ const KycStep1 = () => {
                 <View style={styles.footer}>
                     <CommonButton
                         title="Next"
-                        onPress={() => { }}
+                        onPress={() => (navigation as any).navigate('KycStep2', { documentType: selectedMethod })}
                         style={{ width: '100%' }}
                         rightIcon={<View style={styles.nextIconWrapper}><ArrowRight color={colors.white} size={14} /></View>}
                     />
@@ -273,15 +270,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    progressContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-    },
-    progressSegment: {
-        height: 4,
-        borderRadius: 2,
-    },
+
     scrollContent: {
         paddingHorizontal: 16,
         paddingBottom: 24,

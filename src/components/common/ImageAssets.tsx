@@ -36,6 +36,17 @@ export const ImageAssets = {
     PassportIcon: require('../../assets/images/PassportIcon.png'),
     LicenceIcon: require('../../assets/images/LicenceIcon.png'),
     IDCardIcon: require('../../assets/images/IDCardIcon.png'),
+    docCheckImg: require('../../assets/images/docCheckImg.png'),
+    ShieldCheckIcon: require('../../assets/images/ShieldCheckIcon.png'),
+    IDCardCheckIcon: require('../../assets/images/IDCardCheckIcon.png'),
+    CameraCheckIcon: require('../../assets/images/CameraCheckIcon.png'),
+    faceVerification: require('../../assets/images/faceVerification.png'),
+    faceVeificationUser: require('../../assets/images/faceVeificationUser.png'),
+    verifyingImg: require('../../assets/images/verifyingImg.png'),
+    verification_reject: require('../../assets/images/verification_reject.png'),
+    verification_pending: require('../../assets/images/verification_pending.png'),
+    verification_success: require('../../assets/images/verification_success.png'),
+
 
 
 

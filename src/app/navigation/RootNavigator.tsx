@@ -20,7 +20,11 @@ import SetPasswordScreen from '../../screens/public/SetPasswordScreen';
 import LandingPage from '../../screens/public/LandingPage';
 import { colors } from '../../theme/colors';
 import { fonts } from '../../theme/fonts';
-import KycStep1 from '../../screens/private/KycStep1';
+import KycStep1 from '../../screens/private/kyc/KycStep1';
+import KycStep2 from '../../screens/private/kyc/KycStep2';
+import KycStep3 from '../../screens/private/kyc/KycStep3';
+import KycStep4 from '../../screens/private/kyc/KycStep4';
+import KycStatus from '../../screens/private/kyc/KycStatus';
 
 const { width } = Dimensions.get('window');
 
@@ -157,7 +161,11 @@ export type RootStackParamList = {
   SetPassword: undefined;
   MainTabs: undefined;
   LandingPage: undefined;
-  KycStep1: undefined
+  KycStep1: undefined;
+  KycStep2: undefined;
+  KycStep3: undefined;
+  KycStep4: undefined;
+  KycStatus: { status: 'SUCCESS' | 'PENDING' | 'FAILED' };
 };
 
 declare global {
@@ -260,6 +268,10 @@ export const RootNavigator = () => {
           <>
             <Stack.Screen name="MainTabs" component={MainTabs} />
             <Stack.Screen name="KycStep1" component={KycStep1} />
+            <Stack.Screen name="KycStep2" component={KycStep2} />
+            <Stack.Screen name="KycStep3" component={KycStep3} />
+            <Stack.Screen name="KycStep4" component={KycStep4} />
+            <Stack.Screen name="KycStatus" component={KycStatus} />
 
           </>
         )}

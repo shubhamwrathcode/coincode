@@ -3,6 +3,7 @@ import { TouchableOpacity, TouchableOpacityProps, StyleSheet, ActivityIndicator,
 import { useTheme } from '../../theme/ThemeProvider';
 import { Typography } from './Typography';
 import { fonts } from '../../theme/fonts';
+import LinearGradient from 'react-native-linear-gradient';
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
@@ -14,6 +15,7 @@ interface CommonButtonProps extends Omit<TouchableOpacityProps, 'onPress'> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   titleStyle?: any;
+  gradientColors?: string[];
   onPress?: (event: any) => void | Promise<any>;
 }
 
@@ -27,6 +29,7 @@ export const CommonButton: React.FC<CommonButtonProps> = ({
   leftIcon,
   rightIcon,
   titleStyle = {},
+  gradientColors,
   onPress,
   ...props
 }) => {
@@ -96,23 +99,32 @@ export const CommonButton: React.FC<CommonButtonProps> = ({
       onPress={handlePress}
       style={[
         styles.button,
-        { backgroundColor: getBackgroundColor() },
+        !gradientColors && { backgroundColor: getBackgroundColor() },
         (variant === 'secondary' || variant === 'outline') && { borderWidth: 1, borderColor: colors.grey },
         shrinkOnLoad && { width: animatedWidth, paddingHorizontal: animatedPadding },
+        { overflow: 'hidden' },
         style,
       ]}
       {...props}
     >
+      {gradientColors && gradientColors.length > 0 && (
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={StyleSheet.absoluteFill}
+        />
+      )}
       {isLoading ? (
         <ActivityIndicator color={getTextColor()} />
       ) : (
         <>
-          {leftIcon && <View style={{ position: 'absolute', left: 16 }}>{leftIcon}</View>}
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            {leftIcon && <View style={{ marginRight: 8 }}>{leftIcon}</View>}
             <Typography color={getTextColor()} align="center" style={{ fontFamily: fonts.semiBold, fontSize: 16, ...titleStyle }}>
               {title}
             </Typography>
-            {rightIcon && <View style={{ marginLeft: 10 }}>{rightIcon}</View>}
+            {rightIcon && <View style={{ marginLeft: 8 }}>{rightIcon}</View>}
           </View>
         </>
       )}
