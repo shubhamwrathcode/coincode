@@ -25,6 +25,7 @@ import KycStep2 from '../../screens/private/kyc/KycStep2';
 import KycStep3 from '../../screens/private/kyc/KycStep3';
 import KycStep4 from '../../screens/private/kyc/KycStep4';
 import KycStatus from '../../screens/private/kyc/KycStatus';
+import { MarketScreen } from '../../screens/private/Market/MarketScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -194,9 +195,7 @@ const MainTabs = () => {
       }}
     >
       <Tab.Screen name="Home" component={LandingPage} />
-      <Tab.Screen name="Market">
-        {() => <PlaceholderScreen title="Market" />}
-      </Tab.Screen>
+      <Tab.Screen name="Market" component={MarketScreen} />
       <Tab.Screen name="Trade">
         {() => <PlaceholderScreen title="Trade" />}
       </Tab.Screen>
@@ -220,9 +219,7 @@ const GuestTabs = () => {
       }}
     >
       <Tab.Screen name="Home" component={LandingPage} />
-      <Tab.Screen name="Market">
-        {() => <PlaceholderScreen title="Market (Login Required)" />}
-      </Tab.Screen>
+      <Tab.Screen name="Market" component={MarketScreen} />
       <Tab.Screen name="Trade">
         {() => <PlaceholderScreen title="Trade (Login Required)" />}
       </Tab.Screen>

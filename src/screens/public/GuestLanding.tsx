@@ -18,11 +18,11 @@ const { width } = Dimensions.get('window');
 
 // Mock Data
 const MOCK_CRYPTO_DATA = [
-    { id: '1', symbol: 'BTCUSDT', name: 'Bitcoin', price: '71,726.6', priceUsd: '$71,726.6', change: '+0.68%', icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png' },
-    { id: '2', symbol: 'ETHUSDT', name: 'Ethereum', price: '2,192.38', priceUsd: '$2,192.38', change: '+0.68%', icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png' },
-    { id: '3', symbol: 'SOLUSDT', name: 'Solana', price: '83.37', priceUsd: '$83.37', change: '+0.68%', icon: 'https://cryptologos.cc/logos/solana-sol-logo.png' },
-    { id: '4', symbol: 'XAUUSDT', name: 'Gold', price: '4,752.50', priceUsd: '$4,752.50', change: '+0.68%', icon: 'https://cryptologos.cc/logos/tether-gold-xaut-logo.png' },
-    { id: '5', symbol: 'DOGEUSDT', name: 'DogeCoin', price: '0.09239', priceUsd: '$0.09239', change: '+0.68%', icon: 'https://cryptologos.cc/logos/dogecoin-doge-logo.png' },
+    { id: '1', symbol: 'BTCUSDT', name: 'Bitcoin', price: '71,726.6', priceUsd: '$71,726.6', change: '+0.68%', initial: 'B', color: '#F7931A' },
+    { id: '2', symbol: 'ETHUSDT', name: 'Ethereum', price: '2,192.38', priceUsd: '$2,192.38', change: '+0.68%', initial: 'E', color: '#627EEA' },
+    { id: '3', symbol: 'SOLUSDT', name: 'Solana', price: '83.37', priceUsd: '$83.37', change: '+0.68%', initial: 'S', color: '#14F195' },
+    { id: '4', symbol: 'XAUUSDT', name: 'Gold', price: '4,752.50', priceUsd: '$4,752.50', change: '+0.68%', initial: 'G', color: '#FFD700' },
+    { id: '5', symbol: 'DOGEUSDT', name: 'DogeCoin', price: '0.09239', priceUsd: '$0.09239', change: '+0.68%', initial: 'D', color: '#C2A633' },
 ];
 
 const MAIN_TABS = ['Favorites', 'Hot', 'New', 'Gainers', 'Losers'];
@@ -198,7 +198,11 @@ const GuestLanding = () => {
     const renderCryptoItem = ({ item }: any) => (
         <View key={item.id} style={styles.cryptoRow}>
             <View style={styles.cryptoLeft}>
-                <FastImage source={{ uri: item.icon }} style={styles.cryptoIcon} resizeMode="contain" />
+                <View style={[styles.cryptoIcon, { backgroundColor: item.color }]}>
+                    <Typography color={colors.white} size={15} style={{ fontFamily: fonts.bold }}>
+                        {item.initial}
+                    </Typography>
+                </View>
                 <View>
                     <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold, marginBottom: 1 }}>{item.symbol}</Typography>
                     <Typography color={colors.darkShadeColorText} size={11} style={{ fontFamily: fonts.medium }}>{item.name}</Typography>
@@ -336,6 +340,8 @@ const styles = StyleSheet.create({
         width: 26,
         height: 26,
         borderRadius: 13,
+        justifyContent: 'center',
+        alignItems: 'center',
         marginRight: 10,
     },
     cryptoMiddle: {

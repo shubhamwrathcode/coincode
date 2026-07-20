@@ -39,15 +39,15 @@ const springConfig = {
 };
 
 const TOP_SEARCHES = [
-    { id: '1', name: 'Bitcoin', symbol: 'BTC', price: '$43,114.57', isUp: true, icon: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=029' },
-    { id: '2', name: 'Ethereum', symbol: 'ETH', price: '$43,114.57', isUp: true, icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=029' },
-    { id: '3', name: 'Tether', symbol: 'USDT', price: '$1.000', isUp: false, icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png?v=029' },
-    { id: '4', name: 'BNB', symbol: 'BNB', price: '$1.000', isUp: false, icon: 'https://cryptologos.cc/logos/bnb-bnb-logo.png?v=029' },
-    { id: '5', name: 'Cardano', symbol: 'ADA', price: '$43,114.57', isUp: true, icon: 'https://cryptologos.cc/logos/cardano-ada-logo.png?v=029' },
-    { id: '6', name: 'Dogecoin', symbol: 'DOGE', price: '$1.000', isUp: false, icon: 'https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=029' },
-    { id: '7', name: 'Shiba Inu', symbol: 'SHIB', price: '$43,114.57', isUp: true, icon: 'https://cryptologos.cc/logos/shiba-inu-shib-logo.png?v=029' },
-    { id: '8', name: 'Solana', symbol: 'SOL', price: '$1.000', isUp: false, icon: 'https://cryptologos.cc/logos/solana-sol-logo.png?v=029' },
-    { id: '9', name: 'USD COIN', symbol: 'USDC', price: '$43,114.57', isUp: true, icon: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=029' },
+    { id: '1', name: 'Bitcoin', symbol: 'BTC', price: '$43,114.57', isUp: true, initial: 'B', color: '#F7931A' },
+    { id: '2', name: 'Ethereum', symbol: 'ETH', price: '$43,114.57', isUp: true, initial: 'E', color: '#627EEA' },
+    { id: '3', name: 'Tether', symbol: 'USDT', price: '$1.000', isUp: false, initial: 'T', color: '#26A17B' },
+    { id: '4', name: 'BNB', symbol: 'BNB', price: '$1.000', isUp: false, initial: 'B', color: '#F3BA2F' },
+    { id: '5', name: 'Cardano', symbol: 'ADA', price: '$43,114.57', isUp: true, initial: 'C', color: '#0033AD' },
+    { id: '6', name: 'Dogecoin', symbol: 'DOGE', price: '$1.000', isUp: false, initial: 'D', color: '#C2A633' },
+    { id: '7', name: 'Shiba Inu', symbol: 'SHIB', price: '$43,114.57', isUp: true, initial: 'S', color: '#E11400' },
+    { id: '8', name: 'Solana', symbol: 'SOL', price: '$1.000', isUp: false, initial: 'S', color: '#14F195' },
+    { id: '9', name: 'USD COIN', symbol: 'USDC', price: '$43,114.57', isUp: true, initial: 'U', color: '#2775CA' },
 ];
 
 const Sparkline = ({ isUp, color }: { isUp: boolean; color: string }) => {
@@ -225,7 +225,11 @@ export const SearchModal = ({ isVisible, onClose, originLayout }: SearchModalPro
                                         <Animated.View entering={FadeInUp.delay(200 + (index * 40)).springify()}>
                                             <TouchableOpacity style={[styles.coinRow, { backgroundColor: '#131315', borderColor: 'rgba(255,255,255,0.1)' }]}>
                                                 <View style={styles.coinLeft}>
-                                                    <FastImage source={{ uri: coin.icon }} style={styles.coinIcon} />
+                                                    <View style={[styles.coinIcon, { backgroundColor: coin.color }]}>
+                                                        <Typography color={colors.white} size={15} style={{ fontFamily: fonts.bold }}>
+                                                            {coin.initial}
+                                                        </Typography>
+                                                    </View>
                                                     <View>
                                                         <Typography color={colors.white} size={14} style={{ fontFamily: fonts.semiBold }}>
                                                             {coin.name}
@@ -331,6 +335,8 @@ const styles = StyleSheet.create({
         width: 28,
         height: 28,
         borderRadius: 14,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     coinRight: {
         alignItems: 'flex-end',
