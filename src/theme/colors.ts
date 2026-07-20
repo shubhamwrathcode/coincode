@@ -11,7 +11,8 @@ export const colors = {
   placeholderTextColor: "#4A5565",
   backBtnBg: '#1A1C22',
   searchBoxBorderColor: '#202023ff',
-  borderColor: "#252525"
+  borderColor: "#252525",
+  green: "#06C168"
 
 };
 

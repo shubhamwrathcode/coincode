@@ -46,6 +46,11 @@ export const ImageAssets = {
     verification_reject: require('../../assets/images/verification_reject.png'),
     verification_pending: require('../../assets/images/verification_pending.png'),
     verification_success: require('../../assets/images/verification_success.png'),
+    RectangleGreen: require('../../assets/images/RectangleGreen.png'),
+    RectangleRed: require('../../assets/images/RectangleRed.png'),
+    historyIcon: require('../../assets/images/historyIcon.png'),
+    noData: require('../../assets/images/noData.png'),
+
 
 
 
