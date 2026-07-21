@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { Typography } from '../../../../components/common/Typography';
 import { fonts } from '../../../../theme/fonts';
 import { CandlestickChart, LineChart } from 'lucide-react-native';
+import FastImage from 'react-native-fast-image';
+import { ImageAssets } from '../../../../components/common/ImageAssets';
+import { MarketPairsSheet } from './MarketPairsSheet';
 
-export const TradePairInfo = () => {
+interface TradePairInfoProps {
+  activeMode?: 'candles' | 'line';
+  onModeChange?: (mode: 'candles' | 'line') => void;
+}
+
+export const TradePairInfo = ({ activeMode, onModeChange }: TradePairInfoProps) => {
   const { colors } = useTheme();
-  const [activeIcon, setActiveIcon] = useState<'candles' | 'line'>('line');
+  const [internalActiveIcon, setInternalActiveIcon] = useState<'candles' | 'line'>('line');
+  const [activePair, setActivePair] = useState('BTC/USDT');
+  const sheetRef = useRef<any>(null);
+
+  const activeIcon = activeMode !== undefined ? activeMode : internalActiveIcon;
+  const setActiveIcon = onModeChange || setInternalActiveIcon;
 
   return (
     <View style={styles.container}>
       <View style={styles.left}>
-        <View style={styles.pairRow}>
-          <Typography size={22} style={{ fontFamily: fonts.semiBold }}>BTC/USDT</Typography>
-        </View>
+        <TouchableOpacity style={styles.pairRow} onPress={() => sheetRef.current?.open()}>
+          <Typography size={22} style={{ fontFamily: fonts.semiBold }}>{activePair}</Typography>
+        </TouchableOpacity>
         <Typography size={12} style={{ color: colors.red, fontFamily: fonts.medium, marginTop: 4 }}>-1.05%</Typography>
       </View>
 
@@ -31,7 +44,8 @@ export const TradePairInfo = () => {
             style={[styles.iconWrapper, activeIcon === 'candles' && styles.activeIconWrapper]}
             onPress={() => setActiveIcon('candles')}
           >
-            <CandlestickChart color={activeIcon === 'candles' ? colors.white : colors.grey} size={18} />
+            <FastImage source={ImageAssets.candleIcon} style={{ width: 18, height: 18 }}
+              resizeMode='contain' tintColor={activeIcon === 'candles' ? colors.white : colors.grey} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.iconWrapper, activeIcon === 'line' && styles.activeIconWrapper]}
@@ -41,6 +55,11 @@ export const TradePairInfo = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <MarketPairsSheet 
+        sheetRef={sheetRef} 
+        onSelect={(pair) => setActivePair(`${pair}/USDT`)} 
+      />
     </View>
   );
 };

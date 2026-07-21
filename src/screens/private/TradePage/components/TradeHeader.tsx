@@ -38,15 +38,15 @@ const TabItem = ({ tab, isActive, onPress, colors }: any) => {
       <Animated.Text style={{ fontFamily: fonts.semiBold, color: textColor, fontSize: 16 }}>
         {tab}
       </Animated.Text>
-      <Animated.View 
+      <Animated.View
         style={[
-          styles.activeIndicator, 
-          { 
-            backgroundColor: colors.cyan, 
+          styles.activeIndicator,
+          {
+            backgroundColor: colors.cyan,
             opacity: indicatorOpacity,
             transform: [{ scaleX: indicatorScaleX }]
           }
-        ]} 
+        ]}
       />
     </TouchableOpacity>
   );
@@ -62,14 +62,15 @@ export const TradeHeader = ({ onBack }: { onBack?: () => void }) => {
         <ChevronLeft color={colors.white} size={28} strokeWidth={2.5} />
       </TouchableOpacity>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsContainer}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.tabsContainer}>
         {TABS.map((tab) => (
-          <TabItem 
-            key={tab} 
-            tab={tab} 
-            isActive={activeTab === tab} 
-            onPress={() => setActiveTab(tab)} 
-            colors={colors} 
+          <TabItem
+            key={tab}
+            tab={tab}
+            isActive={activeTab === tab}
+            onPress={() => setActiveTab(tab)}
+            colors={colors}
           />
         ))}
       </ScrollView>

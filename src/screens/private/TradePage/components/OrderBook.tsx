@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { Typography } from '../../../../components/common/Typography';
 import { fonts } from '../../../../theme/fonts';
 import { ChevronDown, ListFilter } from 'lucide-react-native';
 import { ImageAssets } from '../../../../components/common/ImageAssets';
+import { OrderBookDepthSheet } from './OrderBookDepthSheet';
 
 const ASKS = [
   { price: '58,697.5', qty: '0.0561', fill: '20%' },
@@ -31,6 +32,8 @@ const BIDS = [
 
 export const OrderBook = () => {
   const { colors } = useTheme();
+  const [depth, setDepth] = useState('0.1');
+  const sheetRef = useRef<any>(null);
 
   const renderRow = (item: any, type: 'ask' | 'bid') => {
     const textColor = type === 'ask' ? colors.red : colors.green;
@@ -82,14 +85,26 @@ export const OrderBook = () => {
       </View>
 
       <View style={styles.bottomOptions}>
-        <TouchableOpacity style={styles.dropdown}>
-          <Typography size={11}>0.01</Typography>
+        <TouchableOpacity 
+          style={styles.dropdown}
+          onPress={() => sheetRef.current?.open()}
+        >
+          <Typography size={11}>{depth}</Typography>
           <ChevronDown color={colors.grey} size={14} style={{ marginLeft: 5 }} />
         </TouchableOpacity>
         <TouchableOpacity>
           <ListFilter color={colors.grey} size={18} />
         </TouchableOpacity>
       </View>
+
+      <OrderBookDepthSheet 
+        sheetRef={sheetRef} 
+        selectedDepth={depth}
+        onSelect={(newDepth) => {
+          setDepth(newDepth);
+          sheetRef.current?.close();
+        }}
+      />
     </View>
   );
 };

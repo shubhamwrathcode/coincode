@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { Typography } from '../../../../components/common/Typography';
@@ -6,6 +6,7 @@ import { fonts } from '../../../../theme/fonts';
 import { ChevronDown, Plus, Minus, PlusCircle } from 'lucide-react-native';
 import { PercentBar } from './PercentBar';
 import { ToggleSwitch } from './ToggleSwitch';
+import { OrderTypeSheet } from './OrderTypeSheet';
 
 export const OrderForm = () => {
   const { colors } = useTheme();
@@ -13,6 +14,7 @@ export const OrderForm = () => {
   const [orderType, setOrderType] = useState('Limit');
   const [percent, setPercent] = useState(0);
   const [tpSl, setTpSl] = useState(false);
+  const sheetRef = useRef<any>(null);
 
   const isBuy = side === 'BUY';
   const actionColor = isBuy ? colors.green : colors.red;
@@ -61,7 +63,10 @@ export const OrderForm = () => {
       </View>
 
       {/* Order Type Dropdown */}
-      <TouchableOpacity style={[styles.dropdown, { backgroundColor: '#161719' }]}>
+      <TouchableOpacity 
+        style={[styles.dropdown, { backgroundColor: '#161719' }]}
+        onPress={() => sheetRef.current?.open()}
+      >
         <Typography size={13}>{orderType}</Typography>
         <ChevronDown color={colors.grey} size={14} />
       </TouchableOpacity>
@@ -92,6 +97,16 @@ export const OrderForm = () => {
           {isBuy ? 'Buy BTC' : 'Sell BTC'}
         </Typography>
       </TouchableOpacity>
+
+      {/* Order Type Sheet */}
+      <OrderTypeSheet 
+        sheetRef={sheetRef} 
+        selectedType={orderType} 
+        onSelect={(type) => {
+          setOrderType(type);
+          sheetRef.current?.close();
+        }}
+      />
     </View>
   );
 };

@@ -1,3 +1,5 @@
+import { Users } from "lucide-react-native";
+
 export const ImageAssets = {
     loginPromoImg: require('../../assets/images/loginPromoImg.png'),
     authUserImg: require('../../assets/images/authUserImg.png'),
@@ -50,8 +52,8 @@ export const ImageAssets = {
     RectangleRed: require('../../assets/images/RectangleRed.png'),
     historyIcon: require('../../assets/images/historyIcon.png'),
     noData: require('../../assets/images/noData.png'),
-
-
+    candleIcon: require('../../assets/images/candleIcon.png'),
+    DiamondIcon: require('../../assets/images/DiamondIcon.png'),
 
 
 
