@@ -10,6 +10,7 @@ import { TradeBottomTabs } from './components/TradeBottomTabs';
 import { TradeActionButtons } from './components/TradeActionButtons';
 import { ChartDetailView } from './components/ChartDetailView';
 import { MarginOrderForm } from './components/MarginOrderForm';
+import { FuturesTradeView } from './components/Futures/FuturesTradeView';
 import { Typography } from '../../../components/common/Typography';
 import { fonts } from '../../../theme/fonts';
 import { colors } from '../../../theme/colors';
@@ -24,24 +25,28 @@ export const TradeScreen = ({ navigation }: any) => {
       style={[styles.container, { backgroundColor: colors.black, paddingTop: insets.top }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <TradeHeader 
-        onBack={() => navigation.goBack()} 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab} 
+      <TradeHeader
+        onBack={() => navigation.goBack()}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
       />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <TradePairInfo activeMode={viewMode} onModeChange={setViewMode} />
 
         {viewMode === 'line' ? (
-          <>
-            <View style={styles.mainLayout}>
-              {activeTab === 'Margin' ? <MarginOrderForm /> : <OrderForm />}
-              <OrderBook isMargin={activeTab === 'Margin'} />
-            </View>
-            <TradeBottomTabs />
-            <TradeActionButtons />
-          </>
+          activeTab === 'Futures' ? (
+            <FuturesTradeView />
+          ) : (
+            <>
+              <View style={styles.mainLayout}>
+                {activeTab === 'Margin' ? <MarginOrderForm /> : <OrderForm />}
+                <OrderBook isMargin={activeTab === 'Margin'} />
+              </View>
+              <TradeBottomTabs />
+              <TradeActionButtons />
+            </>
+          )
         ) : (
           <>
             <ChartDetailView />

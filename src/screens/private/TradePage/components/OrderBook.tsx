@@ -41,12 +41,12 @@ export const OrderBook = ({ isMargin }: OrderBookProps) => {
   const sheetRef = useRef<any>(null);
   const borrowingSheetRef = useRef<any>(null);
 
-  const renderRow = (item: any, type: 'ask' | 'bid') => {
+  const renderRow = (item: any, type: 'ask' | 'bid', index: number) => {
     const textColor = type === 'ask' ? colors.red : colors.green;
     const bgFill = type === 'ask' ? '#FF3B3020' : '#00C85320';
 
     return (
-      <View style={styles.row} key={Math.random().toString()}>
+      <View style={styles.row} key={`${type}-${index}`}>
         <View style={[styles.bgFill, { backgroundColor: bgFill, width: item.fill, alignSelf: 'flex-end' }]} />
         <Typography size={12} style={{ color: textColor, fontFamily: fonts.medium }}>{item.price}</Typography>
         <Typography size={12} style={{ color: colors.white }}>{item.qty}</Typography>
@@ -76,7 +76,7 @@ export const OrderBook = ({ isMargin }: OrderBookProps) => {
 
       {/* Asks */}
       <View style={styles.list}>
-        {ASKS.map(item => renderRow(item, 'ask'))}
+        {ASKS.map((item, index) => renderRow(item, 'ask', index))}
       </View>
 
       {/* Center Price */}
@@ -87,7 +87,7 @@ export const OrderBook = ({ isMargin }: OrderBookProps) => {
 
       {/* Bids */}
       <View style={styles.list}>
-        {BIDS.map(item => renderRow(item, 'bid'))}
+        {BIDS.map((item, index) => renderRow(item, 'bid', index))}
       </View>
 
       {/* Spread / Options */}
