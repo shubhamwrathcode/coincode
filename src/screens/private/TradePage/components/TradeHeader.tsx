@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { ChevronLeft } from 'lucide-react-native';
 import { useTheme } from '../../../../theme/ThemeProvider';
@@ -52,9 +52,14 @@ const TabItem = ({ tab, isActive, onPress, colors }: any) => {
   );
 };
 
-export const TradeHeader = ({ onBack }: { onBack?: () => void }) => {
+interface TradeHeaderProps {
+  onBack?: () => void;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
+export const TradeHeader = ({ onBack, activeTab, onTabChange }: TradeHeaderProps) => {
   const { colors } = useTheme();
-  const [activeTab, setActiveTab] = useState('Spot');
 
   return (
     <View style={styles.container}>
@@ -69,7 +74,7 @@ export const TradeHeader = ({ onBack }: { onBack?: () => void }) => {
             key={tab}
             tab={tab}
             isActive={activeTab === tab}
-            onPress={() => setActiveTab(tab)}
+            onPress={() => onTabChange(tab)}
             colors={colors}
           />
         ))}

@@ -54,7 +54,10 @@ export const ImageAssets = {
     noData: require('../../assets/images/noData.png'),
     candleIcon: require('../../assets/images/candleIcon.png'),
     DiamondIcon: require('../../assets/images/DiamondIcon.png'),
-
+    defaultTrade: require('../../assets/images/defaultTrade.png'),
+    onchainImg: require('../../assets/images/onchainImg.png'),
+    p2pTradeImg: require('../../assets/images/p2pTradeImg.png'),
+    buyFiatImg: require('../../assets/images/buyFiatImg.png'),
 
 
 

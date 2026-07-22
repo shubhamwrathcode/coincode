@@ -7,14 +7,22 @@ import { ChevronDown, Plus, Minus, PlusCircle } from 'lucide-react-native';
 import { PercentBar } from './PercentBar';
 import { ToggleSwitch } from './ToggleSwitch';
 import { OrderTypeSheet } from './OrderTypeSheet';
+import { AddFundsSheet } from './AddFundsSheet';
+import { MarginModeSheet } from './MarginModeSheet';
+import { LeverageSheet } from './LeverageSheet';
 
-export const OrderForm = () => {
+export const MarginOrderForm = () => {
   const { colors } = useTheme();
   const [side, setSide] = useState<'BUY' | 'SELL'>('BUY');
   const [orderType, setOrderType] = useState('Limit');
   const [percent, setPercent] = useState(0);
   const [tpSl, setTpSl] = useState(false);
   const sheetRef = useRef<any>(null);
+  const fundsSheetRef = useRef<any>(null);
+  const marginModeSheetRef = useRef<any>(null);
+  const leverageSheetRef = useRef<any>(null);
+  const [marginMode, setMarginMode] = useState('Isolated');
+  const [leverage, setLeverage] = useState(20);
 
   const isBuy = side === 'BUY';
   const actionColor = isBuy ? colors.green : colors.red;
@@ -56,15 +64,33 @@ export const OrderForm = () => {
       {/* Available Balance */}
       <View style={styles.rowBetween}>
         <Typography size={12} style={{ color: colors.grey }}>Available</Typography>
-        <View style={styles.row}>
+        <TouchableOpacity style={styles.row} onPress={() => fundsSheetRef.current?.open()}>
           <Typography size={12} style={{ fontFamily: fonts.semiBold, marginRight: 4 }}>0 USDT</Typography>
           <PlusCircle color={colors.black} fill="#00C853" size={14} />
-        </View>
+        </TouchableOpacity>
+      </View>
+
+      {/* Margin Options */}
+      <View style={styles.marginOptionsRow}>
+        <TouchableOpacity 
+          style={[styles.dropdown, { backgroundColor: '#161719', flex: 1, marginRight: 8, marginBottom: 0 }]}
+          onPress={() => marginModeSheetRef.current?.open()}
+        >
+          <Typography size={13}>{marginMode}</Typography>
+          <ChevronDown color={colors.grey} size={14} />
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.dropdown, { backgroundColor: '#161719', paddingHorizontal: 8, marginBottom: 0 }]}
+          onPress={() => leverageSheetRef.current?.open()}
+        >
+          <Typography size={13}>{leverage}x</Typography>
+          <ChevronDown color={colors.grey} size={14} style={{ marginLeft: 4 }} />
+        </TouchableOpacity>
       </View>
 
       {/* Order Type Dropdown */}
       <TouchableOpacity
-        style={[styles.dropdown, { backgroundColor: '#161719' }]}
+        style={[styles.dropdown, { backgroundColor: '#161719', marginTop: 10 }]}
         onPress={() => sheetRef.current?.open()}
       >
         <Typography size={13}>{orderType}</Typography>
@@ -80,21 +106,26 @@ export const OrderForm = () => {
 
       {renderInputRow('Total (BTC)', '', 'Total')}
 
-      {/* TP/SL & Max */}
+      {/* TP/SL & Max & Borrowing */}
       <View style={[styles.rowBetween, { marginTop: 5 }]}>
         <Typography size={12} style={{ color: colors.grey }}>TP/SL</Typography>
         <ToggleSwitch value={tpSl} onValueChange={setTpSl} />
       </View>
 
-      <View style={[styles.rowBetween, { marginTop: 5, marginBottom: 10 }]}>
+      <View style={[styles.rowBetween, { marginTop: 5 }]}>
         <Typography size={12} style={{ color: colors.grey }}>Max</Typography>
+        <Typography size={12} style={{ fontFamily: fonts.semiBold }}>0 USDT</Typography>
+      </View>
+
+      <View style={[styles.rowBetween, { marginTop: 5, marginBottom: 10 }]}>
+        <Typography size={12} style={{ color: colors.grey }}>Borrowing</Typography>
         <Typography size={12} style={{ fontFamily: fonts.semiBold }}>0 USDT</Typography>
       </View>
 
       {/* Action Button */}
       <TouchableOpacity style={[styles.actionBtn, { backgroundColor: actionColor }]}>
         <Typography size={14} style={{ fontFamily: fonts.semiBold, color: colors.white }}>
-          {isBuy ? 'Buy BTC' : 'Sell BTC'}
+          Margin BTC
         </Typography>
       </TouchableOpacity>
 
@@ -106,6 +137,23 @@ export const OrderForm = () => {
           setOrderType(type);
           sheetRef.current?.close();
         }}
+      />
+
+      {/* Add Funds Sheet */}
+      <AddFundsSheet sheetRef={fundsSheetRef} />
+
+      {/* Margin Mode Sheet */}
+      <MarginModeSheet 
+        sheetRef={marginModeSheetRef} 
+        selectedMode={marginMode}
+        onSelectMode={setMarginMode}
+      />
+
+      {/* Leverage Sheet */}
+      <LeverageSheet 
+        sheetRef={leverageSheetRef}
+        currentLeverage={leverage}
+        onSelectLeverage={setLeverage}
       />
     </View>
   );
@@ -139,6 +187,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  marginOptionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   dropdown: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -164,11 +217,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 12,
-  },
-  toggle: {
-    width: 32,
-    height: 18,
-    borderRadius: 9,
   },
   actionBtn: {
     paddingVertical: 10,

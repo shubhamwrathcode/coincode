@@ -37,11 +37,11 @@ export const MarketPairsSheet = ({ sheetRef, onSelect }: MarketPairsSheetProps) 
             <View style={styles.container}>
                 {/* Search Bar */}
                 <View style={styles.searchContainer}>
-                    <Search color="#6B7280" size={18} />
+                    <Search color={themeColors.grey} size={18} />
                     <TextInput 
-                        style={styles.searchInput}
+                        style={[styles.searchInput, { color: themeColors.white }]}
                         placeholder="Search for market"
-                        placeholderTextColor="#6B7280"
+                        placeholderTextColor={themeColors.grey}
                     />
                 </View>
 
@@ -81,17 +81,17 @@ export const MarketPairsSheet = ({ sheetRef, onSelect }: MarketPairsSheetProps) 
                             <Star color={item.isFav ? "#F59E0B" : "#4B5563"} fill={item.isFav ? "#F59E0B" : "transparent"} size={16} style={{ marginRight: 15 }} />
                             
                             <View style={[styles.coinLogo, { backgroundColor: item.logoColor }]}>
-                                <Typography size={14} style={{ color: '#FFF', fontFamily: fonts.bold }}>{item.symbol[0]}</Typography>
+                                <Typography size={14} style={{ color: themeColors.white, fontFamily: fonts.bold }}>{item.symbol[0]}</Typography>
                             </View>
 
                             <View style={styles.coinInfo}>
-                                <Typography size={14} style={{ fontFamily: fonts.semiBold, color: '#FFF' }}>{item.name}</Typography>
-                                <Typography size={11} style={{ fontFamily: fonts.medium, color: '#6B7280', marginTop: 2 }}>{item.symbol}</Typography>
+                                <Typography size={14} style={{ fontFamily: fonts.semiBold, color: themeColors.white }}>{item.name}</Typography>
+                                <Typography size={11} style={{ fontFamily: fonts.medium, color: themeColors.grey, marginTop: 2 }}>{item.symbol}</Typography>
                             </View>
 
                             <View style={styles.priceInfo}>
-                                <Typography size={14} style={{ fontFamily: fonts.semiBold, color: '#FFF' }}>{item.price}</Typography>
-                                <Typography size={11} style={{ fontFamily: fonts.medium, color: '#059669', marginTop: 2 }}>{item.change}</Typography>
+                                <Typography size={14} style={{ fontFamily: fonts.semiBold, color: themeColors.white }}>{item.price}</Typography>
+                                <Typography size={11} style={{ fontFamily: fonts.medium, color: themeColors.green, marginTop: 2 }}>{item.change}</Typography>
                             </View>
                         </TouchableOpacity>
                     ))}
@@ -120,7 +120,6 @@ const styles = StyleSheet.create({
     searchInput: {
         flex: 1,
         marginLeft: 10,
-        color: '#FFF',
         fontFamily: fonts.medium,
         fontSize: 14,
     },

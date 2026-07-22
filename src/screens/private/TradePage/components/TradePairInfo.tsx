@@ -51,14 +51,15 @@ export const TradePairInfo = ({ activeMode, onModeChange }: TradePairInfoProps) 
             style={[styles.iconWrapper, activeIcon === 'line' && styles.activeIconWrapper]}
             onPress={() => setActiveIcon('line')}
           >
-            <LineChart color={activeIcon === 'line' ? colors.white : colors.grey} size={18} />
+            <FastImage source={ImageAssets.defaultTrade} style={{ width: 18, height: 18 }}
+              resizeMode='contain' tintColor={activeIcon === 'candles' ? colors.grey : colors.white} />
           </TouchableOpacity>
         </View>
       </View>
 
-      <MarketPairsSheet 
-        sheetRef={sheetRef} 
-        onSelect={(pair) => setActivePair(`${pair}/USDT`)} 
+      <MarketPairsSheet
+        sheetRef={sheetRef}
+        onSelect={(pair) => setActivePair(`${pair}/USDT`)}
       />
     </View>
   );

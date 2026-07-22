@@ -9,6 +9,7 @@ import { OrderBook } from './components/OrderBook';
 import { TradeBottomTabs } from './components/TradeBottomTabs';
 import { TradeActionButtons } from './components/TradeActionButtons';
 import { ChartDetailView } from './components/ChartDetailView';
+import { MarginOrderForm } from './components/MarginOrderForm';
 import { Typography } from '../../../components/common/Typography';
 import { fonts } from '../../../theme/fonts';
 import { colors } from '../../../theme/colors';
@@ -16,13 +17,18 @@ export const TradeScreen = ({ navigation }: any) => {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [viewMode, setViewMode] = useState<'line' | 'candles'>('line');
+  const [activeTab, setActiveTab] = useState('Spot');
 
   return (
     <KeyboardAvoidingView
       style={[styles.container, { backgroundColor: colors.black, paddingTop: insets.top }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <TradeHeader onBack={() => navigation.goBack()} />
+      <TradeHeader 
+        onBack={() => navigation.goBack()} 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <TradePairInfo activeMode={viewMode} onModeChange={setViewMode} />
@@ -30,8 +36,8 @@ export const TradeScreen = ({ navigation }: any) => {
         {viewMode === 'line' ? (
           <>
             <View style={styles.mainLayout}>
-              <OrderForm />
-              <OrderBook />
+              {activeTab === 'Margin' ? <MarginOrderForm /> : <OrderForm />}
+              <OrderBook isMargin={activeTab === 'Margin'} />
             </View>
             <TradeBottomTabs />
             <TradeActionButtons />

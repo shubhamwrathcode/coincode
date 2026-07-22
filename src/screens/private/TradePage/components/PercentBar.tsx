@@ -7,20 +7,32 @@ interface PercentBarProps {
   percent: number;
   color: string;
   onPercentChange?: (percent: number) => void;
+  points?: number[];
+  formatLabel?: (val: number) => string;
+  min?: number;
+  max?: number;
 }
 
-export const PercentBar = ({ percent = 0, color = '#06C168', onPercentChange }: PercentBarProps) => {
+export const PercentBar = ({ 
+  percent = 0, 
+  color = '#06C168', 
+  onPercentChange,
+  points = [0, 25, 50, 75, 100],
+  formatLabel = (val) => `${val}%`,
+  min = 0,
+  max = 100
+}: PercentBarProps) => {
   const { colors } = useTheme();
 
-  const percents = [0, 25, 50, 75, 100];
+  const fillPercentage = ((percent - min) / (max - min)) * 100;
 
   return (
     <View style={styles.container}>
       <View style={[styles.track, { backgroundColor: colors.darkGrey }]}>
-        <View style={[styles.fill, { backgroundColor: color, width: `${percent}%` }]} />
+        <View style={[styles.fill, { backgroundColor: color, width: `${Math.max(0, Math.min(100, fillPercentage))}%` }]} />
       </View>
       <View style={styles.dots}>
-        {percents.map((p) => (
+        {points.map((p) => (
           <TouchableOpacity
             key={p}
             style={[
@@ -32,9 +44,9 @@ export const PercentBar = ({ percent = 0, color = '#06C168', onPercentChange }: 
         ))}
       </View>
       <View style={styles.labels}>
-        {percents.map((p) => (
-          <Typography key={p} size={10} style={{ color: colors.grey }}>
-            {p}%
+        {points.map((p) => (
+          <Typography key={p} size={10} style={{ color: p <= percent ? color : colors.grey }}>
+            {formatLabel(p)}
           </Typography>
         ))}
       </View>

@@ -6,6 +6,7 @@ import { fonts } from '../../../../theme/fonts';
 import { ChevronDown, ListFilter } from 'lucide-react-native';
 import { ImageAssets } from '../../../../components/common/ImageAssets';
 import { OrderBookDepthSheet } from './OrderBookDepthSheet';
+import { BorrowingRateSheet } from './BorrowingRateSheet';
 
 const ASKS = [
   { price: '58,697.5', qty: '0.0561', fill: '20%' },
@@ -30,10 +31,15 @@ const BIDS = [
   { price: '58,691.4', qty: '0.0119', fill: '5%' },
 ];
 
-export const OrderBook = () => {
+interface OrderBookProps {
+  isMargin?: boolean;
+}
+
+export const OrderBook = ({ isMargin }: OrderBookProps) => {
   const { colors } = useTheme();
   const [depth, setDepth] = useState('0.1');
   const sheetRef = useRef<any>(null);
+  const borrowingSheetRef = useRef<any>(null);
 
   const renderRow = (item: any, type: 'ask' | 'bid') => {
     const textColor = type === 'ask' ? colors.red : colors.green;
@@ -51,6 +57,18 @@ export const OrderBook = () => {
   return (
     <View style={styles.container}>
       {/* Header */}
+      {isMargin && (
+        <View style={styles.marginHeader}>
+          <TouchableOpacity style={styles.brBadge} onPress={() => borrowingSheetRef.current?.open()}>
+            <Typography size={10} style={{ color: colors.white, fontFamily: fonts.medium }}>B/R</Typography>
+          </TouchableOpacity>
+          <View style={{ alignItems: 'flex-end' }}>
+            <Typography size={9} style={{ color: colors.grey, fontFamily: fonts.medium }}>Hourly Rate (USD)...</Typography>
+            <Typography size={9} style={{ color: colors.white, fontFamily: fonts.medium, textDecorationLine: 'underline', marginTop: 2 }}>0.0000231%</Typography>
+          </View>
+        </View>
+      )}
+
       <View style={styles.header}>
         <Typography size={10} style={{ color: colors.grey, fontFamily: fonts.medium }}>Price(USDT)</Typography>
         <Typography size={10} style={{ color: colors.grey, fontFamily: fonts.medium }}>Qty(BTC)</Typography>
@@ -105,6 +123,7 @@ export const OrderBook = () => {
           sheetRef.current?.close();
         }}
       />
+      <BorrowingRateSheet sheetRef={borrowingSheetRef} />
     </View>
   );
 };
@@ -118,6 +137,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+  },
+  marginHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  brBadge: {
+    backgroundColor: '#1E1F24',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 2,
   },
   list: {
     gap: 4,
