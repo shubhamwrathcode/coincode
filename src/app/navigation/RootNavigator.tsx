@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LoginScreen } from '../../screens/public/LoginScreen';
 import { useTheme } from '../../theme/ThemeProvider';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { Typography } from '../../components/common/Typography';
 import { useAuthStore } from '../../store/authStore';
 import { Dimensions, TouchableOpacity, StyleSheet, Animated as RNAnimated, Easing } from 'react-native';
@@ -27,6 +27,7 @@ import KycStep4 from '../../screens/private/kyc/KycStep4';
 import KycStatus from '../../screens/private/kyc/KycStatus';
 import { MarketScreen } from '../../screens/private/Market/MarketScreen';
 import { TradeScreen } from '../../screens/private/TradePage/TradeScreen';
+import { AssetsScreen } from '../../screens/private/Assets/AssetsScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -101,13 +102,15 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => 
     <View style={[styles.outerContainer, {
       paddingBottom: insets.bottom ? 5 : 5,
     }]}>
-      <BlurView
-        style={[StyleSheet.absoluteFill, { borderTopLeftRadius: 20, borderTopRightRadius: 20 }]}
-        blurType="light"
-        blurAmount={15}
-        overlayColor="transparent"
-        reducedTransparencyFallbackColor="transparent"
-      />
+      {Platform.OS === 'ios' && (
+        <BlurView
+          style={[StyleSheet.absoluteFill, { borderTopLeftRadius: 20, borderTopRightRadius: 20 }]}
+          blurType="light"
+          blurAmount={15}
+          overlayColor="transparent"
+          reducedTransparencyFallbackColor="transparent"
+        />
+      )}
       <View style={[StyleSheet.absoluteFill, {
         backgroundColor: 'rgba(0, 0, 0, 0.55)',
         borderTopLeftRadius: 20,
@@ -201,9 +204,7 @@ const MainTabs = () => {
       <Tab.Screen name="Earn">
         {() => <PlaceholderScreen title="Earn" />}
       </Tab.Screen>
-      <Tab.Screen name="Assets">
-        {() => <PlaceholderScreen title="Assets" />}
-      </Tab.Screen>
+      <Tab.Screen name="Assets" component={AssetsScreen} />
     </Tab.Navigator>
   );
 };
@@ -223,9 +224,7 @@ const GuestTabs = () => {
       <Tab.Screen name="Earn">
         {() => <PlaceholderScreen title="Earn (Login Required)" />}
       </Tab.Screen>
-      <Tab.Screen name="Assets">
-        {() => <PlaceholderScreen title="Assets (Login Required)" />}
-      </Tab.Screen>
+      <Tab.Screen name="Assets" component={AssetsScreen} />
     </Tab.Navigator>
   );
 };

@@ -1,4 +1,3 @@
-import { Users } from "lucide-react-native";
 
 export const ImageAssets = {
     loginPromoImg: require('../../assets/images/loginPromoImg.png'),
@@ -58,8 +57,10 @@ export const ImageAssets = {
     onchainImg: require('../../assets/images/onchainImg.png'),
     p2pTradeImg: require('../../assets/images/p2pTradeImg.png'),
     buyFiatImg: require('../../assets/images/buyFiatImg.png'),
-
-
-
+    overviewWalletImg: require('../../assets/images/overviewWalletImg.png'),
+    spotWalletImg: require('../../assets/images/spotWalletImg.png'),
+    futureWalletImg: require('../../assets/images/futureWalletImg.png'),
+    marginWalletImg: require('../../assets/images/marginWalletImg.png'),
+    earningWalletImg: require('../../assets/images/earningWalletImg.png'),
 
 }
