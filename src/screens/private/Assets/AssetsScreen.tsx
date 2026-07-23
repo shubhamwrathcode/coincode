@@ -8,10 +8,12 @@ import { OverviewTab } from './components/OverviewTab';
 import { SpotTab } from './components/SpotTab';
 import { FuturesTab } from './components/FuturesTab';
 import { MarginTab } from './components/MarginTab';
+import { EarningTab } from './components/EarningTab';
 export const AssetsScreen = () => {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<TabName>('Overview');
+  console.log(activeTab, '===activetab ');
 
   const renderContent = () => {
     switch (activeTab) {
@@ -23,6 +25,8 @@ export const AssetsScreen = () => {
         return <FuturesTab />;
       case 'Margin':
         return <MarginTab />;
+      case 'Earn':
+        return <EarningTab />;
       default:
         return (
           <View style={styles.placeholderContainer}>

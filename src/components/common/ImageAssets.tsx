@@ -62,5 +62,14 @@ export const ImageAssets = {
     futureWalletImg: require('../../assets/images/futureWalletImg.png'),
     marginWalletImg: require('../../assets/images/marginWalletImg.png'),
     earningWalletImg: require('../../assets/images/earningWalletImg.png'),
+    depositWallet: require('../../assets/images/depositWallet.png'),
+    earnWallet: require('../../assets/images/earnWallet.png'),
+    transferWallet: require('../../assets/images/transferWallet.png'),
+    withdrawWallet: require('../../assets/images/withdrawWallet.png'),
+    launchpool: require('../../assets/images/launchpool.png'),
+    savings: require('../../assets/images/savings.png'),
+    staking: require('../../assets/images/staking.png'),
+    flexibleEarn: require('../../assets/images/flexibleEarn.png'),
+    startEarningBanner: require('../../assets/images/startEarningBanner.png'),
 
 }
