@@ -71,5 +71,8 @@ export const ImageAssets = {
     staking: require('../../assets/images/staking.png'),
     flexibleEarn: require('../../assets/images/flexibleEarn.png'),
     startEarningBanner: require('../../assets/images/startEarningBanner.png'),
+    stakingPromo: require('../../assets/images/stakingPromo.png'),
+    coinBanner: require('../../assets/images/coinBanner.png'),
+
 
 }
