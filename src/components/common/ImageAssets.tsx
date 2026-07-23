@@ -87,4 +87,7 @@ export const ImageAssets = {
     depositIcon: require('../../assets/images/depositIcon.png'),
     copyTradeIcon: require('../../assets/images/copyTradeIcon.png'),
     convertIcon: require('../../assets/images/convertIcon.png'),
+    tabBgImg: require('../../assets/images/tabBgImg.png'),
+
+
 }

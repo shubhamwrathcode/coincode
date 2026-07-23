@@ -31,6 +31,7 @@ import { AssetsScreen } from '../../screens/private/Assets/AssetsScreen';
 import { EarnScreen } from '../../screens/private/Earn/EarnScreen';
 import { StakingDetailsScreen } from '../../screens/private/Earn/StakingDetailsScreen';
 import { MyProfileScreen } from '../../screens/private/MyProfile/MyProfileScreen';
+import { ProfileDetailScreen } from '../../screens/private/MyProfile/ProfileDetailScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -176,6 +177,7 @@ export type RootStackParamList = {
   KycStatus: { status: 'SUCCESS' | 'PENDING' | 'FAILED' };
   StakingDetails: { product: any };
   MyProfile: undefined;
+  ProfileDetail: undefined;
 };
 
 declare global {
@@ -272,6 +274,7 @@ export const RootNavigator = () => {
             <Stack.Screen name="KycStatus" component={KycStatus} />
             <Stack.Screen name="StakingDetails" component={StakingDetailsScreen} />
             <Stack.Screen name="MyProfile" component={MyProfileScreen} />
+            <Stack.Screen name="ProfileDetail" component={ProfileDetailScreen} />
 
           </>
         )}

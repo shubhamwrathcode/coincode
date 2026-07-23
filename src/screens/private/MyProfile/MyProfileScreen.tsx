@@ -9,6 +9,8 @@ import {
   CheckCircle2
 } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../app/navigation/RootNavigator';
 import { ToggleSwitch } from '../TradePage/components/ToggleSwitch';
 import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../../components/common/ImageAssets';
@@ -26,7 +28,7 @@ const ACTION_BUTTONS = [
 
 export const MyProfileScreen = () => {
   const { colors } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [productChangelog, setProductChangelog] = useState(true);
 
   return (
@@ -34,25 +36,25 @@ export const MyProfileScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <FastImage source={ImageAssets.backButtonImg} style={{ width: 40, height: 40 }} resizeMode="contain" />
+          <FastImage source={ImageAssets.backButtonImg} style={{ width: 35, height: 35 }} resizeMode="contain" />
         </TouchableOpacity>
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.headerIconBtn}>
-            <FastImage source={ImageAssets.scanImg} style={{ width: 40, height: 40 }} resizeMode="contain" />
+            <FastImage source={ImageAssets.scanImg} style={{ width: 35, height: 35 }} resizeMode="contain" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerIconBtn}>
-            <FastImage source={ImageAssets.settingImg} style={{ width: 40, height: 40 }} resizeMode="contain" />
+            <FastImage source={ImageAssets.settingImg} style={{ width: 35, height: 35 }} resizeMode="contain" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerIconBtn}>
-            <FastImage source={ImageAssets.headphoneImg} style={{ width: 40, height: 40 }} resizeMode="contain" />
+            <FastImage source={ImageAssets.headphoneImg} style={{ width: 35, height: 35 }} resizeMode="contain" />
           </TouchableOpacity>
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-
+        
         {/* User Info Section */}
-        <TouchableOpacity style={styles.userInfoContainer}>
+        <TouchableOpacity style={styles.userInfoContainer} onPress={() => navigation.navigate('ProfileDetail')}>
           <View style={[styles.avatarContainer, { borderColor: colors.cyan, borderWidth: 1.5 }]}>
             <FastImage
               source={ImageAssets.userAvtar}
