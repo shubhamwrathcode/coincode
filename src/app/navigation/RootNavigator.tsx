@@ -30,6 +30,7 @@ import { TradeScreen } from '../../screens/private/TradePage/TradeScreen';
 import { AssetsScreen } from '../../screens/private/Assets/AssetsScreen';
 import { EarnScreen } from '../../screens/private/Earn/EarnScreen';
 import { StakingDetailsScreen } from '../../screens/private/Earn/StakingDetailsScreen';
+import { MyProfileScreen } from '../../screens/private/MyProfile/MyProfileScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -174,6 +175,7 @@ export type RootStackParamList = {
   KycStep4: undefined;
   KycStatus: { status: 'SUCCESS' | 'PENDING' | 'FAILED' };
   StakingDetails: { product: any };
+  MyProfile: undefined;
 };
 
 declare global {
@@ -257,6 +259,7 @@ export const RootNavigator = () => {
             <Stack.Screen name="AuthOtpVerify" component={AuthOtpVerify} />
             <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
             <Stack.Screen name="StakingDetails" component={StakingDetailsScreen} />
+            <Stack.Screen name="MyProfile" component={MyProfileScreen} />
 
           </>
         ) : (
@@ -268,6 +271,7 @@ export const RootNavigator = () => {
             <Stack.Screen name="KycStep4" component={KycStep4} />
             <Stack.Screen name="KycStatus" component={KycStatus} />
             <Stack.Screen name="StakingDetails" component={StakingDetailsScreen} />
+            <Stack.Screen name="MyProfile" component={MyProfileScreen} />
 
           </>
         )}

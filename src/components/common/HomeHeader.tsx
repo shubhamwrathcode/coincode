@@ -7,12 +7,15 @@ import { Search, User } from 'lucide-react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageAssets } from './ImageAssets';
 import { SearchModal } from './SearchModal';
+import { useNavigation } from '@react-navigation/native';
 
 export const HomeHeader = () => {
     const { colors } = useTheme();
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const [searchLayout, setSearchLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
     const searchBarRef = useRef<View>(null);
+
+    const navigation = useNavigation<any>();
 
     const handleOpenSearch = () => {
         searchBarRef.current?.measure((x, y, width, height, pageX, pageY) => {
@@ -23,11 +26,14 @@ export const HomeHeader = () => {
 
     return (
         <View style={styles.header}>
-            <TouchableOpacity style={[styles.avatar, { borderColor: colors.searchBoxBorderColor, backgroundColor: colors.inputBorderColor }]}>
+            <TouchableOpacity
+                style={[styles.avatar, { borderColor: colors.searchBoxBorderColor, backgroundColor: colors.inputBorderColor }]}
+                onPress={() => navigation.navigate('MyProfile')}
+            >
                 <User color={colors.grey} size={20} />
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
                 ref={searchBarRef as any}
                 style={[styles.searchContainer, { borderColor: colors.searchBoxBorderColor, backgroundColor: colors.inputBorderColor }]}
                 onPress={handleOpenSearch}
@@ -53,9 +59,9 @@ export const HomeHeader = () => {
                     </View>
                 </TouchableOpacity>
             </View>
-            <SearchModal 
-                isVisible={isSearchVisible} 
-                onClose={() => setIsSearchVisible(false)} 
+            <SearchModal
+                isVisible={isSearchVisible}
+                onClose={() => setIsSearchVisible(false)}
                 originLayout={searchLayout}
             />
         </View>

@@ -1,3 +1,4 @@
+import { Users } from "lucide-react-native";
 
 export const ImageAssets = {
     loginPromoImg: require('../../assets/images/loginPromoImg.png'),
@@ -73,6 +74,17 @@ export const ImageAssets = {
     startEarningBanner: require('../../assets/images/startEarningBanner.png'),
     stakingPromo: require('../../assets/images/stakingPromo.png'),
     coinBanner: require('../../assets/images/coinBanner.png'),
-
-
+    userAvtar: require('../../assets/images/userAvtar.png'),
+    referProgramIcon: require('../../assets/images/referProgramIcon.png'),
+    backButtonImg: require('../../assets/images/backButtonImg.png'),
+    scanImg: require('../../assets/images/scanImg.png'),
+    settingImg: require('../../assets/images/settingImg.png'),
+    headphoneImg: require('../../assets/images/headphoneImg.png'),
+    withdrawalIcon: require('../../assets/images/withdrawalIcon.png'),
+    p2pIcon: require('../../assets/images/p2pIcon.png'),
+    newsIcon: require('../../assets/images/newsIcon.png'),
+    inviteFriendsIcon: require('../../assets/images/inviteFriendsIcon.png'),
+    depositIcon: require('../../assets/images/depositIcon.png'),
+    copyTradeIcon: require('../../assets/images/copyTradeIcon.png'),
+    convertIcon: require('../../assets/images/convertIcon.png'),
 }
