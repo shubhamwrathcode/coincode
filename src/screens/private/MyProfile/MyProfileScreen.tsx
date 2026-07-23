@@ -6,7 +6,8 @@ import { Typography } from '../../../components/common/Typography';
 import { fonts } from '../../../theme/fonts';
 import {
   ChevronRight,
-  CheckCircle2
+  CheckCircle2,
+  Check
 } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -71,7 +72,9 @@ export const MyProfileScreen = () => {
               <Typography size={16} style={{ fontFamily: fonts.semiBold, color: colors.white, marginRight: 6 }}>
                 jie****@gmail.com
               </Typography>
-              <CheckCircle2 color={colors.cyan} fill={colors.cyan} size={16} />
+              <View style={{ width: 16, height: 16, borderRadius: 8, backgroundColor: colors.cyan, alignItems: 'center', justifyContent: 'center' }}>
+                <Check color={colors.black} size={12} strokeWidth={3} />
+              </View>
             </View>
             <Typography size={13} style={{ color: colors.grey, marginBottom: 8 }}>
               UID: 224183177
