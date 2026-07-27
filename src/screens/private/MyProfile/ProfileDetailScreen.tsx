@@ -240,7 +240,7 @@ export const ProfileDetailScreen = () => {
               </View>
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Key color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.passkeyIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Passkey</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -251,7 +251,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Smartphone color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.authenticatorIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Authenticator App</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -262,7 +262,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Mail color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.emailVerificationIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Email Verification</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -273,7 +273,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Phone color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.phoneIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Phone Number</Typography>
                 </View>
                 <ChevronRight color={colors.grey} size={18} />
@@ -287,7 +287,7 @@ export const ProfileDetailScreen = () => {
               </View>
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><LogIn color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.loginVerifyIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Login Verification</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -298,7 +298,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><ShieldAlert color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.antiPhisingIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Anti-Phishing Code</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -309,7 +309,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><ShieldAlert color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.withdrawProtectionIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Withdrawal Protection</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -320,7 +320,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><PhoneCall color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.emergencyContactIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Emergency Contact</Typography>
                 </View>
                 <ChevronRight color={colors.grey} size={18} />
@@ -328,7 +328,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Link color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.connectedAccounts} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Connected Accounts</Typography>
                 </View>
                 <ChevronRight color={colors.grey} size={18} />
@@ -342,7 +342,7 @@ export const ProfileDetailScreen = () => {
               </View>
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Lock color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.loginPasswordIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Login Password</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -353,7 +353,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Lock color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.fundPasswordIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Fund Password</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -370,7 +370,7 @@ export const ProfileDetailScreen = () => {
               </View>
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Monitor color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.trustedDeviceIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Trusted Devices</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -381,7 +381,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><Clock color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.loginHistoryIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Login History</Typography>
                 </View>
                 <ChevronRight color={colors.grey} size={18} />
@@ -395,7 +395,7 @@ export const ProfileDetailScreen = () => {
               </View>
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><UserMinus color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.freezeAccountIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Freeze Account</Typography>
                 </View>
                 <View style={styles.listRight}>
@@ -406,7 +406,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.divider} />
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><XCircle color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.closeAccountIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Close Account</Typography>
                 </View>
                 <ChevronRight color={colors.grey} size={18} />
@@ -420,7 +420,7 @@ export const ProfileDetailScreen = () => {
               </View>
               <TouchableOpacity style={styles.listItem}>
                 <View style={styles.listLeft}>
-                  <View style={styles.iconContainer}><ShieldCheck color={colors.cyan} size={18} /></View>
+                  <View style={styles.iconContainer}><FastImage source={ImageAssets.thirdPartyIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Third-Party Access</Typography>
                 </View>
                 <ChevronRight color={colors.grey} size={18} />
@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'rgba(0, 255, 255, 0.05)',
     alignItems: 'center',
     justifyContent: 'center',
   },

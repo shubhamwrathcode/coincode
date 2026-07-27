@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { useNavigation } from '@react-navigation/native';
 import { Typography } from '../common/Typography';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fonts } from '../../theme/fonts';
@@ -16,12 +17,21 @@ const QUICK_LINKS = [
 
 export const QuickLinks = () => {
     const { colors } = useTheme();
+    const navigation = useNavigation<any>();
 
     return (
         <View style={styles.quickLinksContainer}>
             {QUICK_LINKS.map((link) => {
                 return (
-                    <TouchableOpacity key={link.id} style={styles.quickLinkItem}>
+                    <TouchableOpacity 
+                        key={link.id} 
+                        style={styles.quickLinkItem}
+                        onPress={() => {
+                            if (link.id === '5') {
+                                navigation.navigate('MoreServices');
+                            }
+                        }}
+                    >
                         <View style={styles.quickLinkIconCircle}>
                             <FastImage
                                 source={link.icon}

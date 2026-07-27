@@ -18,7 +18,6 @@ import SignupScreen from '../../screens/public/SignupScreen';
 import AuthOtpVerify from '../../screens/public/AuthOtpVerify';
 import SetPasswordScreen from '../../screens/public/SetPasswordScreen';
 import LandingPage from '../../screens/public/LandingPage';
-import { colors } from '../../theme/colors';
 import { fonts } from '../../theme/fonts';
 import KycStep1 from '../../screens/private/kyc/KycStep1';
 import KycStep2 from '../../screens/private/kyc/KycStep2';
@@ -32,6 +31,10 @@ import { EarnScreen } from '../../screens/private/Earn/EarnScreen';
 import { StakingDetailsScreen } from '../../screens/private/Earn/StakingDetailsScreen';
 import { MyProfileScreen } from '../../screens/private/MyProfile/MyProfileScreen';
 import { ProfileDetailScreen } from '../../screens/private/MyProfile/ProfileDetailScreen';
+import { MoreServicesScreen } from '../../screens/private/MoreServices/MoreServicesScreen';
+import { SelectCoinScreen } from '../../screens/private/Deposit/SelectCoinScreen';
+import { DepositQrCodeScreen } from '../../screens/private/Deposit/DepositQrCodeScreen';
+import { WithdrawalAddressScreen } from '../../screens/private/Withdrawal/WithdrawalAddressScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -178,6 +181,10 @@ export type RootStackParamList = {
   StakingDetails: { product: any };
   MyProfile: undefined;
   ProfileDetail: undefined;
+  MoreServices: undefined;
+  SelectCoin: undefined;
+  DepositQrCode: undefined;
+  WithdrawalAddress: undefined;
 };
 
 declare global {
@@ -262,7 +269,10 @@ export const RootNavigator = () => {
             <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
             <Stack.Screen name="StakingDetails" component={StakingDetailsScreen} />
             <Stack.Screen name="MyProfile" component={MyProfileScreen} />
-
+            <Stack.Screen name="ProfileDetail" component={ProfileDetailScreen} />
+            <Stack.Screen name="MoreServices" component={MoreServicesScreen} />
+            <Stack.Screen name="SelectCoin" component={SelectCoinScreen} />
+            <Stack.Screen name="DepositQrCode" component={DepositQrCodeScreen} />
           </>
         ) : (
           <>
@@ -275,7 +285,10 @@ export const RootNavigator = () => {
             <Stack.Screen name="StakingDetails" component={StakingDetailsScreen} />
             <Stack.Screen name="MyProfile" component={MyProfileScreen} />
             <Stack.Screen name="ProfileDetail" component={ProfileDetailScreen} />
-
+            <Stack.Screen name="MoreServices" component={MoreServicesScreen} />
+            <Stack.Screen name="SelectCoin" component={SelectCoinScreen} />
+            <Stack.Screen name="DepositQrCode" component={DepositQrCodeScreen} />
+            <Stack.Screen name="WithdrawalAddress" component={WithdrawalAddressScreen} />
           </>
         )}
       </Stack.Navigator>
