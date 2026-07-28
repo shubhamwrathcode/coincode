@@ -238,7 +238,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.sectionTitle}>
                 <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.bold }}>Two-Factor Authentication (2FA)</Typography>
               </View>
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('PasskeyScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.passkeyIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Passkey</Typography>

@@ -35,6 +35,9 @@ import { MoreServicesScreen } from '../../screens/private/MoreServices/MoreServi
 import { SelectCoinScreen } from '../../screens/private/Deposit/SelectCoinScreen';
 import { DepositQrCodeScreen } from '../../screens/private/Deposit/DepositQrCodeScreen';
 import { WithdrawalAddressScreen } from '../../screens/private/Withdrawal/WithdrawalAddressScreen';
+import { PasskeyScreen } from '../../screens/private/MyProfile/SecurityScreens/PasskeyScreen';
+import { AddPhoneScreen } from '../../screens/private/MyProfile/SecurityScreens/AddPhoneScreen';
+import { SecurityVerificationScreen } from '../../screens/private/MyProfile/SecurityScreens/SecurityVerificationScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -185,6 +188,9 @@ export type RootStackParamList = {
   SelectCoin: undefined;
   DepositQrCode: undefined;
   WithdrawalAddress: undefined;
+  PasskeyScreen: undefined;
+  AddPhoneScreen: undefined;
+  SecurityVerificationScreen: undefined;
 };
 
 declare global {
@@ -273,6 +279,9 @@ export const RootNavigator = () => {
             <Stack.Screen name="MoreServices" component={MoreServicesScreen} />
             <Stack.Screen name="SelectCoin" component={SelectCoinScreen} />
             <Stack.Screen name="DepositQrCode" component={DepositQrCodeScreen} />
+            <Stack.Screen name="PasskeyScreen" component={PasskeyScreen} />
+            <Stack.Screen name="AddPhoneScreen" component={AddPhoneScreen} />
+            <Stack.Screen name="SecurityVerificationScreen" component={SecurityVerificationScreen} />
           </>
         ) : (
           <>
@@ -289,6 +298,9 @@ export const RootNavigator = () => {
             <Stack.Screen name="SelectCoin" component={SelectCoinScreen} />
             <Stack.Screen name="DepositQrCode" component={DepositQrCodeScreen} />
             <Stack.Screen name="WithdrawalAddress" component={WithdrawalAddressScreen} />
+            <Stack.Screen name="PasskeyScreen" component={PasskeyScreen} />
+            <Stack.Screen name="AddPhoneScreen" component={AddPhoneScreen} />
+            <Stack.Screen name="SecurityVerificationScreen" component={SecurityVerificationScreen} />
           </>
         )}
       </Stack.Navigator>

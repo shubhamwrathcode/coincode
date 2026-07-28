@@ -128,6 +128,11 @@ export const ImageAssets = {
     blockIcon: require('../../assets/images/blockIcon.png'),
     minDepositIcon: require('../../assets/images/minDepositIcon.png'),
     barcodeFrame: require('../../assets/images/barcodeFrame.png'),
+    enablePasskey: require('../../assets/images/enablePasskey.png'),
+    securityRiskIcon: require('../../assets/images/securityRiskIcon.png'),
+    addPhoneBanner: require('../../assets/images/addPhoneBanner.png'),
+    SecurityVerificationBanner: require('../../assets/images/SecurityVerificationBanner.png'),
+
 
 
 }
