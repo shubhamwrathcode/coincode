@@ -38,6 +38,14 @@ import { WithdrawalAddressScreen } from '../../screens/private/Withdrawal/Withdr
 import { PasskeyScreen } from '../../screens/private/MyProfile/SecurityScreens/PasskeyScreen';
 import { AddPhoneScreen } from '../../screens/private/MyProfile/SecurityScreens/AddPhoneScreen';
 import { SecurityVerificationScreen } from '../../screens/private/MyProfile/SecurityScreens/SecurityVerificationScreen';
+import { AuthenticatorScreen } from '../../screens/private/MyProfile/SecurityScreens/AuthenticatorScreen';
+import { LinkGoogleAuthenticatorScreen } from '../../screens/private/MyProfile/SecurityScreens/LinkGoogleAuthenticatorScreen';
+import { EmailSettingsScreen } from '../../screens/private/MyProfile/SecurityScreens/EmailSettingsScreen';
+import { ChangeEmailAddressScreen } from '../../screens/private/MyProfile/SecurityScreens/ChangeEmailAddressScreen';
+import { PhoneNumberScreen } from '../../screens/private/MyProfile/SecurityScreens/PhoneNumberScreen';
+import { ChangePhoneNumberScreen } from '../../screens/private/MyProfile/SecurityScreens/ChangePhoneNumberScreen';
+import { UnlinkPhoneNumberScreen } from '../../screens/private/MyProfile/SecurityScreens/UnlinkPhoneNumberScreen';
+import { DeviceRemovedScreen } from '../../screens/private/MyProfile/SecurityScreens/DeviceRemovedScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -191,6 +199,14 @@ export type RootStackParamList = {
   PasskeyScreen: undefined;
   AddPhoneScreen: undefined;
   SecurityVerificationScreen: undefined;
+  AuthenticatorScreen: undefined;
+  LinkGoogleAuthenticatorScreen: undefined;
+  EmailSettingsScreen: undefined;
+  ChangeEmailAddressScreen: undefined;
+  PhoneNumberScreen: undefined;
+  ChangePhoneNumberScreen: undefined;
+  UnlinkPhoneNumberScreen: undefined;
+  DeviceRemovedScreen: undefined;
 };
 
 declare global {
@@ -282,6 +298,14 @@ export const RootNavigator = () => {
             <Stack.Screen name="PasskeyScreen" component={PasskeyScreen} />
             <Stack.Screen name="AddPhoneScreen" component={AddPhoneScreen} />
             <Stack.Screen name="SecurityVerificationScreen" component={SecurityVerificationScreen} />
+            <Stack.Screen name="AuthenticatorScreen" component={AuthenticatorScreen} />
+            <Stack.Screen name="LinkGoogleAuthenticatorScreen" component={LinkGoogleAuthenticatorScreen} />
+            <Stack.Screen name="EmailSettingsScreen" component={EmailSettingsScreen} />
+            <Stack.Screen name="ChangeEmailAddressScreen" component={ChangeEmailAddressScreen} />
+            <Stack.Screen name="PhoneNumberScreen" component={PhoneNumberScreen} />
+            <Stack.Screen name="ChangePhoneNumberScreen" component={ChangePhoneNumberScreen} />
+            <Stack.Screen name="UnlinkPhoneNumberScreen" component={UnlinkPhoneNumberScreen} />
+            <Stack.Screen name="DeviceRemovedScreen" component={DeviceRemovedScreen} />
           </>
         ) : (
           <>
@@ -301,6 +325,14 @@ export const RootNavigator = () => {
             <Stack.Screen name="PasskeyScreen" component={PasskeyScreen} />
             <Stack.Screen name="AddPhoneScreen" component={AddPhoneScreen} />
             <Stack.Screen name="SecurityVerificationScreen" component={SecurityVerificationScreen} />
+            <Stack.Screen name="AuthenticatorScreen" component={AuthenticatorScreen} />
+            <Stack.Screen name="LinkGoogleAuthenticatorScreen" component={LinkGoogleAuthenticatorScreen} />
+            <Stack.Screen name="EmailSettingsScreen" component={EmailSettingsScreen} />
+            <Stack.Screen name="ChangeEmailAddressScreen" component={ChangeEmailAddressScreen} />
+            <Stack.Screen name="PhoneNumberScreen" component={PhoneNumberScreen} />
+            <Stack.Screen name="ChangePhoneNumberScreen" component={ChangePhoneNumberScreen} />
+            <Stack.Screen name="UnlinkPhoneNumberScreen" component={UnlinkPhoneNumberScreen} />
+            <Stack.Screen name="DeviceRemovedScreen" component={DeviceRemovedScreen} />
           </>
         )}
       </Stack.Navigator>

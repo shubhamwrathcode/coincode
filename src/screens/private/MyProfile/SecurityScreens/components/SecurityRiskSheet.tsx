@@ -11,23 +11,35 @@ import { ImageAssets } from '../../../../../components/common/ImageAssets';
 
 interface SecurityRiskSheetProps {
     sheetRef: any;
+    image?: any;
+    title?: React.ReactNode;
+    description?: string;
+    children?: React.ReactNode;
+    height?: number;
 }
 
-export const SecurityRiskSheet = ({ sheetRef }: SecurityRiskSheetProps) => {
+export const SecurityRiskSheet = ({ 
+    sheetRef,
+    image = ImageAssets.securityRiskIcon,
+    title,
+    description = "To enhance your account security, please activate at least one additional verification method.",
+    children,
+    height = 550
+}: SecurityRiskSheetProps) => {
     const { colors } = useTheme();
     const navigation = useNavigation<any>();
 
     return (
         <CustomBottomSheet
             sheetRef={sheetRef}
-            height={550}
+            height={height}
         >
             <View style={styles.container}>
 
                 {/* Hero Graphic */}
                 <View style={styles.heroContainer}>
                     <FastImage
-                        source={ImageAssets.securityRiskIcon}
+                        source={image}
                         style={styles.heroImage}
                         resizeMode="contain"
                     />
@@ -35,56 +47,77 @@ export const SecurityRiskSheet = ({ sheetRef }: SecurityRiskSheetProps) => {
 
                 {/* Title Section */}
                 <View style={styles.titleContainer}>
-                    <Typography size={20} style={{ color: colors.white, fontFamily: fonts.bold }}>
-                        Security Risk <Typography size={20} style={{ color: '#FF4C4C', fontFamily: fonts.bold }}>Warning</Typography>
-                    </Typography>
+                    {title ? (
+                        typeof title === 'string' ? (
+                            <Typography size={20} style={{ color: colors.white, fontFamily: fonts.bold }}>
+                                {title}
+                            </Typography>
+                        ) : title
+                    ) : (
+                        <Typography size={20} style={{ color: colors.white, fontFamily: fonts.bold }}>
+                            Security Risk <Typography size={20} style={{ color: '#FF4C4C', fontFamily: fonts.bold }}>Warning</Typography>
+                        </Typography>
+                    )}
                     <Typography size={13} style={{ color: colors.grey, fontFamily: fonts.regular, textAlign: 'center', marginTop: 12, lineHeight: 20, paddingHorizontal: 20 }}>
-                        To enhance your account security, please activate at least one additional verification method.
+                        {description}
                     </Typography>
                 </View>
 
                 {/* Options Container */}
                 <View style={styles.optionsContainer}>
-                    {/* Option 1: Google Authenticator */}
-                    <TouchableOpacity style={styles.optionCard} activeOpacity={0.8}>
-                        <View style={styles.iconWrapper}>
-                            <FastImage source={ImageAssets.googleIcon} style={{ width: 22, height: 22 }} resizeMode="contain" />
-                        </View>
-                        <View style={styles.optionTextContainer}>
-                            <Typography size={14} style={{ color: colors.white, fontFamily: fonts.semiBold, marginBottom: 4 }}>
-                                Google Authenticator
-                            </Typography>
-                            <Typography size={12} style={{ color: colors.grey, fontFamily: fonts.regular, lineHeight: 16 }}>
-                                Secure your account with time-based verification codes.
-                            </Typography>
-                        </View>
-                        <ChevronRight color={colors.grey} size={18} />
-                    </TouchableOpacity>
+                    {children ? children : (
+                        <>
+                            {/* Option 1: Google Authenticator */}
+                            <TouchableOpacity
+                                style={styles.optionCard}
+                                activeOpacity={0.8}
+                                onPress={() => {
+                                    sheetRef.current?.close();
+                                    setTimeout(() => {
+                                        navigation.navigate('AuthenticatorScreen');
+                                    }, 300);
+                                }}
+                            >
+                                <View style={styles.iconWrapper}>
+                                    <FastImage source={ImageAssets.googleIcon} style={{ width: 22, height: 22 }} resizeMode="contain" />
+                                </View>
+                                <View style={styles.optionTextContainer}>
+                                    <Typography size={14} style={{ color: colors.white, fontFamily: fonts.semiBold, marginBottom: 4 }}>
+                                        Google Authenticator
+                                    </Typography>
+                                    <Typography size={12} style={{ color: colors.grey, fontFamily: fonts.regular, lineHeight: 16 }}>
+                                        Secure your account with time-based verification codes.
+                                    </Typography>
+                                </View>
+                                <ChevronRight color={colors.grey} size={18} />
+                            </TouchableOpacity>
 
-                    {/* Option 2: Phone Number */}
-                    <TouchableOpacity
-                        style={styles.optionCard}
-                        activeOpacity={0.8}
-                        onPress={() => {
-                            sheetRef.current?.close();
-                            setTimeout(() => {
-                                navigation.navigate('AddPhoneScreen');
-                            }, 300);
-                        }}
-                    >
-                        <View style={styles.iconWrapper}>
-                            <Phone color={colors.cyan} size={20} />
-                        </View>
-                        <View style={styles.optionTextContainer}>
-                            <Typography size={14} style={{ color: colors.white, fontFamily: fonts.semiBold, marginBottom: 4 }}>
-                                Phone Number
-                            </Typography>
-                            <Typography size={12} style={{ color: colors.grey, fontFamily: fonts.regular, lineHeight: 16 }}>
-                                Verify your identity using SMS verification code.
-                            </Typography>
-                        </View>
-                        <ChevronRight color={colors.grey} size={18} />
-                    </TouchableOpacity>
+                            {/* Option 2: Phone Number */}
+                            <TouchableOpacity
+                                style={styles.optionCard}
+                                activeOpacity={0.8}
+                                onPress={() => {
+                                    sheetRef.current?.close();
+                                    setTimeout(() => {
+                                        navigation.navigate('AddPhoneScreen');
+                                    }, 300);
+                                }}
+                            >
+                                <View style={styles.iconWrapper}>
+                                    <Phone color={colors.cyan} size={20} />
+                                </View>
+                                <View style={styles.optionTextContainer}>
+                                    <Typography size={14} style={{ color: colors.white, fontFamily: fonts.semiBold, marginBottom: 4 }}>
+                                        Phone Number
+                                    </Typography>
+                                    <Typography size={12} style={{ color: colors.grey, fontFamily: fonts.regular, lineHeight: 16 }}>
+                                        Verify your identity using SMS verification code.
+                                    </Typography>
+                                </View>
+                                <ChevronRight color={colors.grey} size={18} />
+                            </TouchableOpacity>
+                        </>
+                    )}
                 </View>
             </View>
         </CustomBottomSheet>

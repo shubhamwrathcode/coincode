@@ -249,7 +249,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('AuthenticatorScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.authenticatorIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Authenticator App</Typography>
@@ -260,7 +260,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('EmailSettingsScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.emailVerificationIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Email Verification</Typography>
@@ -271,7 +271,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('PhoneNumberScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.phoneIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Phone Number</Typography>

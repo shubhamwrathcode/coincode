@@ -132,6 +132,13 @@ export const ImageAssets = {
     securityRiskIcon: require('../../assets/images/securityRiskIcon.png'),
     addPhoneBanner: require('../../assets/images/addPhoneBanner.png'),
     SecurityVerificationBanner: require('../../assets/images/SecurityVerificationBanner.png'),
+    downloadAuthenticatorBanner: require('../../assets/images/downloadAuthenticatorBanner.png'),
+    googleAuthenticatorBanner: require('../../assets/images/googleAuthenticatorBanner.png'),
+    emailSettingBanner: require('../../assets/images/emailSettingBanner.png'),
+    changeEmailBanner: require('../../assets/images/changeEmailBanner.png'),
+    phoneNumberBanner: require('../../assets/images/phoneNumberBanner.png'),
+    unlinkPhoneNumberBanner: require('../../assets/images/unlinkPhoneNumberBanner.png'),
+    deviceRemovedBanner: require('../../assets/images/deviceRemovedBanner.png'),
 
 
 

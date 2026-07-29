@@ -1,25 +1,27 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import FastImage from 'react-native-fast-image';
-import { ChevronLeft, ShieldQuestion } from 'lucide-react-native';
+import { ChevronLeft, ShieldQuestion, Phone, Mail, Clock } from 'lucide-react-native';
 import { Typography } from '../../../../components/common/Typography';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { fonts } from '../../../../theme/fonts';
-import { ImageAssets } from '../../../../components/common/ImageAssets';
 import { CommonButton } from '../../../../components/common/CommonButton';
-import { CommonInput } from '../../../../components/common/CommonInput';
+import { OTPInput } from '../../../../components/common/OTPInput';
 
 export const SecurityVerificationScreen = () => {
     const { colors } = useTheme();
     const navigation = useNavigation();
 
+    const [phoneCode, setPhoneCode] = useState('');
+    const [emailCode, setEmailCode] = useState('');
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.black }]} edges={['top', 'bottom']}>
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
             >
                 {/* Header */}
                 <View style={styles.header}>
@@ -28,90 +30,89 @@ export const SecurityVerificationScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-                    {/* Hero Section */}
-                    <View style={styles.heroSection}>
-                        <View style={styles.heroTextContainer}>
-                            <Typography size={24} style={{ color: colors.white, fontFamily: fonts.semiBold, marginBottom: 4 }}>
-                                Security
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { flexGrow: 1 }]} keyboardShouldPersistTaps="handled">
+                    <View style={{ flex: 1 }}>
+                        <Typography size={24} style={{ color: colors.white, fontFamily: fonts.semiBold, marginBottom: 8, marginTop: 16 }}>
+                            Security Verification
+                        </Typography>
+                        <Typography size={14} style={{ color: colors.grey, fontFamily: fonts.regular, lineHeight: 22, marginBottom: 24 }}>
+                            To ensure the security of your account, please complete the following verification operations.
+                        </Typography>
+
+                        {/* Phone Verification Card */}
+                        <View style={styles.card}>
+                            <View style={styles.cardHeader}>
+                                <Phone color={colors.cyan} size={18} />
+                                <Typography size={15} style={{ color: colors.white, fontFamily: fonts.medium, marginLeft: 8 }}>
+                                    Code sent to: <Typography size={15} style={{ color: colors.cyan, fontFamily: fonts.medium }}>+91******3</Typography>
+                                </Typography>
+                            </View>
+                            <Typography size={13} style={{ color: colors.grey, fontFamily: fonts.regular, marginBottom: 16, lineHeight: 20 }}>
+                                Please enter the 6-digit SMS code sent to your mobile number.
                             </Typography>
-                            <Typography size={24} style={{ color: colors.cyan, fontFamily: fonts.semiBold, marginBottom: 12 }}>
-                                Verification
-                            </Typography>
-                            <Typography size={13} style={{ color: colors.grey, fontFamily: fonts.regular, lineHeight: 20 }}>
-                                To secure the security of your account, please complete the following verification.
-                            </Typography>
+
+                            <OTPInput
+                                value={phoneCode}
+                                onChangeText={setPhoneCode}
+                                onSendPress={() => { }}
+                            />
+
+                            <View style={styles.validityContainer}>
+                                <Clock color={colors.cyan} size={14} />
+                                <Typography size={12} style={{ color: colors.grey, fontFamily: fonts.regular, marginLeft: 6 }}>
+                                    Valid for 10 minutes
+                                </Typography>
+                            </View>
                         </View>
-                        <FastImage
-                            source={ImageAssets.SecurityVerificationBanner}
-                            style={styles.heroImage}
-                            resizeMode="contain"
+
+                        {/* Email Verification Card */}
+                        <View style={styles.card}>
+                            <View style={styles.cardHeader}>
+                                <Mail color={colors.cyan} size={18} />
+                                <Typography size={15} style={{ color: colors.white, fontFamily: fonts.medium, marginLeft: 8 }}>
+                                    Code sent to: <Typography size={15} style={{ color: colors.cyan, fontFamily: fonts.medium }}>r***9@gmail.com</Typography>
+                                </Typography>
+                            </View>
+                            <Typography size={13} style={{ color: colors.grey, fontFamily: fonts.regular, marginBottom: 16, lineHeight: 20 }}>
+                                Please enter the 6-digit email code sent to your email address.
+                            </Typography>
+
+                            <OTPInput
+                                value={emailCode}
+                                onChangeText={setEmailCode}
+                                onSendPress={() => { }}
+                            />
+
+                            <View style={styles.validityContainer}>
+                                <Clock color={colors.cyan} size={14} />
+                                <Typography size={12} style={{ color: colors.grey, fontFamily: fonts.regular, marginLeft: 6 }}>
+                                    Valid for 10 minutes
+                                </Typography>
+                            </View>
+                        </View>
+                    </View>
+
+                    {/* Footer Section */}
+                    <View style={styles.footer}>
+                        <CommonButton
+                            title="Confirm"
+                            onPress={() => {
+                                navigation.navigate('ChangePhoneNumberScreen' as never);
+                            }}
                         />
-                    </View>
 
-                    {/* Verification Fields */}
-                    <View style={styles.formContainer}>
-                        {/* Phone Code */}
-                        <View style={styles.inputGroup}>
-                            <Typography size={14} style={{ color: colors.grey, fontFamily: fonts.regular, marginBottom: 8 }}>
-                                Code sent to: <Typography size={14} style={{ color: colors.white, fontFamily: fonts.semiBold }}>+91 ••• ••42</Typography>
-                            </Typography>
-                            <CommonInput
-                                placeholder="Please enter 6-digit code"
-                                keyboardType="number-pad"
-                                maxLength={6}
-                                rightIcon={
-                                    <TouchableOpacity>
-                                        <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.semiBold }}>Send</Typography>
-                                    </TouchableOpacity>
-                                }
-                            />
-                            <Typography size={12} style={{ color: 'rgba(255,255,255,0.3)', fontFamily: fonts.regular, }}>
-                                Valid for 10 minutes
-                            </Typography>
+                        <View style={styles.orContainer}>
+                            <View style={[styles.line, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]} />
+                            <Typography size={12} style={{ color: colors.grey, fontFamily: fonts.regular, marginHorizontal: 12 }}>OR</Typography>
+                            <View style={[styles.line, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]} />
                         </View>
 
-                        {/* Email Code */}
-                        <View style={styles.inputGroup}>
-                            <Typography size={14} style={{ color: colors.grey, fontFamily: fonts.regular, marginBottom: 8 }}>
-                                Code sent to:
-                            </Typography>
-                            <CommonInput
-                                placeholder="Please enter 6-digit code"
-                                keyboardType="number-pad"
-                                maxLength={6}
-                                rightIcon={
-                                    <TouchableOpacity>
-                                        <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.semiBold }}>Send</Typography>
-                                    </TouchableOpacity>
-                                }
-                            />
-                            <Typography size={12} style={{ color: 'rgba(255,255,255,0.3)', fontFamily: fonts.regular, }}>
-                                Valid for 10 minutes
-                            </Typography>
-                        </View>
+                        <TouchableOpacity style={styles.helpBtn}>
+                            <ShieldQuestion color={colors.cyan} size={16} />
+                            <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.semiBold, marginLeft: 6 }}>Unable to Verify?</Typography>
+                        </TouchableOpacity>
                     </View>
-
                 </ScrollView>
-
-                {/* Footer Section */}
-                <View style={styles.footer}>
-                    <CommonButton
-                        title="Submit"
-                        onPress={() => { }}
-                    />
-
-                    <View style={styles.orContainer}>
-                        <View style={[styles.line, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]} />
-                        <Typography size={12} style={{ color: colors.grey, fontFamily: fonts.regular, marginHorizontal: 12 }}>OR</Typography>
-                        <View style={[styles.line, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]} />
-                    </View>
-
-                    <TouchableOpacity style={styles.helpBtn}>
-                        <ShieldQuestion color={colors.cyan} size={16} />
-                        <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.semiBold, marginLeft: 6 }}>Unable to Verify?</Typography>
-                    </TouchableOpacity>
-                </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
@@ -141,26 +142,23 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 40,
     },
-    heroSection: {
+    card: {
+        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.05)',
+    },
+    cardHeader: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 0,
-        marginBottom: 30,
+        marginBottom: 8,
     },
-    heroTextContainer: {
-        flex: 1,
-        paddingRight: 16,
-    },
-    heroImage: {
-        width: 140,
-        height: 140,
-    },
-    formContainer: {
-        gap: 12,
-    },
-    inputGroup: {
-
+    validityContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 16,
     },
     footer: {
         paddingHorizontal: 16,
