@@ -46,6 +46,21 @@ import { PhoneNumberScreen } from '../../screens/private/MyProfile/SecurityScree
 import { ChangePhoneNumberScreen } from '../../screens/private/MyProfile/SecurityScreens/ChangePhoneNumberScreen';
 import { UnlinkPhoneNumberScreen } from '../../screens/private/MyProfile/SecurityScreens/UnlinkPhoneNumberScreen';
 import { DeviceRemovedScreen } from '../../screens/private/MyProfile/SecurityScreens/DeviceRemovedScreen';
+import { LoginVerificationScreen } from '../../screens/private/MyProfile/SecurityScreens/LoginVerificationScreen';
+import { AntiPhishingScreen } from '../../screens/private/MyProfile/SecurityScreens/AntiPhishingScreen';
+import { CreateAntiPhishingCodeScreen } from '../../screens/private/MyProfile/SecurityScreens/CreateAntiPhishingCodeScreen';
+import { ManageAntiPhishingCodeScreen } from '../../screens/private/MyProfile/SecurityScreens/ManageAntiPhishingCodeScreen';
+import { EditAntiPhishingCodeScreen } from '../../screens/private/MyProfile/SecurityScreens/EditAntiPhishingCodeScreen';
+import { DisableAntiPhishingCodeScreen } from '../../screens/private/MyProfile/SecurityScreens/DisableAntiPhishingCodeScreen';
+import { WithdrawalSettingsScreen } from '../../screens/private/MyProfile/SecurityScreens/WithdrawalSettingsScreen';
+import { VerifyEmailScreen } from '../../screens/private/MyProfile/SecurityScreens/VerifyEmailScreen';
+import { VerifyPhoneScreen } from '../../screens/private/MyProfile/SecurityScreens/VerifyPhoneScreen';
+import { EmergencyContactIntroScreen } from '../../screens/private/MyProfile/SecurityScreens/EmergencyContactIntroScreen';
+import { AddEmergencyContactScreen } from '../../screens/private/MyProfile/SecurityScreens/AddEmergencyContactScreen';
+import { ReviewEmergencyContactScreen } from '../../screens/private/MyProfile/SecurityScreens/ReviewEmergencyContactScreen';
+import { ConnectedAccountsScreen } from '../../screens/private/MyProfile/SecurityScreens/ConnectedAccountsScreen';
+import { ThirdPartyAccessScreen } from '../../screens/private/MyProfile/SecurityScreens/ThirdPartyAccessScreen';
+import { CloseAccountScreen } from '../../screens/private/MyProfile/SecurityScreens/CloseAccountScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -207,6 +222,21 @@ export type RootStackParamList = {
   ChangePhoneNumberScreen: undefined;
   UnlinkPhoneNumberScreen: undefined;
   DeviceRemovedScreen: undefined;
+  LoginVerificationScreen: undefined;
+  AntiPhishingScreen: undefined;
+  CreateAntiPhishingCodeScreen: undefined;
+  ManageAntiPhishingCodeScreen: undefined;
+  EditAntiPhishingCodeScreen: undefined;
+  DisableAntiPhishingCodeScreen: undefined;
+  WithdrawalSettingsScreen: undefined;
+  VerifyEmailScreen: undefined;
+  VerifyPhoneScreen: undefined;
+  EmergencyContactIntroScreen: undefined;
+  AddEmergencyContactScreen: undefined;
+  ReviewEmergencyContactScreen: undefined;
+  ConnectedAccountsScreen: undefined;
+  ThirdPartyAccessScreen: undefined;
+  CloseAccountScreen: undefined;
 };
 
 declare global {
@@ -306,6 +336,21 @@ export const RootNavigator = () => {
             <Stack.Screen name="ChangePhoneNumberScreen" component={ChangePhoneNumberScreen} />
             <Stack.Screen name="UnlinkPhoneNumberScreen" component={UnlinkPhoneNumberScreen} />
             <Stack.Screen name="DeviceRemovedScreen" component={DeviceRemovedScreen} />
+            <Stack.Screen name="LoginVerificationScreen" component={LoginVerificationScreen} />
+            <Stack.Screen name="AntiPhishingScreen" component={AntiPhishingScreen} />
+            <Stack.Screen name="CreateAntiPhishingCodeScreen" component={CreateAntiPhishingCodeScreen} />
+            <Stack.Screen name="ManageAntiPhishingCodeScreen" component={ManageAntiPhishingCodeScreen} />
+            <Stack.Screen name="EditAntiPhishingCodeScreen" component={EditAntiPhishingCodeScreen} />
+            <Stack.Screen name="DisableAntiPhishingCodeScreen" component={DisableAntiPhishingCodeScreen} />
+            <Stack.Screen name="WithdrawalSettingsScreen" component={WithdrawalSettingsScreen} />
+            <Stack.Screen name="VerifyEmailScreen" component={VerifyEmailScreen} />
+            <Stack.Screen name="VerifyPhoneScreen" component={VerifyPhoneScreen} />
+            <Stack.Screen name="EmergencyContactIntroScreen" component={EmergencyContactIntroScreen} />
+            <Stack.Screen name="AddEmergencyContactScreen" component={AddEmergencyContactScreen} />
+            <Stack.Screen name="ReviewEmergencyContactScreen" component={ReviewEmergencyContactScreen} />
+            <Stack.Screen name="ConnectedAccountsScreen" component={ConnectedAccountsScreen} />
+            <Stack.Screen name="ThirdPartyAccessScreen" component={ThirdPartyAccessScreen} />
+            <Stack.Screen name="CloseAccountScreen" component={CloseAccountScreen} />
           </>
         ) : (
           <>
@@ -333,6 +378,21 @@ export const RootNavigator = () => {
             <Stack.Screen name="ChangePhoneNumberScreen" component={ChangePhoneNumberScreen} />
             <Stack.Screen name="UnlinkPhoneNumberScreen" component={UnlinkPhoneNumberScreen} />
             <Stack.Screen name="DeviceRemovedScreen" component={DeviceRemovedScreen} />
+            <Stack.Screen name="LoginVerificationScreen" component={LoginVerificationScreen} />
+            <Stack.Screen name="AntiPhishingScreen" component={AntiPhishingScreen} />
+            <Stack.Screen name="CreateAntiPhishingCodeScreen" component={CreateAntiPhishingCodeScreen} />
+            <Stack.Screen name="ManageAntiPhishingCodeScreen" component={ManageAntiPhishingCodeScreen} />
+            <Stack.Screen name="EditAntiPhishingCodeScreen" component={EditAntiPhishingCodeScreen} />
+            <Stack.Screen name="DisableAntiPhishingCodeScreen" component={DisableAntiPhishingCodeScreen} />
+            <Stack.Screen name="WithdrawalSettingsScreen" component={WithdrawalSettingsScreen} />
+            <Stack.Screen name="VerifyEmailScreen" component={VerifyEmailScreen} />
+            <Stack.Screen name="VerifyPhoneScreen" component={VerifyPhoneScreen} />
+            <Stack.Screen name="EmergencyContactIntroScreen" component={EmergencyContactIntroScreen} />
+            <Stack.Screen name="AddEmergencyContactScreen" component={AddEmergencyContactScreen} />
+            <Stack.Screen name="ReviewEmergencyContactScreen" component={ReviewEmergencyContactScreen} />
+            <Stack.Screen name="ConnectedAccountsScreen" component={ConnectedAccountsScreen} />
+            <Stack.Screen name="ThirdPartyAccessScreen" component={ThirdPartyAccessScreen} />
+            <Stack.Screen name="CloseAccountScreen" component={CloseAccountScreen} />
           </>
         )}
       </Stack.Navigator>

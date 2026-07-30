@@ -139,6 +139,19 @@ export const ImageAssets = {
     phoneNumberBanner: require('../../assets/images/phoneNumberBanner.png'),
     unlinkPhoneNumberBanner: require('../../assets/images/unlinkPhoneNumberBanner.png'),
     deviceRemovedBanner: require('../../assets/images/deviceRemovedBanner.png'),
+    googleAuthneticatorIcon: require('../../assets/images/googleAuthneticatorIcon.png'),
+    lettersIcon: require('../../assets/images/lettersIcon.png'),
+    charIcon: require('../../assets/images/charIcon.png'),
+    antiPhisingBanner: require('../../assets/images/antiPhisingBanner.png'),
+    phoneVerifyBanner: require('../../assets/images/phoneVerifyBanner.png'),
+    emailVerifyBanner: require('../../assets/images/emailVerifyBanner.png'),
+    emergencyContactBanner: require('../../assets/images/emergencyContactBanner.png'),
+    reviewEmergencyContactBanner: require('../../assets/images/reviewEmergencyContactBanner.png'),
+    AccountConnectionBanner: require('../../assets/images/AccountConnectionBanner.png'),
+    appleLogo: require('../../assets/images/apple-logo.png'),
+    deleteAccountIcon: require('../../assets/images/deleteAccountIcon.png'),
+    deleteAccountTermBanner: require('../../assets/images/deleteAccountTermBanner.png'),
+
 
 
 

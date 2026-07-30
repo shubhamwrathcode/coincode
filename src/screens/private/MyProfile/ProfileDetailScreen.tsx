@@ -285,7 +285,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.sectionTitle}>
                 <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.bold }}>Advanced Protection</Typography>
               </View>
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('LoginVerificationScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.loginVerifyIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Login Verification</Typography>
@@ -296,7 +296,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ManageAntiPhishingCodeScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.antiPhisingIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Anti-Phishing Code</Typography>
@@ -307,7 +307,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('WithdrawalSettingsScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.withdrawProtectionIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Withdrawal Protection</Typography>
@@ -318,7 +318,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('EmergencyContactIntroScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.emergencyContactIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Emergency Contact</Typography>
@@ -326,7 +326,7 @@ export const ProfileDetailScreen = () => {
                 <ChevronRight color={colors.grey} size={18} />
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ConnectedAccountsScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.connectedAccounts} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Connected Accounts</Typography>
@@ -404,7 +404,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('CloseAccountScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.closeAccountIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Close Account</Typography>
@@ -418,7 +418,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.sectionTitle}>
                 <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.bold }}>Privacy & Integrations</Typography>
               </View>
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ThirdPartyAccessScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.thirdPartyIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Third-Party Access</Typography>
