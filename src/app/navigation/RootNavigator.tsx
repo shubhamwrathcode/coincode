@@ -77,6 +77,8 @@ import { LaunchpadScreen } from '../../screens/private/MoreServices/LaunchpadScr
 import { CompletedProjectsScreen } from '../../screens/private/MoreServices/CompletedProjectsScreen';
 import { ProjectDetailScreen } from '../../screens/private/MoreServices/ProjectDetailScreen';
 import { ConvertScreen } from '../../screens/private/MoreServices/ConvertScreen';
+import { SpotHistory } from '../../screens/private/HistoryPages/SpotHistory';
+import { FuturesHistory } from '../../screens/private/HistoryPages/FuturesHistory';
 
 const { width } = Dimensions.get('window');
 
@@ -269,6 +271,8 @@ export type RootStackParamList = {
   CompletedProjectsScreen: undefined;
   ProjectDetailScreen: undefined;
   ConvertScreen: undefined;
+  SpotHistory: undefined;
+  FuturesHistory: undefined;
 };
 
 declare global {
@@ -399,6 +403,8 @@ export const RootNavigator = () => {
             <Stack.Screen name="CompletedProjectsScreen" component={CompletedProjectsScreen} />
             <Stack.Screen name="ProjectDetailScreen" component={ProjectDetailScreen} />
             <Stack.Screen name="ConvertScreen" component={ConvertScreen} />
+            <Stack.Screen name="SpotHistory" component={SpotHistory} />
+            <Stack.Screen name="FuturesHistory" component={FuturesHistory} />
           </>
         ) : (
           <>
@@ -457,6 +463,8 @@ export const RootNavigator = () => {
             <Stack.Screen name="CompletedProjectsScreen" component={CompletedProjectsScreen} />
             <Stack.Screen name="ProjectDetailScreen" component={ProjectDetailScreen} />
             <Stack.Screen name="ConvertScreen" component={ConvertScreen} />
+            <Stack.Screen name="SpotHistory" component={SpotHistory} />
+            <Stack.Screen name="FuturesHistory" component={FuturesHistory} />
           </>
         )}
       </Stack.Navigator>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../../../theme/ThemeProvider';
+import { useNavigation } from '@react-navigation/native';
 import { Typography } from '../../../../components/common/Typography';
 import { fonts } from '../../../../theme/fonts';
 import { History, FileX2 } from 'lucide-react-native';
@@ -11,6 +12,7 @@ const TABS = ['Positions (0)', 'Orders (0)', 'Assets'];
 
 export const TradeBottomTabs = () => {
   const { colors } = useTheme();
+  const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState(TABS[0]);
 
   return (
@@ -29,7 +31,7 @@ export const TradeBottomTabs = () => {
             );
           })}
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => (navigation.navigate as any)('SpotHistory')}>
           <FastImage source={ImageAssets.historyIcon} style={{ width: 18, height: 18 }} resizeMode='contain' />
         </TouchableOpacity>
       </View>
