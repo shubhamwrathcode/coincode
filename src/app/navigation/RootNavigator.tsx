@@ -73,6 +73,9 @@ import { ResetFundPasswordScreen } from '../../screens/private/MyProfile/Securit
 import { FundPasswordSuccessScreen } from '../../screens/private/MyProfile/SecurityScreens/FundPasswordSuccessScreen';
 import { ComingSoonScreen } from '../../screens/private/ComingSoonScreen';
 import { ReferralScreen } from '../../screens/private/MoreServices/ReferralScreen';
+import { LaunchpadScreen } from '../../screens/private/MoreServices/LaunchpadScreen';
+import { CompletedProjectsScreen } from '../../screens/private/MoreServices/CompletedProjectsScreen';
+import { ProjectDetailScreen } from '../../screens/private/MoreServices/ProjectDetailScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -261,6 +264,9 @@ export type RootStackParamList = {
   FundPasswordSuccessScreen: undefined;
   ComingSoonScreen: undefined;
   ReferralScreen: undefined;
+  LaunchpadScreen: undefined;
+  CompletedProjectsScreen: undefined;
+  ProjectDetailScreen: undefined;
 };
 
 declare global {
@@ -387,6 +393,9 @@ export const RootNavigator = () => {
             <Stack.Screen name="FundPasswordSuccessScreen" component={FundPasswordSuccessScreen} />
             <Stack.Screen name="ComingSoonScreen" component={ComingSoonScreen} />
             <Stack.Screen name="ReferralScreen" component={ReferralScreen} />
+            <Stack.Screen name="LaunchpadScreen" component={LaunchpadScreen} />
+            <Stack.Screen name="CompletedProjectsScreen" component={CompletedProjectsScreen} />
+            <Stack.Screen name="ProjectDetailScreen" component={ProjectDetailScreen} />
           </>
         ) : (
           <>
@@ -441,6 +450,9 @@ export const RootNavigator = () => {
             <Stack.Screen name="FundPasswordSuccessScreen" component={FundPasswordSuccessScreen} />
             <Stack.Screen name="ComingSoonScreen" component={ComingSoonScreen} />
             <Stack.Screen name="ReferralScreen" component={ReferralScreen} />
+            <Stack.Screen name="LaunchpadScreen" component={LaunchpadScreen} />
+            <Stack.Screen name="CompletedProjectsScreen" component={CompletedProjectsScreen} />
+            <Stack.Screen name="ProjectDetailScreen" component={ProjectDetailScreen} />
           </>
         )}
       </Stack.Navigator>

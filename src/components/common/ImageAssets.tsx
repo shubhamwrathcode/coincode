@@ -159,6 +159,7 @@ export const ImageAssets = {
     resetFundPasswordBanner: require('../../assets/images/resetFundPasswordBanner.png'),
     resetsuccessBanner: require('../../assets/images/resetsuccessBanner.png'),
     referalBanner: require('../../assets/images/referalBanner.png'),
+    launchpadBanner: require('../../assets/images/launchpadBanner.png'),
 
 
 

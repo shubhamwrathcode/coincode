@@ -180,7 +180,7 @@ export const MoreServicesScreen = () => {
 
         {/* Earn Section */}
         {renderSection('Earn', [
-          { title: 'Launchpad', image: ImageAssets.launchpadIcon },
+          { title: 'Launchpad', image: ImageAssets.launchpadIcon, route: 'LaunchpadScreen' },
           { title: 'Refer & Earn', image: ImageAssets.referIcon, route: 'ReferralScreen' },
           { title: 'VIP', image: ImageAssets.vipIcon },
           { title: 'Simple Earn', image: ImageAssets.simpleEarnIcon },
