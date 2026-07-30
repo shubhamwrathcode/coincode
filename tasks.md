@@ -22,3 +22,4 @@
 - **Security Logs:** Built SecurityLogsScreen (Login History) with tab switching and an empty state illustration.
 - **Password Management:** Built ChangePasswordScreen, ResetYourPasswordScreen, and SetNewPasswordScreen with dynamic email/phone tabs and unified components.
 - **Fund Password Management:** Developed SetFundPasswordScreen, ChangeFundPasswordScreen, ResetFundPasswordScreen, and FundPasswordSuccessScreen, integrating a security risk bottom sheet and navigating through a comprehensive verification flow.
+- **Coming Soon Screen:** Created a reusable `ComingSoonScreen` using `lottie-react-native` for upcoming features, and wired it up in `MoreServicesScreen`.

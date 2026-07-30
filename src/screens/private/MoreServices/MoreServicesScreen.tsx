@@ -28,6 +28,8 @@ export const MoreServicesScreen = () => {
           } else {
             (navigation.navigate as any)(item.route);
           }
+        } else {
+          navigation.navigate('ComingSoonScreen' as any);
         }
       }}
     >
@@ -51,7 +53,7 @@ export const MoreServicesScreen = () => {
       <View style={styles.sectionHeader}>
         <Typography size={14} style={{ color: colors.white, fontFamily: fonts.semiBold }}>{title}</Typography>
         {hasEdit && (
-          <TouchableOpacity style={[styles.editButton, { backgroundColor: colors.cyan }]}>
+          <TouchableOpacity style={[styles.editButton, { backgroundColor: colors.cyan }]} >
             <Edit3 color={colors.white} size={10} style={{ marginRight: 4 }} />
             <Typography size={10} style={{ color: colors.white, fontFamily: fonts.semiBold }}>Edit</Typography>
           </TouchableOpacity>
@@ -179,7 +181,7 @@ export const MoreServicesScreen = () => {
         {/* Earn Section */}
         {renderSection('Earn', [
           { title: 'Launchpad', image: ImageAssets.launchpadIcon },
-          { title: 'Refer & Earn', image: ImageAssets.referIcon },
+          { title: 'Refer & Earn', image: ImageAssets.referIcon, route: 'ReferralScreen' },
           { title: 'VIP', image: ImageAssets.vipIcon },
           { title: 'Simple Earn', image: ImageAssets.simpleEarnIcon },
           { title: 'Soft Staking', image: ImageAssets.softStakingIcon },
@@ -188,7 +190,7 @@ export const MoreServicesScreen = () => {
         {/* More Section */}
         {renderSection('More', [
           { title: 'Announcements', image: ImageAssets.announcementIcon },
-          { title: 'Referral', image: ImageAssets.referIcon },
+          { title: 'Referral', image: ImageAssets.referIcon, route: 'ReferralScreen' },
           { title: 'Affiliate Program', image: ImageAssets.affilateIcon },
           { title: 'Proof of Reserves', image: ImageAssets.proofOfReserveIcon },
           { title: 'VIP Services', image: ImageAssets.vipServicesIcon },

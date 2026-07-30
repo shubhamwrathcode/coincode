@@ -71,6 +71,8 @@ import { SetFundPasswordScreen } from '../../screens/private/MyProfile/SecurityS
 import { ChangeFundPasswordScreen } from '../../screens/private/MyProfile/SecurityScreens/ChangeFundPasswordScreen';
 import { ResetFundPasswordScreen } from '../../screens/private/MyProfile/SecurityScreens/ResetFundPasswordScreen';
 import { FundPasswordSuccessScreen } from '../../screens/private/MyProfile/SecurityScreens/FundPasswordSuccessScreen';
+import { ComingSoonScreen } from '../../screens/private/ComingSoonScreen';
+import { ReferralScreen } from '../../screens/private/MoreServices/ReferralScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -257,6 +259,8 @@ export type RootStackParamList = {
   ChangeFundPasswordScreen: undefined;
   ResetFundPasswordScreen: undefined;
   FundPasswordSuccessScreen: undefined;
+  ComingSoonScreen: undefined;
+  ReferralScreen: undefined;
 };
 
 declare global {
@@ -381,6 +385,8 @@ export const RootNavigator = () => {
             <Stack.Screen name="ChangeFundPasswordScreen" component={ChangeFundPasswordScreen} />
             <Stack.Screen name="ResetFundPasswordScreen" component={ResetFundPasswordScreen} />
             <Stack.Screen name="FundPasswordSuccessScreen" component={FundPasswordSuccessScreen} />
+            <Stack.Screen name="ComingSoonScreen" component={ComingSoonScreen} />
+            <Stack.Screen name="ReferralScreen" component={ReferralScreen} />
           </>
         ) : (
           <>
@@ -433,6 +439,8 @@ export const RootNavigator = () => {
             <Stack.Screen name="ChangeFundPasswordScreen" component={ChangeFundPasswordScreen} />
             <Stack.Screen name="ResetFundPasswordScreen" component={ResetFundPasswordScreen} />
             <Stack.Screen name="FundPasswordSuccessScreen" component={FundPasswordSuccessScreen} />
+            <Stack.Screen name="ComingSoonScreen" component={ComingSoonScreen} />
+            <Stack.Screen name="ReferralScreen" component={ReferralScreen} />
           </>
         )}
       </Stack.Navigator>
