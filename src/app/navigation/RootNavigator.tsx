@@ -76,6 +76,7 @@ import { ReferralScreen } from '../../screens/private/MoreServices/ReferralScree
 import { LaunchpadScreen } from '../../screens/private/MoreServices/LaunchpadScreen';
 import { CompletedProjectsScreen } from '../../screens/private/MoreServices/CompletedProjectsScreen';
 import { ProjectDetailScreen } from '../../screens/private/MoreServices/ProjectDetailScreen';
+import { ConvertScreen } from '../../screens/private/MoreServices/ConvertScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -267,6 +268,7 @@ export type RootStackParamList = {
   LaunchpadScreen: undefined;
   CompletedProjectsScreen: undefined;
   ProjectDetailScreen: undefined;
+  ConvertScreen: undefined;
 };
 
 declare global {
@@ -396,6 +398,7 @@ export const RootNavigator = () => {
             <Stack.Screen name="LaunchpadScreen" component={LaunchpadScreen} />
             <Stack.Screen name="CompletedProjectsScreen" component={CompletedProjectsScreen} />
             <Stack.Screen name="ProjectDetailScreen" component={ProjectDetailScreen} />
+            <Stack.Screen name="ConvertScreen" component={ConvertScreen} />
           </>
         ) : (
           <>
@@ -453,6 +456,7 @@ export const RootNavigator = () => {
             <Stack.Screen name="LaunchpadScreen" component={LaunchpadScreen} />
             <Stack.Screen name="CompletedProjectsScreen" component={CompletedProjectsScreen} />
             <Stack.Screen name="ProjectDetailScreen" component={ProjectDetailScreen} />
+            <Stack.Screen name="ConvertScreen" component={ConvertScreen} />
           </>
         )}
       </Stack.Navigator>

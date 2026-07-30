@@ -23,3 +23,7 @@
 - **Password Management:** Built ChangePasswordScreen, ResetYourPasswordScreen, and SetNewPasswordScreen with dynamic email/phone tabs and unified components.
 - **Fund Password Management:** Developed SetFundPasswordScreen, ChangeFundPasswordScreen, ResetFundPasswordScreen, and FundPasswordSuccessScreen, integrating a security risk bottom sheet and navigating through a comprehensive verification flow.
 - **Coming Soon Screen:** Created a reusable `ComingSoonScreen` using `lottie-react-native` for upcoming features, and wired it up in `MoreServicesScreen`.
+- **Referral Screen:** Created a highly detailed Referral program screen with a leaderboard, invitation link sharing, and dynamic cards for referral stats and steps.
+- **Launchpad Screen:** Built the Launchpad hub featuring active project statistics, horizontal scrollable completed projects, and a collapsible FAQ section.
+- **Completed Projects:** Developed a list view of completed token sales utilizing `FlatList` and `React.memo` for optimized performance.
+- **Project Detail Screen:** Implemented a detailed screen for individual token projects featuring a glowing header, grid stats, and a vertical event timeline with status badges.

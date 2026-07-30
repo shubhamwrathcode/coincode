@@ -95,7 +95,7 @@ export const MoreServicesScreen = () => {
         {/* My Favourites */}
         {renderSection('My Favourites', [
           { title: 'Spot', image: ImageAssets.spotIcon },
-          { title: 'Convert', image: ImageAssets.convertIcon },
+          { title: 'Convert', image: ImageAssets.convertIcon, route: 'ConvertScreen' },
           { title: 'Margin', image: ImageAssets.marginIcon },
           { title: 'P2P', image: ImageAssets.p2pIcon },
         ], true)}
@@ -164,7 +164,7 @@ export const MoreServicesScreen = () => {
         {renderSection('Trade', [
           { title: 'Spot', image: ImageAssets.spotIcon },
           { title: 'Margin', image: ImageAssets.marginIcon },
-          { title: 'Convert', image: ImageAssets.convertIcon },
+          { title: 'Convert', image: ImageAssets.convertIcon, route: 'ConvertScreen' },
           { title: 'Copy Trading', image: ImageAssets.copyTradeIcon },
           { title: 'OTC Desk', image: ImageAssets.otpDeskIcon },
           { title: 'P2P Trading', image: ImageAssets.p2pIcon },
