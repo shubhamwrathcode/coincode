@@ -151,6 +151,13 @@ export const ImageAssets = {
     appleLogo: require('../../assets/images/apple-logo.png'),
     deleteAccountIcon: require('../../assets/images/deleteAccountIcon.png'),
     deleteAccountTermBanner: require('../../assets/images/deleteAccountTermBanner.png'),
+    disableAccountBanner: require('../../assets/images/disableAccountBanner.png'),
+    resetPasswordPhoneBanner: require('../../assets/images/resetPasswordPhoneBanner.png'),
+    resetPasswordBanner: require('../../assets/images/resetPasswordBanner.png'),
+    loginPasswordBanner: require('../../assets/images/loginPasswordBanner.png'),
+    fundPasswordBanner: require('../../assets/images/fundPasswordBanner.png'),
+    resetFundPasswordBanner: require('../../assets/images/resetFundPasswordBanner.png'),
+    resetsuccessBanner: require('../../assets/images/resetsuccessBanner.png'),
 
 
 

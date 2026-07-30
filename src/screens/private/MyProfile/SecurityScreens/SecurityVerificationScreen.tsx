@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { ChevronLeft, ShieldQuestion, Phone, Mail, Clock } from 'lucide-react-native';
 import { Typography } from '../../../../components/common/Typography';
 import { useTheme } from '../../../../theme/ThemeProvider';
@@ -12,6 +12,8 @@ import { OTPInput } from '../../../../components/common/OTPInput';
 export const SecurityVerificationScreen = () => {
     const { colors } = useTheme();
     const navigation = useNavigation();
+    const route = useRoute<RouteProp<any, any>>();
+    const nextScreen = route.params?.nextScreen || 'ChangePhoneNumberScreen';
 
     const [phoneCode, setPhoneCode] = useState('');
     const [emailCode, setEmailCode] = useState('');
@@ -97,7 +99,7 @@ export const SecurityVerificationScreen = () => {
                         <CommonButton
                             title="Confirm"
                             onPress={() => {
-                                navigation.navigate('ChangePhoneNumberScreen' as never);
+                                navigation.navigate(nextScreen as never);
                             }}
                         />
 

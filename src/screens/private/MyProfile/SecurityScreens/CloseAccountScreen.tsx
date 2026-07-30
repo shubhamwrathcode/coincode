@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ScrollView, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronLeft, Frown, Users, Grid, AlertCircle, FileText, Lock, Activity, CreditCard, Monitor, Clock, Star, User } from 'lucide-react-native';
@@ -12,14 +12,12 @@ import { ImageAssets } from '../../../../components/common/ImageAssets';
 import { CustomBottomSheet } from '../../../../components/common/CustomBottomSheet';
 import { colors } from '../../../../theme/colors';
 
-const { width } = Dimensions.get('window');
-
 export const CloseAccountScreen = () => {
     const { colors } = useTheme();
     const navigation = useNavigation();
 
     const [step, setStep] = useState(1);
-    const [selectedReason, setSelectedReason] = useState<number | null>(0); // 0, 1, 2
+    const [selectedReason, setSelectedReason] = useState<number | null>(0);
     const [isAgreed, setIsAgreed] = useState(false);
     const bottomSheetRef = useRef<any>(null);
 
@@ -226,7 +224,6 @@ export const CloseAccountScreen = () => {
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.black }]} edges={['top', 'bottom']}>
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backBtn} onPress={() => {
                     if (step > 1) {

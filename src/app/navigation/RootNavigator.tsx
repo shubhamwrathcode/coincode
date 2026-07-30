@@ -61,6 +61,16 @@ import { ReviewEmergencyContactScreen } from '../../screens/private/MyProfile/Se
 import { ConnectedAccountsScreen } from '../../screens/private/MyProfile/SecurityScreens/ConnectedAccountsScreen';
 import { ThirdPartyAccessScreen } from '../../screens/private/MyProfile/SecurityScreens/ThirdPartyAccessScreen';
 import { CloseAccountScreen } from '../../screens/private/MyProfile/SecurityScreens/CloseAccountScreen';
+import { DisableAccountScreen } from '../../screens/private/MyProfile/SecurityScreens/DisableAccountScreen';
+import { SecurityLogsScreen } from '../../screens/private/MyProfile/SecurityScreens/SecurityLogsScreen';
+import { AuthorizedDevicesScreen } from '../../screens/private/MyProfile/SecurityScreens/AuthorizedDevicesScreen';
+import { ChangePasswordScreen } from '../../screens/private/MyProfile/SecurityScreens/ChangePasswordScreen';
+import { ResetYourPasswordScreen } from '../../screens/private/MyProfile/SecurityScreens/ResetYourPasswordScreen';
+import { SetNewPasswordScreen } from '../../screens/private/MyProfile/SecurityScreens/SetNewPasswordScreen';
+import { SetFundPasswordScreen } from '../../screens/private/MyProfile/SecurityScreens/SetFundPasswordScreen';
+import { ChangeFundPasswordScreen } from '../../screens/private/MyProfile/SecurityScreens/ChangeFundPasswordScreen';
+import { ResetFundPasswordScreen } from '../../screens/private/MyProfile/SecurityScreens/ResetFundPasswordScreen';
+import { FundPasswordSuccessScreen } from '../../screens/private/MyProfile/SecurityScreens/FundPasswordSuccessScreen';
 
 const { width } = Dimensions.get('window');
 
@@ -237,6 +247,16 @@ export type RootStackParamList = {
   ConnectedAccountsScreen: undefined;
   ThirdPartyAccessScreen: undefined;
   CloseAccountScreen: undefined;
+  DisableAccountScreen: undefined;
+  SecurityLogsScreen: undefined;
+  AuthorizedDevicesScreen: undefined;
+  ChangePasswordScreen: undefined;
+  ResetYourPasswordScreen: undefined;
+  SetNewPasswordScreen: undefined;
+  SetFundPasswordScreen: undefined;
+  ChangeFundPasswordScreen: undefined;
+  ResetFundPasswordScreen: undefined;
+  FundPasswordSuccessScreen: undefined;
 };
 
 declare global {
@@ -351,6 +371,16 @@ export const RootNavigator = () => {
             <Stack.Screen name="ConnectedAccountsScreen" component={ConnectedAccountsScreen} />
             <Stack.Screen name="ThirdPartyAccessScreen" component={ThirdPartyAccessScreen} />
             <Stack.Screen name="CloseAccountScreen" component={CloseAccountScreen} />
+            <Stack.Screen name="DisableAccountScreen" component={DisableAccountScreen} />
+            <Stack.Screen name="SecurityLogsScreen" component={SecurityLogsScreen} />
+            <Stack.Screen name="AuthorizedDevicesScreen" component={AuthorizedDevicesScreen} />
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
+            <Stack.Screen name="ResetYourPasswordScreen" component={ResetYourPasswordScreen} />
+            <Stack.Screen name="SetNewPasswordScreen" component={SetNewPasswordScreen} />
+            <Stack.Screen name="SetFundPasswordScreen" component={SetFundPasswordScreen} />
+            <Stack.Screen name="ChangeFundPasswordScreen" component={ChangeFundPasswordScreen} />
+            <Stack.Screen name="ResetFundPasswordScreen" component={ResetFundPasswordScreen} />
+            <Stack.Screen name="FundPasswordSuccessScreen" component={FundPasswordSuccessScreen} />
           </>
         ) : (
           <>
@@ -393,6 +423,16 @@ export const RootNavigator = () => {
             <Stack.Screen name="ConnectedAccountsScreen" component={ConnectedAccountsScreen} />
             <Stack.Screen name="ThirdPartyAccessScreen" component={ThirdPartyAccessScreen} />
             <Stack.Screen name="CloseAccountScreen" component={CloseAccountScreen} />
+            <Stack.Screen name="DisableAccountScreen" component={DisableAccountScreen} />
+            <Stack.Screen name="SecurityLogsScreen" component={SecurityLogsScreen} />
+            <Stack.Screen name="AuthorizedDevicesScreen" component={AuthorizedDevicesScreen} />
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
+            <Stack.Screen name="ResetYourPasswordScreen" component={ResetYourPasswordScreen} />
+            <Stack.Screen name="SetNewPasswordScreen" component={SetNewPasswordScreen} />
+            <Stack.Screen name="SetFundPasswordScreen" component={SetFundPasswordScreen} />
+            <Stack.Screen name="ChangeFundPasswordScreen" component={ChangeFundPasswordScreen} />
+            <Stack.Screen name="ResetFundPasswordScreen" component={ResetFundPasswordScreen} />
+            <Stack.Screen name="FundPasswordSuccessScreen" component={FundPasswordSuccessScreen} />
           </>
         )}
       </Stack.Navigator>

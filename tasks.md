@@ -14,3 +14,11 @@
 - **Fund Password Modal:** Implemented a secure bottom sheet modal inside the settings screen for fast verification.
 - **Keyboard Optimization:** Adjusted KeyboardAvoidingView behavior on Android to prevent the keyboard from hiding OTP inputs.
 - **Clipboard Integration:** Installed `@react-native-clipboard/clipboard` and integrated it with the OTP paste buttons.
+- **Emergency Contact:** Built EmergencyContactIntroScreen, AddEmergencyContactScreen, and ReviewEmergencyContactScreen.
+- **Connected Accounts:** Created ConnectedAccountsScreen for managing linked Google/Apple accounts.
+- **Third-Party Access:** Created ThirdPartyAccessScreen for managing third-party integrations.
+- **Close Account:** Developed a multi-step CloseAccountScreen with inline tabs, warnings, terms and conditions, and a bottom sheet confirmation.
+- **Disable/Freeze Account:** Built DisableAccountScreen with warnings and a button to initiate account freezing.
+- **Security Logs:** Built SecurityLogsScreen (Login History) with tab switching and an empty state illustration.
+- **Password Management:** Built ChangePasswordScreen, ResetYourPasswordScreen, and SetNewPasswordScreen with dynamic email/phone tabs and unified components.
+- **Fund Password Management:** Developed SetFundPasswordScreen, ChangeFundPasswordScreen, ResetFundPasswordScreen, and FundPasswordSuccessScreen, integrating a security risk bottom sheet and navigating through a comprehensive verification flow.

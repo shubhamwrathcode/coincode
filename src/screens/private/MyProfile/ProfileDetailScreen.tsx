@@ -340,7 +340,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.sectionTitle}>
                 <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.bold }}>Password & Credentials</Typography>
               </View>
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ChangePasswordScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.loginPasswordIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Login Password</Typography>
@@ -351,7 +351,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('SetFundPasswordScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.fundPasswordIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Fund Password</Typography>
@@ -368,7 +368,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.sectionTitle}>
                 <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.bold }}>Devices & Activity</Typography>
               </View>
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('AuthorizedDevicesScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.trustedDeviceIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Trusted Devices</Typography>
@@ -379,7 +379,7 @@ export const ProfileDetailScreen = () => {
                 </View>
               </TouchableOpacity>
               <View style={styles.divider} />
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('SecurityLogsScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.loginHistoryIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Login History</Typography>
@@ -393,7 +393,7 @@ export const ProfileDetailScreen = () => {
               <View style={styles.sectionTitle}>
                 <Typography size={14} style={{ color: colors.cyan, fontFamily: fonts.bold }}>Account Controls</Typography>
               </View>
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('DisableAccountScreen' as any)}>
                 <View style={styles.listLeft}>
                   <View style={styles.iconContainer}><FastImage source={ImageAssets.freezeAccountIcon} style={{ width: 18, height: 18 }} resizeMode="contain" /></View>
                   <Typography size={14} style={styles.listText}>Freeze Account</Typography>
