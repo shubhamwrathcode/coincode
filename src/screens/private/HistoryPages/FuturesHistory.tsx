@@ -168,12 +168,19 @@ export const FuturesHistory = () => {
 
     const handleSelectType = (type: string, title: string) => {
         setIsDropdownVisible(false);
-        if (type === 'spot') {
-            (navigation as any).replace('SpotHistory');
-        } else if (type === 'futures') {
-            // Already here
+        const screenMap: any = {
+            spot: 'SpotHistory',
+            futures: 'FuturesHistory',
+            margin: 'MarginHistory',
+            convert: 'ConvertHistory',
+            launchpad: 'LaunchpadHistory',
+            staking: 'StakingHistory',
+            quick: 'QuickHistory',
+            asset: 'AssetHistory'
+        };
+        if (screenMap[type]) {
+            (navigation as any).replace(screenMap[type]);
         }
-        // Handle other routes similarly as they are created
     };
 
     return (

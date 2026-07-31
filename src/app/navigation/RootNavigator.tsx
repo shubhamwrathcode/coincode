@@ -79,6 +79,12 @@ import { ProjectDetailScreen } from '../../screens/private/MoreServices/ProjectD
 import { ConvertScreen } from '../../screens/private/MoreServices/ConvertScreen';
 import { SpotHistory } from '../../screens/private/HistoryPages/SpotHistory';
 import { FuturesHistory } from '../../screens/private/HistoryPages/FuturesHistory';
+import { MarginHistory } from '../../screens/private/HistoryPages/MarginHistory';
+import { ConvertHistory } from '../../screens/private/HistoryPages/ConvertHistory';
+import { LaunchpadHistory } from '../../screens/private/HistoryPages/LaunchpadHistory';
+import { StakingHistory } from '../../screens/private/HistoryPages/StakingHistory';
+import { QuickHistory } from '../../screens/private/HistoryPages/QuickHistory';
+import { AssetHistory } from '../../screens/private/HistoryPages/AssetHistory';
 
 const { width } = Dimensions.get('window');
 
@@ -273,6 +279,12 @@ export type RootStackParamList = {
   ConvertScreen: undefined;
   SpotHistory: undefined;
   FuturesHistory: undefined;
+  MarginHistory: undefined;
+  ConvertHistory: undefined;
+  LaunchpadHistory: undefined;
+  StakingHistory: undefined;
+  QuickHistory: undefined;
+  AssetHistory: undefined;
 };
 
 declare global {
@@ -405,6 +417,12 @@ export const RootNavigator = () => {
             <Stack.Screen name="ConvertScreen" component={ConvertScreen} />
             <Stack.Screen name="SpotHistory" component={SpotHistory} />
             <Stack.Screen name="FuturesHistory" component={FuturesHistory} />
+            <Stack.Screen name="MarginHistory" component={MarginHistory} />
+            <Stack.Screen name="ConvertHistory" component={ConvertHistory} />
+            <Stack.Screen name="LaunchpadHistory" component={LaunchpadHistory} />
+            <Stack.Screen name="StakingHistory" component={StakingHistory} />
+            <Stack.Screen name="QuickHistory" component={QuickHistory} />
+            <Stack.Screen name="AssetHistory" component={AssetHistory} />
           </>
         ) : (
           <>
@@ -465,6 +483,12 @@ export const RootNavigator = () => {
             <Stack.Screen name="ConvertScreen" component={ConvertScreen} />
             <Stack.Screen name="SpotHistory" component={SpotHistory} />
             <Stack.Screen name="FuturesHistory" component={FuturesHistory} />
+            <Stack.Screen name="MarginHistory" component={MarginHistory} />
+            <Stack.Screen name="ConvertHistory" component={ConvertHistory} />
+            <Stack.Screen name="LaunchpadHistory" component={LaunchpadHistory} />
+            <Stack.Screen name="StakingHistory" component={StakingHistory} />
+            <Stack.Screen name="QuickHistory" component={QuickHistory} />
+            <Stack.Screen name="AssetHistory" component={AssetHistory} />
           </>
         )}
       </Stack.Navigator>
