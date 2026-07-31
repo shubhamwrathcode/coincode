@@ -644,13 +644,13 @@ const styles = StyleSheet.create({
     },
     extractedStyle28: {
         borderWidth: 1,
-                    borderColor: 'rgba(0,194,255,0.2)',
-                    borderRadius: 12,
-                    paddingVertical: 14,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginVertical: 16,
-                    flexDirection: 'row'
+        borderColor: 'rgba(0,194,255,0.2)',
+        borderRadius: 12,
+        paddingVertical: 14,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 16,
+        flexDirection: 'row'
     },
     extractedStyle29: {
         color: colors.white, fontFamily: fonts.bold, marginRight: 8

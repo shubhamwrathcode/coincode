@@ -162,8 +162,7 @@ export const ImageAssets = {
     launchpadBanner: require('../../assets/images/launchpadBanner.png'),
     convertImg: require('../../assets/images/convertImg.png'),
     futuresIcon: require('../../assets/images/futuresIcon.png'),
-
-
+    logo: require('../../assets/images/logo.png'),
 
 
 }

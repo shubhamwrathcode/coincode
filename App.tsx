@@ -1,8 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppProvider } from './src/app/providers/AppProvider';
 import { RootNavigator } from './src/app/navigation/RootNavigator';
 import { SplashScreen } from './src/screens/public/SplashScreen';
+import { Toast } from './src/components/common/Toast';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const AppContent = () => {
@@ -23,13 +25,18 @@ const AppContent = () => {
   return <RootNavigator />;
 };
 
+const queryClient = new QueryClient();
+
 const App = () => {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <AppProvider>
-        <AppContent />
-      </AppProvider>
-    </GestureHandlerRootView>
+    <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <AppProvider>
+          <AppContent />
+          <Toast />
+        </AppProvider>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 };
 

@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { View, Animated, Easing, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Keyboard, Alert, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Typography } from '../../components/common/Typography';
 import { Screen } from '../../components/common/Screen';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -14,6 +14,8 @@ import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../components/common/ImageAssets';
 import { colors } from '../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
+import { useLoginMutation } from '../../api/mutations/useAuthMutations';
+import { useToastStore } from '../../store/toastStore';
 
 export const LoginScreen = () => {
   const { colors } = useTheme();
@@ -22,12 +24,28 @@ export const LoginScreen = () => {
   const [activeTab, setActiveTab] = useState<'email' | 'phone'>('email');
   const [showPassword, setShowPassword] = useState(false);
 
+  const loginMutation = useLoginMutation();
+  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const showToast = useToastStore((state) => state.showToast);
+
   const handleLogin = async () => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        login();
-        resolve(true);
-      }, 2000);
+    Keyboard.dismiss();
+
+    login()
+    // if (!emailOrPhone.trim()) {
+    //   showToast('Please enter your email or phone number', 'error');
+    //   return;
+    // }
+    // if (!password) {
+    //   showToast('Please enter your password', 'error');
+    //   return;
+    // }
+
+    loginMutation.mutate({
+      email_or_phone: emailOrPhone.trim(),
+      password,
+      token: ''
     });
   };
 
@@ -81,15 +99,21 @@ export const LoginScreen = () => {
             <CommonInput
               placeholder="Enter email address"
               autoCapitalize="none"
+              value={emailOrPhone}
+              onChangeText={setEmailOrPhone}
             />
           ) : (
             <PhoneInput
               placeholder="Enter Phone number"
+              value={emailOrPhone}
+              onChangeText={setEmailOrPhone}
             />
           )}
 
           <CommonInput
             placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
             secureTextEntry={!showPassword}
             rightIcon={
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -104,8 +128,10 @@ export const LoginScreen = () => {
 
           <View style={styles.buttonWrapper}>
             <CommonButton
-              title="Next"
-              onPress={handleLogin} shrinkOnLoad
+              title={loginMutation.isPending ? "Logging in..." : "Next"}
+              onPress={handleLogin}
+              disabled={loginMutation.isPending}
+              shrinkOnLoad
               rightIcon={<View style={styles.nextIconWrapper}><ArrowRight color={colors.white} size={14} /></View>}
               style={{
                 marginTop: 8,
