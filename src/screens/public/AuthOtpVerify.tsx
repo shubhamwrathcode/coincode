@@ -12,16 +12,20 @@ import { ImageAssets } from '../../components/common/ImageAssets';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../app/navigation/RootNavigator';
+import { useAuthStore } from '../../store/authStore';
 
 const AuthOtpVerify = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const login = useAuthStore((state) => state.login);
     const [otp, setOtp] = useState('');
 
     const handleVerify = async () => {
+        // Here you would typically call an API to verify the OTP.
+        // For now, we simulate a successful verification and log the user in.
         return new Promise(resolve => {
             setTimeout(() => {
-                navigation.navigate('SetPassword');
+                login();
                 resolve(true);
             }, 2000);
         });

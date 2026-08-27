@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { Typography } from '../../../../components/common/Typography';
 import { fonts } from '../../../../theme/fonts';
 import { BarChart2, Edit2, Settings, Trophy, Flame, Layers } from 'lucide-react-native';
+import { useMarketStore } from '../../../../store/marketStore';
+import { CandlestickChartRenderer } from './CandlestickChartRenderer';
 
 const { width } = Dimensions.get('window');
 
@@ -12,11 +14,90 @@ const TIMEFRAMES = ['1h', '2h', '4h', '1D', 'More'];
 const INDICATORS = ['VOL', 'SRL', 'MA', 'EMA', 'BOLL', 'SAR', 'SuperTrend', 'AVL'];
 const BOTTOM_TABS = ['Order Book', 'Depth', 'Trades', 'Global Markets'];
 
+const formatNumber = (val: number, decimals: number) => {
+  if (decimals > 4) {
+    return val.toFixed(decimals);
+  }
+  return val.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+};
+
+const generateHorizontalBook = (midPrice: number, decimals: number) => {
+  const step = Math.max(0.0000001, midPrice * 0.00016);
+  return Array.from({ length: 12 }, (_, i) => {
+    const bidPrice = Math.max(0.00000001, midPrice - (i + 1) * step + (Math.random() - 0.5) * (step * 0.25));
+    const askPrice = Math.max(0.00000001, midPrice + (i + 1) * step + (Math.random() - 0.5) * (step * 0.25));
+
+    const bidQty = (Math.random() * 3.5 + 0.05).toFixed(decimals > 4 ? 2 : 4);
+    const askQty = (Math.random() * 3.5 + 0.05).toFixed(decimals > 4 ? 2 : 4);
+
+    const bidFill = `${Math.min(95, Math.floor(Math.random() * 60) + 20)}%`;
+    const askFill = `${Math.min(95, Math.floor(Math.random() * 60) + 20)}%`;
+
+    return {
+      bidPrice: formatNumber(bidPrice, decimals),
+      bidQty,
+      bidFill,
+      askPrice: formatNumber(askPrice, decimals),
+      askQty,
+      askFill,
+    };
+  });
+};
+
 export const ChartDetailView = () => {
   const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState('Chart');
   const [activeTimeframe, setActiveTimeframe] = useState('1h');
   const [activeBottomTab, setActiveBottomTab] = useState('Order Book');
+
+  const selectedCoin = useMarketStore((state) => state.selectedCoin);
+
+  const price = selectedCoin ? selectedCoin.currentPrice : 71726.6;
+  const decimals = selectedCoin ? selectedCoin.decimals : 2;
+  const pairSymbol = selectedCoin ? selectedCoin.pair : 'BTC';
+  const isPositive = (selectedCoin?.change24h ?? 0) >= 0;
+  const changeColor = isPositive ? colors.green : colors.red;
+  const formattedPrice = formatNumber(price, decimals);
+
+  // Dynamic 24h High / Low & MA based on live price
+  const high24h = formatNumber(price * (1 + Math.max(0.012, Math.abs((selectedCoin?.change24h ?? 1) * 0.005) + 0.015)), decimals);
+  const low24h = formatNumber(price * (1 - Math.max(0.012, Math.abs((selectedCoin?.change24h ?? 1) * 0.005) + 0.012)), decimals);
+  const ma5 = formatNumber(price * 1.002, decimals);
+  const ma10 = formatNumber(price * 0.998, decimals);
+  const ma30 = formatNumber(price * 0.994, decimals);
+
+  const yPrice1 = formatNumber(price * 1.03, decimals);
+  const yPrice2 = formatNumber(price * 1.015, decimals);
+  const yPrice3 = formatNumber(price * 0.985, decimals);
+  const yPrice4 = formatNumber(price * 0.97, decimals);
+
+  const [horizBook, setHorizBook] = useState(() => generateHorizontalBook(price, decimals));
+  const [obRatio, setObRatio] = useState({ buy: 61.35, sell: 38.65 });
+
+  useEffect(() => {
+    let isMounted = true;
+    let timer: NodeJS.Timeout;
+
+    const tick = () => {
+      if (!isMounted) return;
+      setHorizBook(generateHorizontalBook(price, decimals));
+      const b = parseFloat((Math.random() * 24 + 38).toFixed(2)); // 38% to 62%
+      setObRatio({ buy: b, sell: parseFloat((100 - b).toFixed(2)) });
+
+      const nextInterval = Math.floor(Math.random() * 350) + 450;
+      timer = setTimeout(tick, nextInterval);
+    };
+
+    timer = setTimeout(tick, 450);
+
+    return () => {
+      isMounted = false;
+      if (timer) clearTimeout(timer);
+    };
+  }, [price, decimals]);
 
   return (
     <View style={styles.container}>
@@ -24,26 +105,28 @@ export const ChartDetailView = () => {
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsRow}>
           {CHART_TABS.map(tab => {
-          const isActive = activeTab === tab;
-          return (
-            <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} style={styles.tabItem}>
-              <Typography size={14} style={{ color: isActive ? colors.cyan : colors.grey, fontFamily: isActive ? fonts.semiBold : fonts.regular }}>
-                {tab}
-              </Typography>
-              {isActive && <View style={[styles.activeIndicator, { backgroundColor: colors.cyan }]} />}
-            </TouchableOpacity>
-          );
-        })}
+            const isActive = activeTab === tab;
+            return (
+              <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} style={styles.tabItem}>
+                <Typography size={14} style={{ color: isActive ? colors.cyan : colors.grey, fontFamily: isActive ? fonts.semiBold : fonts.regular }}>
+                  {tab}
+                </Typography>
+                {isActive && <View style={[styles.activeIndicator, { backgroundColor: colors.cyan }]} />}
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
       </View>
 
       {/* Price & Stats Section */}
       <View style={styles.priceSection}>
         <View style={styles.priceLeft}>
-          <Typography size={32} style={{ color: colors.red, fontFamily: fonts.semiBold }}>104,771.58</Typography>
+          <Typography size={30} style={{ color: changeColor, fontFamily: fonts.semiBold }}>{formattedPrice}</Typography>
           <View style={styles.fiatRow}>
-            <Typography size={12} style={{ color: colors.grey }}>≈ $105,254.47</Typography>
-            <Typography size={12} style={{ color: colors.red, marginLeft: 10, fontFamily: fonts.medium }}>-3.32%</Typography>
+            <Typography size={12} style={{ color: colors.grey }}>≈ ${formattedPrice}</Typography>
+            <Typography size={12} style={{ color: changeColor, marginLeft: 10, fontFamily: fonts.medium }}>
+              {isPositive ? '+' : ''}{(selectedCoin?.change24h ?? 0).toFixed(2)}%
+            </Typography>
           </View>
           <View style={styles.badgesRow}>
             <View style={styles.badge}>
@@ -63,19 +146,19 @@ export const ChartDetailView = () => {
         <View style={styles.statsRight}>
           <View style={styles.statRow}>
             <Typography size={10} style={{ color: colors.grey }}>24h High</Typography>
-            <Typography size={10} style={{ color: colors.white, fontFamily: fonts.medium }}>108,799.74</Typography>
+            <Typography size={10} style={{ color: colors.green, fontFamily: fonts.medium }}>{high24h}</Typography>
           </View>
           <View style={styles.statRow}>
             <Typography size={10} style={{ color: colors.grey }}>24h Low</Typography>
-            <Typography size={10} style={{ color: colors.white, fontFamily: fonts.medium }}>104,789.66</Typography>
+            <Typography size={10} style={{ color: colors.red, fontFamily: fonts.medium }}>{low24h}</Typography>
           </View>
           <View style={styles.statRow}>
-            <Typography size={10} style={{ color: colors.grey }}>24h Volume (BTC)</Typography>
-            <Typography size={10} style={{ color: colors.white, fontFamily: fonts.medium }}>22.24M USD</Typography>
+            <Typography size={10} style={{ color: colors.grey }}>24h Volume ({pairSymbol})</Typography>
+            <Typography size={10} style={{ color: colors.white, fontFamily: fonts.medium }}>{selectedCoin?.vol || '$32.45B'}</Typography>
           </View>
           <View style={styles.statRow}>
             <Typography size={10} style={{ color: colors.grey }}>24h Turnover (USDT)</Typography>
-            <Typography size={10} style={{ color: colors.white, fontFamily: fonts.medium }}>497.54M</Typography>
+            <Typography size={10} style={{ color: colors.white, fontFamily: fonts.medium }}>{selectedCoin?.vol || '497.54M'}</Typography>
           </View>
         </View>
       </View>
@@ -91,81 +174,27 @@ export const ChartDetailView = () => {
             </TouchableOpacity>
           ))}
         </View>
-        <View style={styles.chartIcons}>
+        {/* <View style={styles.chartIcons}>
           <TouchableOpacity style={styles.iconBtn}><BarChart2 size={16} color={colors.grey} /></TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn}><Edit2 size={16} color={colors.grey} /></TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn}><Settings size={16} color={colors.grey} /></TouchableOpacity>
-        </View>
+        </View> */}
       </View>
 
       {/* Chart Indicators MA values */}
       <View style={styles.maRow}>
-        <Typography size={10} style={{ color: '#F0B90B' }}>MA5: 77,845.9</Typography>
-        <Typography size={10} style={{ color: colors.cyan, marginLeft: 15 }}>MA10: 78,035.6</Typography>
-        <Typography size={10} style={{ color: '#B388FF', marginLeft: 15 }}>MA30: 78,208.0</Typography>
+        <Typography size={10} style={{ color: '#F0B90B' }}>MA5: {ma5}</Typography>
+        <Typography size={10} style={{ color: colors.cyan, marginLeft: 15 }}>MA10: {ma10}</Typography>
+        <Typography size={10} style={{ color: '#B388FF', marginLeft: 15 }}>MA30: {ma30}</Typography>
       </View>
 
-      {/* Dummy Chart Area */}
-      <View style={styles.chartArea}>
-        {/* We will draw a few mock candlestick lines just to make it look decent */}
-        <View style={[styles.gridLine, { top: '20%' }]} />
-        <View style={[styles.gridLine, { top: '40%' }]} />
-        <View style={[styles.gridLine, { top: '60%' }]} />
-        <View style={[styles.gridLine, { top: '80%' }]} />
-
-        {/* Y Axis labels */}
-        <View style={styles.yAxis}>
-          <Typography size={10} style={{ color: colors.grey }}>61,000.0</Typography>
-          <Typography size={10} style={{ color: colors.grey }}>60,000.0</Typography>
-          <Typography size={10} style={{ color: colors.grey }}>59,000.0</Typography>
-          <View style={{ backgroundColor: colors.red, paddingHorizontal: 4, borderRadius: 2 }}>
-            <Typography size={10} style={{ color: colors.white }}>58,443.6</Typography>
-          </View>
-          <Typography size={10} style={{ color: colors.grey }}>58,000.0</Typography>
-        </View>
-
-        {/* Dummy Candles */}
-        <View style={styles.candlesContainer}>
-          <View style={[styles.candle, { left: 10, height: 40, top: 20, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 20, height: 60, top: 10, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 30, height: 30, top: 50, backgroundColor: colors.red }]} />
-          <View style={[styles.candle, { left: 40, height: 50, top: 60, backgroundColor: colors.red }]} />
-          <View style={[styles.candle, { left: 50, height: 20, top: 100, backgroundColor: colors.red }]} />
-          <View style={[styles.candle, { left: 60, height: 40, top: 110, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 70, height: 30, top: 100, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 80, height: 50, top: 120, backgroundColor: colors.red }]} />
-          <View style={[styles.candle, { left: 90, height: 30, top: 150, backgroundColor: colors.red }]} />
-          <View style={[styles.candle, { left: 100, height: 10, top: 170, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 110, height: 25, top: 160, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 120, height: 40, top: 140, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 130, height: 70, top: 100, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 140, height: 30, top: 120, backgroundColor: colors.red }]} />
-          <View style={[styles.candle, { left: 150, height: 40, top: 130, backgroundColor: colors.green }]} />
-          <View style={[styles.candle, { left: 160, height: 50, top: 140, backgroundColor: colors.red }]} />
-          <View style={[styles.candle, { left: 170, height: 20, top: 180, backgroundColor: colors.red }]} />
-        </View>
-
-        {/* Volume chart */}
-        <View style={styles.volumeArea}>
-          <View style={[styles.volBar, { left: 10, height: 10, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 20, height: 15, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 30, height: 8, backgroundColor: colors.red }]} />
-          <View style={[styles.volBar, { left: 40, height: 12, backgroundColor: colors.red }]} />
-          <View style={[styles.volBar, { left: 50, height: 5, backgroundColor: colors.red }]} />
-          <View style={[styles.volBar, { left: 60, height: 20, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 70, height: 15, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 80, height: 35, backgroundColor: colors.red }]} />
-          <View style={[styles.volBar, { left: 90, height: 25, backgroundColor: colors.red }]} />
-          <View style={[styles.volBar, { left: 100, height: 20, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 110, height: 8, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 120, height: 12, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 130, height: 40, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 140, height: 15, backgroundColor: colors.red }]} />
-          <View style={[styles.volBar, { left: 150, height: 10, backgroundColor: colors.green }]} />
-          <View style={[styles.volBar, { left: 160, height: 20, backgroundColor: colors.red }]} />
-          <View style={[styles.volBar, { left: 170, height: 15, backgroundColor: colors.red }]} />
-        </View>
-      </View>
+      {/* Authentic High-Definition Candlestick Chart */}
+      <CandlestickChartRenderer
+        currentPrice={price}
+        decimals={decimals}
+        isPositive={isPositive}
+        timeframe={activeTimeframe}
+      />
 
       {/* MACD row */}
       <View style={styles.macdRow}>
@@ -188,45 +217,43 @@ export const ChartDetailView = () => {
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.bottomTabsRow}>
           {BOTTOM_TABS.map(tab => (
-          <TouchableOpacity key={tab} onPress={() => setActiveBottomTab(tab)} style={styles.bottomTabItem}>
-            <Typography size={16} style={{ color: activeBottomTab === tab ? colors.white : colors.grey, fontFamily: activeBottomTab === tab ? fonts.semiBold : fonts.regular }}>
-              {tab}
-            </Typography>
-            {activeBottomTab === tab && <View style={[styles.activeIndicator, { backgroundColor: colors.cyan }]} />}
-          </TouchableOpacity>
-        ))}
+            <TouchableOpacity key={tab} onPress={() => setActiveBottomTab(tab)} style={styles.bottomTabItem}>
+              <Typography size={16} style={{ color: activeBottomTab === tab ? colors.white : colors.grey, fontFamily: activeBottomTab === tab ? fonts.semiBold : fonts.regular }}>
+                {tab}
+              </Typography>
+              {activeBottomTab === tab && <View style={[styles.activeIndicator, { backgroundColor: colors.cyan }]} />}
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       </View>
 
-      {/* Horizontal Order Book Mock */}
+      {/* Horizontal Order Book */}
       <View style={styles.horizontalOrderBook}>
         <View style={styles.orderBookHeader}>
-          <Typography size={12} style={{ color: colors.green, fontFamily: fonts.semiBold }}>B 61.35%</Typography>
+          <Typography size={12} style={{ color: colors.green, fontFamily: fonts.semiBold }}>B {obRatio.buy}%</Typography>
           <View style={styles.progressBars}>
-            <View style={[styles.progressBar, { backgroundColor: colors.green, flex: 0.6135 }]} />
-            <View style={[styles.progressBar, { backgroundColor: colors.red, flex: 0.3865 }]} />
+            <View style={[styles.progressBar, { backgroundColor: colors.green, flex: obRatio.buy / 100 }]} />
+            <View style={[styles.progressBar, { backgroundColor: colors.red, flex: obRatio.sell / 100 }]} />
           </View>
-          <Typography size={12} style={{ color: colors.red, fontFamily: fonts.semiBold }}>38.65% S</Typography>
+          <Typography size={12} style={{ color: colors.red, fontFamily: fonts.semiBold }}>{obRatio.sell}% S</Typography>
         </View>
         <View style={styles.orderBookCols}>
           <View style={styles.obColHeader}>
-            <Typography size={10} style={{ color: colors.grey }}>Amount (BTC)</Typography>
-            <Typography size={10} style={{ color: colors.grey }}>0.2</Typography>
-            <Typography size={10} style={{ color: colors.grey }}>Amount (BTC)</Typography>
+            <Typography size={10} style={{ color: colors.grey }}>Amount ({pairSymbol})</Typography>
+            <Typography size={10} style={{ color: colors.grey }}>Depth</Typography>
+            <Typography size={10} style={{ color: colors.grey }}>Amount ({pairSymbol})</Typography>
           </View>
-          {Array.from({ length: 15 }).map((_, i) => (
+          {horizBook.map((row, i) => (
             <View key={i} style={styles.obRow}>
               <View style={styles.obSide}>
-                <Typography size={10} style={{ color: colors.white }}>10.345469</Typography>
-                <Typography size={10} style={{ color: colors.green }}>76,699.4</Typography>
-                {/* Background fill mock */}
-                <View style={[styles.bgFill, { backgroundColor: '#00C85320', width: `${20 + i * 5}%`, left: null, right: 0 }]} />
+                <Typography size={10} style={{ color: colors.white }}>{row.bidQty}</Typography>
+                <Typography size={10} style={{ color: colors.green, fontFamily: fonts.medium }}>{row.bidPrice}</Typography>
+                <View style={[styles.bgFill, { backgroundColor: '#00C85320', width: row.bidFill as any, left: null, right: 0 }]} />
               </View>
               <View style={styles.obSide}>
-                <Typography size={10} style={{ color: colors.red }}>76,699.4</Typography>
-                <Typography size={10} style={{ color: colors.white }}>10.345469</Typography>
-                {/* Background fill mock */}
-                <View style={[styles.bgFill, { backgroundColor: '#FF3B3020', width: `${100 - i * 5}%`, right: null, left: 0 }]} />
+                <Typography size={10} style={{ color: colors.red, fontFamily: fonts.medium }}>{row.askPrice}</Typography>
+                <Typography size={10} style={{ color: colors.white }}>{row.askQty}</Typography>
+                <View style={[styles.bgFill, { backgroundColor: '#FF3B3020', width: row.askFill as any, right: null, left: 0 }]} />
               </View>
             </View>
           ))}
@@ -338,30 +365,51 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     zIndex: 2,
   },
+  currentPriceBadge: {
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 3,
+  },
+  livePriceLine: {
+    position: 'absolute',
+    left: 0,
+    right: 65,
+    borderTopWidth: 1,
+    borderStyle: 'dashed',
+    zIndex: 1,
+    opacity: 0.7,
+  },
   candlesContainer: {
     position: 'absolute',
-    left: 0,
-    right: 60,
-    top: 0,
-    bottom: 50,
+    left: 10,
+    right: 70,
+    top: 10,
+    bottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
-  candle: {
-    position: 'absolute',
-    width: 4,
-    borderRadius: 2,
+  candleColumn: {
+    flex: 1,
+    height: '100%',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
-  volumeArea: {
+  candleWick: {
     position: 'absolute',
-    left: 0,
-    right: 60,
-    bottom: 0,
-    height: 50,
-  },
-  volBar: {
-    position: 'absolute',
-    width: 4,
-    bottom: 0,
+    width: 1.5,
     borderRadius: 1,
+  },
+  candleBody: {
+    position: 'absolute',
+    width: 8,
+    borderRadius: 1.5,
+  },
+  volHistogramBar: {
+    width: 6,
+    borderRadius: 1,
+    marginBottom: 5,
   },
   macdRow: {
     flexDirection: 'row',
@@ -412,24 +460,27 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   orderBookCols: {
-    gap: 4,
+    gap: 0,
   },
   obColHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 5,
+    marginBottom: 6,
   },
   obRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    height: 19,
+    alignItems: 'center',
   },
   obSide: {
     flex: 0.48,
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'relative',
-    height: 18,
+    height: 19,
     alignItems: 'center',
+    paddingHorizontal: 2,
   },
   bgFill: {
     position: 'absolute',

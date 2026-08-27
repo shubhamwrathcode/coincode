@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
@@ -8,10 +8,16 @@ import { FavoritesTab } from './components/FavoritesTab';
 import { SpotTab } from './components/SpotTab';
 import { Typography } from '../../../components/common/Typography';
 
-export const MarketScreen = () => {
+export const MarketScreen = ({ route }: any) => {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const [activeTab, setActiveTab] = useState<TabName>('Favorites');
+  const [activeTab, setActiveTab] = useState<TabName>(route?.params?.initialTab || 'Favorites');
+
+  useEffect(() => {
+    if (route?.params?.initialTab) {
+      setActiveTab(route.params.initialTab);
+    }
+  }, [route?.params?.initialTab]);
 
   const renderContent = () => {
     switch (activeTab) {

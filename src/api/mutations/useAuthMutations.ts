@@ -16,18 +16,20 @@ export const useLoginMutation = () => {
         onSuccess: (data) => {
             console.log('Login Success:', data);
 
-            // Checking common API success structures
             if (data.success !== false) {
-                // You can also save the received Auth Token here to SecureStore/Keychain if needed
-                showToast('Successfully logged in!', 'success');
-                login();
+                if (data.data?.requiresVerification) {
+                    showToast(data.message, 'success');
+                } else {
+                    showToast(data.message, 'success');
+                    login();
+                }
             } else {
-                showToast(data.message || 'Invalid credentials', 'error');
+                showToast(data.message, 'error');
             }
         },
         onError: (error: any) => {
             console.log('Login Error:', error);
-            showToast(error.message || 'An error occurred during login', 'error');
+            showToast(error?.response?.data?.message || error.message, 'error');
         }
     });
 };

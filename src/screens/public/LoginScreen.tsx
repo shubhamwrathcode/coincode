@@ -6,7 +6,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { CommonButton } from '../../components/common/CommonButton';
 import { CommonInput } from '../../components/common/CommonInput';
 import { PhoneInput } from '../../components/common/PhoneInput';
-import { useAuthStore } from '../../store/authStore';
+import { useToastStore } from '../../store/toastStore';
 import { fonts } from '../../theme/fonts';
 import { CustomAuthTab } from '../../components/common/CustomAuthTab';
 import { EyeOff, Eye, ArrowRight } from 'lucide-react-native';
@@ -15,55 +15,42 @@ import { ImageAssets } from '../../components/common/ImageAssets';
 import { colors } from '../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useLoginMutation } from '../../api/mutations/useAuthMutations';
-import { useToastStore } from '../../store/toastStore';
+import { useAuthStore } from '../../store/authStore';
 
 export const LoginScreen = () => {
   const { colors } = useTheme();
   const navigation = useNavigation();
-  const login = useAuthStore((state) => state.login);
   const [activeTab, setActiveTab] = useState<'email' | 'phone'>('email');
   const [showPassword, setShowPassword] = useState(false);
-
   const loginMutation = useLoginMutation();
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const showToast = useToastStore((state) => state.showToast);
+  const [isLoading, setIsLoading] = useState(false);
+  const login = useAuthStore((state) => state.login);
 
   const handleLogin = async () => {
-    Keyboard.dismiss();
-
-    login()
-    // if (!emailOrPhone.trim()) {
-    //   showToast('Please enter your email or phone number', 'error');
-    //   return;
-    // }
-    // if (!password) {
-    //   showToast('Please enter your password', 'error');
-    //   return;
-    // }
-
-    loginMutation.mutate({
-      email_or_phone: emailOrPhone.trim(),
-      password,
-      token: ''
-    });
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      login();
+    }, 1500);
   };
 
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Top Header Icons */}
         <View style={styles.headerContainer}>
           <FastImage
             source={ImageAssets.authUserImg}
             style={styles.headerIcon}
             resizeMode={FastImage.resizeMode.contain}
           />
-          <FastImage
+          {/* <FastImage
             source={ImageAssets.authBellImg}
             style={styles.headerIcon}
             resizeMode={FastImage.resizeMode.contain}
-          />
+          /> */}
         </View>
 
         {/* Welcome Section & Image */}
@@ -128,9 +115,9 @@ export const LoginScreen = () => {
 
           <View style={styles.buttonWrapper}>
             <CommonButton
-              title={loginMutation.isPending ? "Logging in..." : "Next"}
+              title="Next"
               onPress={handleLogin}
-              disabled={loginMutation.isPending}
+              loading={isLoading}
               shrinkOnLoad
               rightIcon={<View style={styles.nextIconWrapper}><ArrowRight color={colors.white} size={14} /></View>}
               style={{

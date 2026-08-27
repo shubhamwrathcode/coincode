@@ -4,7 +4,8 @@ import { Typography } from '../../../../components/common/Typography';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { fonts } from '../../../../theme/fonts';
 import { CustomBottomSheet } from '../../../../components/common/CustomBottomSheet';
-import { Search, Star } from 'lucide-react-native';
+import { Search, Star, X } from 'lucide-react-native';
+import { useMarketStore, MarketCoin } from '../../../../store/marketStore';
 
 interface MarketPairsSheetProps {
     sheetRef: any;
@@ -13,20 +14,51 @@ interface MarketPairsSheetProps {
 
 const TABS = ['Favorites', 'Spot', 'Margin', 'ETF', 'Futures'];
 
-const PAIRS = [
-    { name: 'Bitcoin', symbol: 'BTC', price: '853,134,900', change: '~ +$0.057526', isFav: false, logoColor: '#F59E0B' },
-    { name: 'Ethereum', symbol: 'ETH', price: '60,130,762', change: '~ +$0.057526', isFav: false, logoColor: '#3B82F6' },
-    { name: 'Binance Coin', symbol: 'BNB', price: '8,265,910', change: '~ +$0.057526', isFav: false, logoColor: '#FBBF24' },
-    { name: 'Dogecoin', symbol: 'DOGE', price: '3,421', change: '~ +$0.057526', isFav: true, logoColor: '#FCD34D' },
-    { name: 'Polygon', symbol: 'MATIC', price: '22,967', change: '~ +$0.057526', isFav: false, logoColor: '#8B5CF6' },
-    { name: 'Ethereum', symbol: 'ETH', price: '60,130,762', change: '~ +$0.057526', isFav: false, logoColor: '#3B82F6' },
-    { name: 'Dogecoin', symbol: 'DOGE', price: '3,421', change: '~ +$0.057526', isFav: true, logoColor: '#FCD34D' },
-    { name: 'Polygon', symbol: 'MATIC', price: '22,967', change: '~ +$0.057526', isFav: false, logoColor: '#8B5CF6' },
-];
+const formatNumber = (val: number, decimals: number) => {
+  if (decimals > 4) {
+    return val.toFixed(decimals);
+  }
+  return val.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+};
 
 export const MarketPairsSheet = ({ sheetRef, onSelect }: MarketPairsSheetProps) => {
     const { colors: themeColors } = useTheme();
     const [activeTab, setActiveTab] = useState('Spot');
+    const [search, setSearch] = useState('');
+    
+    const coins = useMarketStore((state) => state.coins);
+    const toggleFav = useMarketStore((state) => state.toggleFav);
+    const setSelectedPair = useMarketStore((state) => state.setSelectedPair);
+    const setSelectedCoin = useMarketStore((state) => state.setSelectedCoin);
+
+    const filteredCoins = coins.filter((item) => {
+        const q = search.trim().toLowerCase();
+        const matchesSearch = !q ||
+            item.name.toLowerCase().includes(q) ||
+            item.pair.toLowerCase().includes(q) ||
+            item.symbol.toLowerCase().includes(q);
+
+        if (!matchesSearch) return false;
+
+        if (q) return true;
+
+        if (activeTab === 'Favorites') {
+            return !!item.isFav;
+        }
+
+        return true;
+    });
+
+    const handleSelectCoin = (item: MarketCoin) => {
+        const pairName = item.pair.includes('/') ? item.pair : `${item.pair}/USDT`;
+        setSelectedPair(pairName);
+        setSelectedCoin(item);
+        onSelect?.(item.pair);
+        sheetRef.current?.close();
+    };
 
     return (
         <CustomBottomSheet
@@ -42,7 +74,16 @@ export const MarketPairsSheet = ({ sheetRef, onSelect }: MarketPairsSheetProps) 
                         style={[styles.searchInput, { color: themeColors.white }]}
                         placeholder="Search for market"
                         placeholderTextColor={themeColors.grey}
+                        value={search}
+                        onChangeText={setSearch}
+                        autoCapitalize="none"
+                        autoCorrect={false}
                     />
+                    {search.length > 0 && (
+                        <TouchableOpacity onPress={() => setSearch('')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+                            <X color={themeColors.grey} size={16} />
+                        </TouchableOpacity>
+                    )}
                 </View>
 
                 {/* Tabs */}
@@ -64,37 +105,71 @@ export const MarketPairsSheet = ({ sheetRef, onSelect }: MarketPairsSheetProps) 
                 {/* Table Header */}
                 <View style={styles.tableHeader}>
                     <Typography size={11} style={{ color: '#6B7280', fontFamily: fonts.medium }}>Coin / Vol</Typography>
-                    <Typography size={11} style={{ color: '#6B7280', fontFamily: fonts.medium }}>Price / Change% ^</Typography>
+                    <Typography size={11} style={{ color: '#6B7280', fontFamily: fonts.medium }}>Price / 24h Change</Typography>
                 </View>
 
                 {/* List */}
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.listContent}>
-                    {PAIRS.map((item, index) => (
-                        <TouchableOpacity 
-                            key={index} 
-                            style={styles.listItem}
-                            onPress={() => {
-                                onSelect?.(item.symbol);
-                                sheetRef.current?.close();
-                            }}
-                        >
-                            <Star color={item.isFav ? "#F59E0B" : "#4B5563"} fill={item.isFav ? "#F59E0B" : "transparent"} size={16} style={{ marginRight: 15 }} />
-                            
-                            <View style={[styles.coinLogo, { backgroundColor: item.logoColor }]}>
-                                <Typography size={14} style={{ color: themeColors.white, fontFamily: fonts.bold }}>{item.symbol[0]}</Typography>
-                            </View>
+                    {filteredCoins.length === 0 ? (
+                        <View style={styles.emptyContainer}>
+                            <Typography size={14} style={{ color: themeColors.grey, textAlign: 'center' }}>
+                                {activeTab === 'Favorites' ? 'No favorite coins added yet' : `No coins found matching "${search}"`}
+                            </Typography>
+                        </View>
+                    ) : (
+                        filteredCoins.map((item) => {
+                            const isPositive = item.change24h >= 0;
+                            const changeColor = isPositive ? '#00C853' : '#FF3B30';
+                            const formattedPrice = formatNumber(item.currentPrice, item.decimals);
 
-                            <View style={styles.coinInfo}>
-                                <Typography size={14} style={{ fontFamily: fonts.semiBold, color: themeColors.white }}>{item.name}</Typography>
-                                <Typography size={11} style={{ fontFamily: fonts.medium, color: themeColors.grey, marginTop: 2 }}>{item.symbol}</Typography>
-                            </View>
+                            return (
+                                <TouchableOpacity 
+                                    key={item.id} 
+                                    style={styles.listItem}
+                                    activeOpacity={0.7}
+                                    onPress={() => handleSelectCoin(item)}
+                                >
+                                    <TouchableOpacity 
+                                        style={{ padding: 4, marginRight: 10 }}
+                                        onPress={(e) => {
+                                            e.stopPropagation?.();
+                                            toggleFav(item.id);
+                                        }}
+                                    >
+                                        <Star 
+                                            color={item.isFav ? "#F59E0B" : "#4B5563"} 
+                                            fill={item.isFav ? "#F59E0B" : "transparent"} 
+                                            size={16} 
+                                        />
+                                    </TouchableOpacity>
+                                    
+                                    <View style={[styles.coinLogo, { backgroundColor: item.color || '#F59E0B' }]}>
+                                        <Typography size={12} style={{ color: themeColors.white, fontFamily: fonts.bold }}>
+                                            {item.initial || item.pair.substring(0, 2)}
+                                        </Typography>
+                                    </View>
 
-                            <View style={styles.priceInfo}>
-                                <Typography size={14} style={{ fontFamily: fonts.semiBold, color: themeColors.white }}>{item.price}</Typography>
-                                <Typography size={11} style={{ fontFamily: fonts.medium, color: themeColors.green, marginTop: 2 }}>{item.change}</Typography>
-                            </View>
-                        </TouchableOpacity>
-                    ))}
+                                    <View style={styles.coinInfo}>
+                                        <Typography size={14} style={{ fontFamily: fonts.semiBold, color: themeColors.white }}>
+                                            {item.name}
+                                        </Typography>
+                                        <Typography size={11} style={{ fontFamily: fonts.medium, color: themeColors.grey, marginTop: 2 }}>
+                                            {item.pair} • {item.vol}
+                                        </Typography>
+                                    </View>
+
+                                    <View style={styles.priceInfo}>
+                                        <Typography size={14} style={{ fontFamily: fonts.semiBold, color: themeColors.white }}>
+                                            {formattedPrice}
+                                        </Typography>
+                                        <Typography size={11} style={{ fontFamily: fonts.medium, color: changeColor, marginTop: 2 }}>
+                                            {isPositive ? '+' : ''}{item.change24h.toFixed(2)}%
+                                        </Typography>
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        })
+                    )}
                 </ScrollView>
             </View>
         </CustomBottomSheet>
@@ -170,5 +245,10 @@ const styles = StyleSheet.create({
     },
     priceInfo: {
         alignItems: 'flex-end',
+    },
+    emptyContainer: {
+        paddingVertical: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });

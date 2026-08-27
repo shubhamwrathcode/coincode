@@ -7,6 +7,7 @@ import { CandlestickChart, LineChart } from 'lucide-react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../../../components/common/ImageAssets';
 import { MarketPairsSheet } from './MarketPairsSheet';
+import { useMarketStore } from '../../../../store/marketStore';
 
 interface TradePairInfoProps {
   activeMode?: 'candles' | 'line';
@@ -16,19 +17,27 @@ interface TradePairInfoProps {
 export const TradePairInfo = ({ activeMode, onModeChange }: TradePairInfoProps) => {
   const { colors } = useTheme();
   const [internalActiveIcon, setInternalActiveIcon] = useState<'candles' | 'line'>('line');
-  const [activePair, setActivePair] = useState('BTC/USDT');
+  const selectedPair = useMarketStore((state) => state.selectedPair);
+  const selectedCoin = useMarketStore((state) => state.selectedCoin);
+  const setSelectedPair = useMarketStore((state) => state.setSelectedPair);
   const sheetRef = useRef<any>(null);
 
   const activeIcon = activeMode !== undefined ? activeMode : internalActiveIcon;
   const setActiveIcon = onModeChange || setInternalActiveIcon;
 
+  const isPositive = (selectedCoin?.change24h ?? 0) >= 0;
+  const changeColor = isPositive ? colors.green : colors.red;
+  const formattedChange = selectedCoin ? `${isPositive ? '+' : ''}${selectedCoin.change24h.toFixed(2)}%` : '-1.05%';
+
   return (
     <View style={styles.container}>
       <View style={styles.left}>
         <TouchableOpacity style={styles.pairRow} onPress={() => sheetRef.current?.open()}>
-          <Typography size={22} style={{ fontFamily: fonts.semiBold }}>{activePair}</Typography>
+          <Typography size={22} style={{ fontFamily: fonts.semiBold }}>{selectedPair}</Typography>
         </TouchableOpacity>
-        <Typography size={12} style={{ color: colors.red, fontFamily: fonts.medium, marginTop: 4 }}>-1.05%</Typography>
+        <Typography size={12} style={{ color: changeColor, fontFamily: fonts.medium, marginTop: 4 }}>
+          {formattedChange}
+        </Typography>
       </View>
 
       <View style={styles.right}>
@@ -59,7 +68,7 @@ export const TradePairInfo = ({ activeMode, onModeChange }: TradePairInfoProps) 
 
       <MarketPairsSheet
         sheetRef={sheetRef}
-        onSelect={(pair) => setActivePair(`${pair}/USDT`)}
+        onSelect={(pair) => setSelectedPair(`${pair}/USDT`)}
       />
     </View>
   );

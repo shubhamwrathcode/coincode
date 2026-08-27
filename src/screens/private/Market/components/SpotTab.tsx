@@ -1,33 +1,31 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { Typography } from '../../../../components/common/Typography';
 import { fonts } from '../../../../theme/fonts';
 import { Star, ChevronDown, ArrowUpDown } from 'lucide-react-native';
+import { useMarketStore, MarketCoin } from '../../../../store/marketStore';
 
 const SPOT_SUB_TABS = ['All', 'New', 'Stocks', 'Metals', 'Pre-IPOs'];
 
-const MOCK_SPOT_LIST = [
-  { id: '1', pair: 'BTC', name: 'Bitcoin', vol: '$32.45B', price: '853,134.900', usdPrice: '$0.057508', change: '+10.2%', isPositive: true, isFav: false },
-  { id: '2', pair: 'ETH', name: 'Ethereum', vol: '$18.92B', price: '60,130.762', usdPrice: '$0.057508', change: '-9.23%', isPositive: false, isFav: false },
-  { id: '3', pair: 'BNB', name: 'Binance Coin', vol: '$2.35B', price: '8,265.910', usdPrice: '$0.057508', change: '-8.89%', isPositive: false, isFav: false },
-  { id: '4', pair: 'DOGE', name: 'Dogecoin', vol: '$1.12B', price: '3.421', usdPrice: '$0.057508', change: '+8.51%', isPositive: true, isFav: false },
-  { id: '5', pair: 'MATIC', name: 'Polygon', vol: '$645.21M', price: '22.967', usdPrice: '$0.057508', change: '-7.17%', isPositive: false, isFav: false },
-  { id: '6', pair: 'ETH2', name: 'Ethereum', vol: '$18.92B', price: '853,134.900', usdPrice: '$0.057508', change: '+9.23%', isPositive: true, isFav: false },
-  { id: '7', pair: 'BTC2', name: 'Bitcoin', vol: '$32.45B', price: '853,134.900', usdPrice: '$0.057508', change: '+10.2%', isPositive: true, isFav: false },
-];
+const formatNumber = (val: number, decimals: number) => {
+  if (decimals > 4) {
+    return val.toFixed(decimals);
+  }
+  return val.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+};
 
-const renderIcon = (pair: string) => {
-  const initials = pair.substring(0, 1);
-  let bgColor = '#F7931A';
-  if (pair.includes('ETH')) bgColor = '#627EEA';
-  if (pair.includes('BNB')) bgColor = '#F3BA2F';
-  if (pair.includes('DOGE')) bgColor = '#C2A633';
-  if (pair.includes('MATIC')) bgColor = '#8247E5';
+const renderIcon = (pair: string, color?: string) => {
+  const initials = pair.substring(0, 2);
+  const bgColor = color || '#F7931A';
 
   return (
     <View style={[styles.coinIcon, { backgroundColor: bgColor }]}>
-      <Typography size={12} style={{ color: '#FFF', fontFamily: fonts.bold }}>
+      <Typography size={11} style={{ color: '#FFF', fontFamily: fonts.bold }}>
         {initials}
       </Typography>
     </View>
@@ -36,17 +34,54 @@ const renderIcon = (pair: string) => {
 
 export const SpotTab = () => {
   const { colors } = useTheme();
+  const navigation = useNavigation<any>();
   const [activeSubTab, setActiveSubTab] = useState(SPOT_SUB_TABS[0]);
+  const coins = useMarketStore((state) => state.coins);
+  const toggleFav = useMarketStore((state) => state.toggleFav);
+  const searchQuery = useMarketStore((state) => state.searchQuery);
+  const setSelectedPair = useMarketStore((state) => state.setSelectedPair);
+  const setSelectedCoin = useMarketStore((state) => state.setSelectedCoin);
 
-  const renderItem = ({ item }: { item: typeof MOCK_SPOT_LIST[0] }) => {
-    const changeColor = item.isPositive ? '#00C853' : '#FF3B30';
+  const handleCoinPress = (item: MarketCoin) => {
+    const pairName = item.pair.includes('/') ? item.pair : `${item.pair}/USDT`;
+    setSelectedPair(pairName);
+    setSelectedCoin(item);
+    navigation.navigate('Trade');
+  };
+
+  const filteredData = coins.filter((item) => {
+    const q = searchQuery.trim().toLowerCase();
+    const matchesSearch =
+      !q ||
+      item.name.toLowerCase().includes(q) ||
+      item.pair.toLowerCase().includes(q) ||
+      item.symbol.toLowerCase().includes(q);
+
+    if (!matchesSearch) return false;
+
+    if (q) return true;
+
+    return activeSubTab === 'All'
+      ? item.category.includes('All')
+      : item.category.includes(activeSubTab);
+  });
+
+  const renderItem = ({ item }: { item: MarketCoin }) => {
+    const isPositive = item.change24h >= 0;
+    const changeColor = isPositive ? '#00C853' : '#FF3B30';
+    const formattedPrice = formatNumber(item.currentPrice, item.decimals);
+    const formattedUsdPrice = `$${formattedPrice}`;
 
     return (
-      <View style={[styles.listItem, { borderBottomColor: colors.inputBorderColor }]}>
+      <TouchableOpacity
+        style={[styles.listItem, { borderBottomColor: colors.inputBorderColor }]}
+        activeOpacity={0.7}
+        onPress={() => handleCoinPress(item)}
+      >
         <View style={styles.col1}>
-          {renderIcon(item.pair)}
+          {renderIcon(item.pair, item.color)}
           <View style={{ marginLeft: 10 }}>
-            <Typography size={14} style={{ fontFamily: fonts.semiBold }}>{item.name}</Typography>
+            <Typography size={14} style={{ fontFamily: fonts.semiBold, color: colors.white }}>{item.name}</Typography>
             <Typography size={11} style={{ color: colors.grey, marginTop: 2 }}>
               {item.pair} • {item.vol}
             </Typography>
@@ -54,25 +89,35 @@ export const SpotTab = () => {
         </View>
 
         <View style={styles.col2}>
-          <Typography size={13} style={{ fontFamily: fonts.semiBold, textAlign: 'right' }}>
-            {item.price}
+          <Typography size={13} style={{ fontFamily: fonts.semiBold, textAlign: 'right', color: colors.white }}>
+            {formattedPrice}
           </Typography>
           <Typography size={11} style={{ color: colors.grey, marginTop: 2, textAlign: 'right' }}>
-            {item.usdPrice}
+            {formattedUsdPrice}
           </Typography>
         </View>
 
         <View style={styles.col3}>
           <View style={[styles.changeBadge, { backgroundColor: changeColor + '20' }]}>
-            <Typography size={11} style={{ color: changeColor, fontFamily: fonts.medium }}>
-              {item.change}
+            <Typography size={11} style={{ color: changeColor, fontFamily: fonts.semiBold }}>
+              {isPositive ? '+' : ''}{item.change24h.toFixed(2)}%
             </Typography>
           </View>
-          <TouchableOpacity style={{ marginLeft: 10 }}>
-            <Star color={colors.grey} size={18} />
+          <TouchableOpacity
+            style={{ marginLeft: 10, padding: 4 }}
+            onPress={(e) => {
+              e.stopPropagation?.();
+              toggleFav(item.id);
+            }}
+          >
+            <Star
+              color={item.isFav ? '#FFD700' : colors.grey}
+              fill={item.isFav ? '#FFD700' : 'transparent'}
+              size={18}
+            />
           </TouchableOpacity>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -131,11 +176,19 @@ export const SpotTab = () => {
       </View>
 
       <FlatList
-        data={MOCK_SPOT_LIST}
+        data={filteredData}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
+        extraData={coins}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Typography size={14} style={{ color: colors.grey, textAlign: 'center', fontFamily: fonts.regular }}>
+              No coins found matching "{searchQuery}"
+            </Typography>
+          </View>
+        }
       />
     </View>
   );
@@ -205,5 +258,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     minWidth: 55,
     alignItems: 'center',
+  },
+  emptyContainer: {
+    paddingVertical: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

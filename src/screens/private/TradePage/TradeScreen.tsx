@@ -14,11 +14,29 @@ import { FuturesTradeView } from './components/Futures/FuturesTradeView';
 import { Typography } from '../../../components/common/Typography';
 import { fonts } from '../../../theme/fonts';
 import { colors } from '../../../theme/colors';
+import { useMarketStore } from '../../../store/marketStore';
+
 export const TradeScreen = ({ navigation }: any) => {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [viewMode, setViewMode] = useState<'line' | 'candles'>('line');
   const [activeTab, setActiveTab] = useState('Spot');
+
+  const selectedCoin = useMarketStore((state) => state.selectedCoin);
+  const midPrice = selectedCoin ? selectedCoin.currentPrice : 71726.6;
+  const decimals = selectedCoin ? selectedCoin.decimals : 2;
+  const pairSymbol = selectedCoin ? selectedCoin.pair : 'BTC';
+
+  const formatPrice = (val: number) => {
+    if (decimals > 4) return val.toFixed(decimals);
+    return val.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+  };
+
+  const buyPrice = formatPrice(midPrice * 1.0002);
+  const sellPrice = formatPrice(midPrice * 0.9998);
 
   return (
     <KeyboardAvoidingView
@@ -52,20 +70,28 @@ export const TradeScreen = ({ navigation }: any) => {
             <ChartDetailView />
             <View style={styles.floatingActionRow}>
               <View style={styles.floatingBtnContainer}>
-                <TouchableOpacity style={styles.floatingBtnLeft}>
+                <TouchableOpacity
+                  style={styles.floatingBtnLeft}
+                  activeOpacity={0.8}
+                  onPress={() => setViewMode('line')}
+                >
                   <Typography size={18} style={{ fontFamily: fonts.bold, color: colors.white }}>Buy</Typography>
-                  <Typography size={13} style={{ fontFamily: fonts.medium, color: colors.white }}>23,345.3</Typography>
+                  <Typography size={13} style={{ fontFamily: fonts.medium, color: colors.white }}>{buyPrice}</Typography>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.floatingBtnRight}>
+                <TouchableOpacity
+                  style={styles.floatingBtnRight}
+                  activeOpacity={0.8}
+                  onPress={() => setViewMode('line')}
+                >
                   <Typography size={18} style={{ fontFamily: fonts.bold, color: colors.white }}>Sell</Typography>
-                  <Typography size={13} style={{ fontFamily: fonts.medium, color: colors.white }}>23,345.3</Typography>
+                  <Typography size={13} style={{ fontFamily: fonts.medium, color: colors.white }}>{sellPrice}</Typography>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.floatingCenter}>
                 <Typography size={12} style={{ color: colors.white, fontFamily: fonts.semiBold }}>Quantity</Typography>
-                <Typography size={12} style={{ color: colors.grey, marginTop: 2 }}>BTC</Typography>
+                <Typography size={12} style={{ color: colors.grey, marginTop: 2 }}>{pairSymbol}</Typography>
               </View>
             </View>
           </>

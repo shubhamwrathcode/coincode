@@ -9,11 +9,17 @@ import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../../components/common/ImageAssets';
 import { colors } from '../../../theme/colors';
+import { useAuthStore } from '../../../store/authStore';
 
 export const ProfileDetailScreen = () => {
   const { colors } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [activeTab, setActiveTab] = useState('Profile');
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.black }]}>
@@ -218,7 +224,7 @@ export const ProfileDetailScreen = () => {
 
             {/* Logout Section */}
             <View style={styles.sectionContainer}>
-              <TouchableOpacity style={styles.listItem}>
+              <TouchableOpacity style={styles.listItem} onPress={handleLogout} activeOpacity={0.7}>
                 <View style={styles.listLeft}>
                   <View style={[styles.iconContainer, { backgroundColor: 'rgba(244, 67, 54, 0.05)' }]}>
                     <LogOut color="#F44336" size={18} />

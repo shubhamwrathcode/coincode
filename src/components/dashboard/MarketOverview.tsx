@@ -2,23 +2,24 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { FlashList } from '@shopify/flash-list';
+import { useNavigation } from '@react-navigation/native';
 import { Typography } from '../common/Typography';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fonts } from '../../theme/fonts';
 import { ChevronRight, ChevronsUpDown } from 'lucide-react-native';
-
-const MOCK_DATA = [
-    { id: '1', symbol: 'BTCUSDT', name: 'Bitcoin', price: '71,726.6', priceInUsd: '$71,726.6', change24h: 0.68, color: '#F7931A', initial: '₿' },
-    { id: '2', symbol: 'ETHUSDT', name: 'Ethereum', price: '2,192.38', priceInUsd: '$2,192.38', change24h: -0.68, color: '#627EEA', initial: 'Ξ' },
-    { id: '3', symbol: 'SOLUSDT', name: 'Solana', price: '83.37', priceInUsd: '$83.37', change24h: 0.68, color: '#14F195', initial: 'S' },
-    { id: '4', symbol: 'XAUUSDT', name: 'Gold', price: '4,752.50', priceInUsd: '$4,752.50', change24h: 0.68, color: '#FFD700', initial: 'Au' },
-    { id: '5', symbol: 'DOGEUSDT', name: 'DogeCoin', price: '0.09239', priceInUsd: '$0.09239', change24h: -0.68, color: '#C2A633', initial: 'Ð' },
-    { id: '6', symbol: 'BTCUSDT', name: 'Bitcoin', price: '71,726.6', priceInUsd: '$71,726.6', change24h: 0.68, color: '#F7931A', initial: '₿' },
-    { id: '7', symbol: 'ETHUSDT', name: 'Ethereum', price: '2,192.38', priceInUsd: '$2,192.38', change24h: -0.68, color: '#627EEA', initial: 'Ξ' },
-    { id: '8', symbol: 'DOGEUSDT', name: 'DogeCoin', price: '0.09239', priceInUsd: '$0.09239', change24h: -0.68, color: '#C2A633', initial: 'Ð' },
-];
+import { useMarketStore, MarketCoin } from '../../store/marketStore';
 
 const TABS = ['All', 'New', 'Stocks', 'Metals', 'Pre-IPOs', 'AI', 'Meme'];
+
+const formatNumber = (val: number, decimals: number) => {
+    if (decimals > 4) {
+        return val.toFixed(decimals);
+    }
+    return val.toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+    });
+};
 
 const TabItem = ({ tab, isActive, onPress, colors }: any) => {
     const animatedBgStyle = useAnimatedStyle(() => {
@@ -49,17 +50,38 @@ const TabItem = ({ tab, isActive, onPress, colors }: any) => {
 
 export const MarketOverview = () => {
     const { colors } = useTheme();
+    const navigation = useNavigation<any>();
     const [activeTab, setActiveTab] = useState('All');
+    const coins = useMarketStore((state) => state.coins);
+    const setSelectedPair = useMarketStore((state) => state.setSelectedPair);
+    const setSelectedCoin = useMarketStore((state) => state.setSelectedCoin);
 
-    const renderItem = ({ item }: any) => {
+    const handleCoinPress = (item: MarketCoin) => {
+        const pairName = item.pair.includes('/') ? item.pair : `${item.pair}/USDT`;
+        setSelectedPair(pairName);
+        setSelectedCoin(item);
+        navigation.navigate('Trade');
+    };
+
+    const filteredData = activeTab === 'All'
+        ? coins.filter(item => item.category.includes('All'))
+        : coins.filter(item => item.category.includes(activeTab));
+
+    const renderItem = ({ item }: { item: MarketCoin }) => {
         const isPositive = item.change24h >= 0;
         const changeColor = isPositive ? '#00C076' : '#FF4B4B';
+        const formattedPrice = formatNumber(item.currentPrice, item.decimals);
+        const formattedUsdPrice = `$${formattedPrice}`;
 
         return (
-            <TouchableOpacity style={styles.row}>
+            <TouchableOpacity
+                style={styles.row}
+                activeOpacity={0.7}
+                onPress={() => handleCoinPress(item)}
+            >
                 <View style={styles.colLeft}>
                     <View style={[styles.coinIcon, { backgroundColor: item.color }]}>
-                        <Typography color={colors.white} size={15} style={{ fontFamily: fonts.bold }}>
+                        <Typography color={colors.white} size={13} style={{ fontFamily: fonts.bold }}>
                             {item.initial}
                         </Typography>
                     </View>
@@ -74,11 +96,11 @@ export const MarketOverview = () => {
                 </View>
 
                 <View style={styles.colCenter}>
-                    <Typography color={colors.white} size={12} style={{ fontFamily: fonts.medium }}>
-                        {item.price}
+                    <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold }}>
+                        {formattedPrice}
                     </Typography>
                     <Typography color={colors.darkShadeColorText} size={11} style={{ marginTop: 2 }}>
-                        {item.priceInUsd}
+                        {formattedUsdPrice}
                     </Typography>
                 </View>
 
@@ -92,8 +114,9 @@ export const MarketOverview = () => {
             </TouchableOpacity>
         );
     };
-    const ITEM_HEIGHT = 55
-    const dynamicListHeight = MOCK_DATA.length * ITEM_HEIGHT;
+
+    const ITEM_HEIGHT = 55;
+    const dynamicListHeight = Math.max(filteredData.length * ITEM_HEIGHT, ITEM_HEIGHT * 3);
 
     return (
         <View style={styles.container}>
@@ -134,16 +157,21 @@ export const MarketOverview = () => {
             {/* FlashList */}
             <View style={[styles.listContainer, { height: dynamicListHeight }]}>
                 <FlashList
-                    data={MOCK_DATA}
+                    data={filteredData}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id}
+                    extraData={coins}
                     showsVerticalScrollIndicator={false}
                     scrollEnabled={false}
                 />
             </View>
 
             {/* Footer */}
-            <TouchableOpacity style={styles.footer}>
+            <TouchableOpacity
+                style={styles.footer}
+                activeOpacity={0.7}
+                onPress={() => navigation.navigate('Market', { initialTab: 'Spot' })}
+            >
                 <Typography color={colors.cyan} size={13} style={styles.viewmorestyle}>
                     View More {'>'}
                 </Typography>
@@ -200,7 +228,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     listContainer: {
-        // Height is now applied dynamically via inline styles
+        // Dynamic height calculated per category item count
     },
     row: {
         flexDirection: 'row',
@@ -215,9 +243,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     coinIcon: {
-        width: 22,
-        height: 22,
-        borderRadius: 17,
+        width: 26,
+        height: 26,
+        borderRadius: 13,
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 10,
@@ -239,6 +267,7 @@ const styles = StyleSheet.create({
     },
     footer: {
         alignItems: 'center',
+        marginTop: 6,
     },
     viewmorestyle: {
         fontFamily: fonts.regular,

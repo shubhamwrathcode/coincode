@@ -24,7 +24,7 @@ export const CommonInput: React.FC<CommonInputProps> = ({
       <TextInput
         style={[
           styles.input,
-          { color: colors.white, fontFamily: fonts.regular },
+          { color: colors.white, fontFamily: fonts.medium },
           style,
         ]}
         placeholderTextColor={colors.placeholderTextColor || colors.darkShadeColorText}

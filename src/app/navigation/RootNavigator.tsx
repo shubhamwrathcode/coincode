@@ -219,7 +219,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => 
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
-  AuthOtpVerify: undefined;
+  AuthOtpVerify: { tempToken: string };
   SetPassword: undefined;
   MainTabs: undefined;
   LandingPage: undefined;
@@ -315,9 +315,7 @@ const MainTabs = () => {
       <Tab.Screen name="Home" component={LandingPage} />
       <Tab.Screen name="Market" component={MarketScreen} />
       <Tab.Screen name="Trade" component={TradeScreen} />
-      <Tab.Screen name="Earn">
-        {() => <PlaceholderScreen title="Earn" />}
-      </Tab.Screen>
+      <Tab.Screen name="Earn" component={EarnScreen} />
       <Tab.Screen name="Assets" component={AssetsScreen} />
     </Tab.Navigator>
   );

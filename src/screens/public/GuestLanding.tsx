@@ -13,17 +13,9 @@ import { fonts } from '../../theme/fonts';
 import { ImageAssets } from '../../components/common/ImageAssets';
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { colors } from '../../theme/colors';
+import { useMarketStore, MarketCoin } from '../../store/marketStore';
 
 const { width } = Dimensions.get('window');
-
-// Mock Data
-const MOCK_CRYPTO_DATA = [
-    { id: '1', symbol: 'BTCUSDT', name: 'Bitcoin', price: '71,726.6', priceUsd: '$71,726.6', change: '+0.68%', initial: 'B', color: '#F7931A' },
-    { id: '2', symbol: 'ETHUSDT', name: 'Ethereum', price: '2,192.38', priceUsd: '$2,192.38', change: '+0.68%', initial: 'E', color: '#627EEA' },
-    { id: '3', symbol: 'SOLUSDT', name: 'Solana', price: '83.37', priceUsd: '$83.37', change: '+0.68%', initial: 'S', color: '#14F195' },
-    { id: '4', symbol: 'XAUUSDT', name: 'Gold', price: '4,752.50', priceUsd: '$4,752.50', change: '+0.68%', initial: 'G', color: '#FFD700' },
-    { id: '5', symbol: 'DOGEUSDT', name: 'DogeCoin', price: '0.09239', priceUsd: '$0.09239', change: '+0.68%', initial: 'D', color: '#C2A633' },
-];
 
 const MAIN_TABS = ['Favorites', 'Hot', 'New', 'Gainers', 'Losers'];
 const SUB_TABS = ['Spot', 'Futures', 'TradFi 🔥', 'Alpha'];
@@ -33,8 +25,12 @@ const GuestLanding = () => {
     const insets = useSafeAreaInsets();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+    const coins = useMarketStore((state) => state.coins);
+    const setSelectedPair = useMarketStore((state) => state.setSelectedPair);
+    const setSelectedCoin = useMarketStore((state) => state.setSelectedCoin);
+
     const [activeMainTab, setActiveMainTab] = useState('Favorites');
-    const [activeSubTab, setActiveSubTab] = useState('Futures');
+    const [activeSubTab, setActiveSubTab] = useState('Spot');
 
     const [mainTabMeasurements, setMainTabMeasurements] = useState<{ [key: string]: { x: number, width: number } }>({});
     const indicatorPosition = useRef(new Animated.Value(0)).current;
@@ -63,20 +59,37 @@ const GuestLanding = () => {
         }
     }, [activeMainTab, mainTabMeasurements]);
 
+    const formatPrice = (price: number, decimals: number) => {
+        if (decimals > 4) {
+            return price.toFixed(decimals);
+        }
+        return price.toLocaleString('en-US', {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
+        });
+    };
+
+    const handleCoinPress = (coin: MarketCoin) => {
+        setSelectedPair(coin.symbol);
+        setSelectedCoin(coin);
+        navigation.navigate('Trade' as any, { initialTab: 'Spot' });
+    };
+
     const getDisplayedData = () => {
+        if (!coins || coins.length === 0) return [];
         switch (activeMainTab) {
             case 'Favorites':
-                return MOCK_CRYPTO_DATA;
+                return coins.slice(0, 5);
             case 'Hot':
-                return [MOCK_CRYPTO_DATA[0], MOCK_CRYPTO_DATA[1], MOCK_CRYPTO_DATA[2]];
+                return [...coins].sort((a, b) => b.currentPrice - a.currentPrice).slice(0, 5);
             case 'New':
-                return [MOCK_CRYPTO_DATA[3], MOCK_CRYPTO_DATA[4], MOCK_CRYPTO_DATA[0]];
+                return [coins[3], coins[4], coins[0], coins[1], coins[2]].filter(Boolean);
             case 'Gainers':
-                return [MOCK_CRYPTO_DATA[2], MOCK_CRYPTO_DATA[4]];
+                return [...coins].sort((a, b) => b.change24h - a.change24h).slice(0, 5);
             case 'Losers':
-                return [MOCK_CRYPTO_DATA[1], MOCK_CRYPTO_DATA[3]];
+                return [...coins].sort((a, b) => a.change24h - b.change24h).slice(0, 5);
             default:
-                return MOCK_CRYPTO_DATA;
+                return coins.slice(0, 5);
         }
     };
 
@@ -122,8 +135,8 @@ const GuestLanding = () => {
                 <CommonButton
                     title="Log In to Trade"
                     onPress={() => navigation.navigate('Login')}
-                    style={{ width: 140, height: 40, marginTop: 12, }}
-                    titleStyle={{ fontSize: 13, }}
+                    style={{ width: 140, height: 40, marginTop: 12 }}
+                    titleStyle={{ fontSize: 13 }}
                 />
             </View>
             <FastImage source={ImageAssets.landingpagedemo}
@@ -174,7 +187,7 @@ const GuestLanding = () => {
 
             {/* Sub Tabs */}
             <View style={styles.subTabsRow}>
-                {SUB_TABS.map((tab, index) => {
+                {SUB_TABS.map((tab) => {
                     const isActive = activeSubTab === tab;
                     return (
                         <TouchableOpacity
@@ -195,34 +208,61 @@ const GuestLanding = () => {
         </View>
     );
 
-    const renderCryptoItem = ({ item }: any) => (
-        <View key={item.id} style={styles.cryptoRow}>
-            <View style={styles.cryptoLeft}>
-                <View style={[styles.cryptoIcon, { backgroundColor: item.color }]}>
-                    <Typography color={colors.white} size={15} style={{ fontFamily: fonts.bold }}>
-                        {item.initial}
+    const renderCryptoItem = ({ item }: { item: MarketCoin }) => {
+        const isPositive = item.change24h >= 0;
+        const changeBg = isPositive ? colors.green : colors.red;
+        const formattedPrice = formatPrice(item.currentPrice, item.decimals);
+
+        return (
+            <TouchableOpacity
+                key={item.id}
+                style={styles.cryptoRow}
+                activeOpacity={0.7}
+                onPress={() => handleCoinPress(item)}
+            >
+                <View style={styles.cryptoLeft}>
+                    <View style={[styles.cryptoIcon, { backgroundColor: item.color }]}>
+                        <Typography color={colors.white} size={15} style={{ fontFamily: fonts.bold }}>
+                            {item.initial}
+                        </Typography>
+                    </View>
+                    <View>
+                        <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold, marginBottom: 1 }}>
+                            {item.symbol}
+                        </Typography>
+                        <Typography color={colors.darkShadeColorText} size={11} style={{ fontFamily: fonts.medium }}>
+                            {item.name}
+                        </Typography>
+                    </View>
+                </View>
+                <View style={styles.cryptoMiddle}>
+                    <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold, marginBottom: 1 }}>
+                        {formattedPrice}
+                    </Typography>
+                    <Typography color={colors.darkShadeColorText} size={11} style={{ fontFamily: fonts.medium }}>
+                        ≈ ${formattedPrice}
                     </Typography>
                 </View>
-                <View>
-                    <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold, marginBottom: 1 }}>{item.symbol}</Typography>
-                    <Typography color={colors.darkShadeColorText} size={11} style={{ fontFamily: fonts.medium }}>{item.name}</Typography>
+                <View style={styles.cryptoRight}>
+                    <View style={[styles.changeButton, { backgroundColor: changeBg }]}>
+                        <Typography color={colors.white} size={11} style={{ fontFamily: fonts.semiBold }}>
+                            {isPositive ? '+' : ''}{item.change24h.toFixed(2)}%
+                        </Typography>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.cryptoMiddle}>
-                <Typography color={colors.white} size={12} style={{ fontFamily: fonts.semiBold, marginBottom: 1 }}>{item.price}</Typography>
-                <Typography color={colors.darkShadeColorText} size={11} style={{ fontFamily: fonts.medium }}>{item.priceUsd}</Typography>
-            </View>
-            <View style={styles.cryptoRight}>
-                <View style={[styles.changeButton, { backgroundColor: '#2BC287' }]}>
-                    <Typography color={colors.white} size={11} style={{ fontFamily: fonts.semiBold }}>{item.change}</Typography>
-                </View>
-            </View>
-        </View>
-    );
+            </TouchableOpacity>
+        );
+    };
 
     const renderFooter = () => (
-        <TouchableOpacity style={styles.footerLink}>
-            <Typography color={colors.cyan} size={13} style={{ fontFamily: fonts.medium, textDecorationLine: "underline" }}>View More</Typography>
+        <TouchableOpacity
+            style={styles.footerLink}
+            onPress={() => navigation.navigate('Market' as any, { initialTab: 'Spot' })}
+            activeOpacity={0.7}
+        >
+            <Typography color={colors.cyan} size={13} style={{ fontFamily: fonts.medium, textDecorationLine: "underline" }}>
+                View More
+            </Typography>
         </TouchableOpacity>
     );
 

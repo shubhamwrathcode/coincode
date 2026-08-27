@@ -1,12 +1,17 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { Search, Bell, MoreHorizontal } from 'lucide-react-native';
+import { Search, Bell, MoreHorizontal, X } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../../../theme/ThemeProvider';
 import { Typography } from '../../../../components/common/Typography';
 import { fonts } from '../../../../theme/fonts';
+import { useMarketStore } from '../../../../store/marketStore';
 
 export const MarketHeader = () => {
   const { colors } = useTheme();
+  const navigation = useNavigation<any>();
+  const searchQuery = useMarketStore((state) => state.searchQuery);
+  const setSearchQuery = useMarketStore((state) => state.setSearchQuery);
 
   return (
     <View style={styles.container}>
@@ -16,11 +21,14 @@ export const MarketHeader = () => {
         </Typography>
 
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.iconButton}>
+          {/* <TouchableOpacity style={styles.iconButton}>
             <Search color={colors.white} size={22} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => navigation.navigate('ComingSoonScreen')}
+          >
             <Bell color={colors.white} size={22} />
             <View style={styles.badge} />
           </TouchableOpacity>
@@ -37,8 +45,17 @@ export const MarketHeader = () => {
           <TextInput
             placeholder="Search for market"
             placeholderTextColor={colors.grey}
-            style={[styles.searchInput, { color: colors.white }]}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={[styles.searchInput, { color: colors.white, fontFamily: fonts.regular }]}
+            autoCapitalize="none"
+            autoCorrect={false}
           />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <X color={colors.grey} size={16} />
+            </TouchableOpacity>
+          )}
         </View>
         <TouchableOpacity style={[styles.moreButton, {
           backgroundColor: '#0F1012',
