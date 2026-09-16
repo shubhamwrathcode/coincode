@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { Typography } from '../../../components/common/Typography';
@@ -10,15 +10,26 @@ import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../../components/common/ImageAssets';
 import { colors } from '../../../theme/colors';
 import { useAuthStore } from '../../../store/authStore';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const ProfileDetailScreen = () => {
   const { colors } = useTheme();
   const navigation = useNavigation<any>();
   const [activeTab, setActiveTab] = useState('Profile');
-  const logout = useAuthStore((state) => state.logout);
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
-    logout();
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: () => {
+          queryClient.clear();
+          useAuthStore.getState().logout();
+        },
+      },
+    ]);
   };
 
   return (

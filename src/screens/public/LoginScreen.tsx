@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import { View, Keyboard, Alert, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import {
+  View,
+  Keyboard,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import { Typography } from '../../components/common/Typography';
 import { Screen } from '../../components/common/Screen';
 import { useTheme } from '../../theme/ThemeProvider';
 import { CommonButton } from '../../components/common/CommonButton';
 import { CommonInput } from '../../components/common/CommonInput';
 import { PhoneInput } from '../../components/common/PhoneInput';
+import { EmailInputWithSuggestions } from '../../components/common/EmailInputWithSuggestions';
 import { useToastStore } from '../../store/toastStore';
 import { fonts } from '../../theme/fonts';
 import { CustomAuthTab } from '../../components/common/CustomAuthTab';
@@ -15,45 +22,182 @@ import { ImageAssets } from '../../components/common/ImageAssets';
 import { colors } from '../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useLoginMutation } from '../../api/mutations/useAuthMutations';
-import { useAuthStore } from '../../store/authStore';
+import { useCheckIdentifierMutation } from '../../api/mutations/useSignupMutations';
+import { validateEmail } from '../../utils/validation';
+import {
+  classifyLoginFailureMessage,
+  parseIdentifierCheckResponse,
+} from '../../utils/authHelpers';
+import { getErrorMessage } from '../../api/errors';
 
 export const LoginScreen = () => {
   const { colors } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
+  const showToast = useToastStore((state) => state.showToast);
+  const loginMutation = useLoginMutation();
+  const checkIdentifierMutation = useCheckIdentifierMutation();
+
   const [activeTab, setActiveTab] = useState<'email' | 'phone'>('email');
   const [showPassword, setShowPassword] = useState(false);
-  const loginMutation = useLoginMutation();
+  const [showPassField, setShowPassField] = useState(false);
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
-  const showToast = useToastStore((state) => state.showToast);
-  const [isLoading, setIsLoading] = useState(false);
-  const login = useAuthStore((state) => state.login);
+  const [countryCode, setCountryCode] = useState('+91');
+  const [checkingUser, setCheckingUser] = useState(false);
 
-  const handleLogin = async () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      login();
-    }, 1500);
+  const getNormalizedLoginId = () => {
+    if (activeTab === 'email') {
+      return String(emailOrPhone || '').trim();
+    }
+    return String(emailOrPhone || '').replace(/\D/g, '').replace(/^0+/, '') || '';
   };
+
+  const validateEmailOrUsername = (raw: string) => {
+    const id = String(raw || '').trim();
+    if (!id) {
+      showToast('Please enter your email or username', 'error');
+      return false;
+    }
+    if (id.includes('@')) {
+      if (!validateEmail(id)) {
+        showToast('Please enter a valid email address', 'error');
+        return false;
+      }
+      return true;
+    }
+    if (id.length < 3) {
+      showToast('Username must be at least 3 characters', 'error');
+      return false;
+    }
+    if (!/^[a-zA-Z0-9._-]+$/.test(id)) {
+      showToast('Username contains invalid characters', 'error');
+      return false;
+    }
+    return true;
+  };
+
+  const changeIdentifier = (val: string) => {
+    setEmailOrPhone(val);
+    if (showPassField) {
+      setShowPassField(false);
+      setPassword('');
+    }
+  };
+
+  /** Step 1 — AGCE onNext: check-signup-email (purpose=login) then reveal password */
+  const onNext = async () => {
+    Keyboard.dismiss();
+
+    if (activeTab === 'email') {
+      if (!validateEmailOrUsername(emailOrPhone)) return;
+    } else {
+      const digits = String(emailOrPhone || '').replace(/\D/g, '').replace(/^0+/, '');
+      if (!digits) {
+        showToast('Please enter your phone number', 'error');
+        return;
+      }
+      if (digits.length < 8) {
+        showToast('Please enter a valid phone number', 'error');
+        return;
+      }
+      if (digits !== emailOrPhone) {
+        setEmailOrPhone(digits);
+      }
+    }
+
+    const normalizedId = getNormalizedLoginId();
+    const identifierKind: 'email' | 'phone' | 'username' =
+      activeTab === 'phone'
+        ? 'phone'
+        : normalizedId.includes('@')
+          ? 'email'
+          : 'username';
+
+    const payload = {
+      identifier: normalizedId,
+      kind: identifierKind,
+      purpose: 'login' as const,
+      countryCode: activeTab === 'phone' ? countryCode : undefined,
+    };
+
+    console.log('[Login][onNext] checkIdentifier payload:', JSON.stringify(payload));
+
+    setCheckingUser(true);
+    try {
+      const loginCheck: any = await checkIdentifierMutation.mutateAsync(payload);
+      console.log('[Login][onNext] checkIdentifier response:', JSON.stringify(loginCheck));
+
+      const accountCheck = parseIdentifierCheckResponse(loginCheck, 'login');
+      if (!accountCheck.ok || !accountCheck.exists) {
+        showToast(accountCheck.message || 'User not found', 'error');
+        return;
+      }
+
+      // AGCE: passkey silent attempt skipped here — show password field
+      console.log('[Login][onNext] setShowPassField(true)');
+      setShowPassField(true);
+    } catch (e: any) {
+      const errorObj = {
+        success: false,
+        code: e?.code || null,
+        message: getErrorMessage(e, 'Could not verify account. Please try again.'),
+      };
+      const accountCheck = parseIdentifierCheckResponse(errorObj, 'login');
+      showToast(accountCheck.message || 'User not found', 'error');
+    } finally {
+      setCheckingUser(false);
+    }
+  };
+
+  /** Step 2 — AGCE onLogin: POST /v1/user/login */
+  const onLogin = async () => {
+    Keyboard.dismiss();
+
+    if (!password) {
+      showToast('Please enter password', 'error');
+      return;
+    }
+
+    const normalizedId = getNormalizedLoginId();
+    console.log('[Login][onLogin] payload', {
+      email_or_phone: normalizedId,
+      passwordLength: String(password || '').length,
+    });
+
+    loginMutation.mutate(
+      {
+        email_or_phone: normalizedId,
+        password,
+        token: '',
+      },
+      {
+        onError: (error) => {
+          const msg = getErrorMessage(error, 'Login failed');
+          const kind = classifyLoginFailureMessage(msg);
+          if (kind === 'wrong_password' || kind === 'auth_failed') {
+            // password step stays visible
+          }
+        },
+      },
+    );
+  };
+
+  const isBusy = checkingUser || checkIdentifierMutation.isPending || loginMutation.isPending;
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.headerContainer}>
           <FastImage
             source={ImageAssets.authUserImg}
             style={styles.headerIcon}
             resizeMode={FastImage.resizeMode.contain}
           />
-          {/* <FastImage
-            source={ImageAssets.authBellImg}
-            style={styles.headerIcon}
-            resizeMode={FastImage.resizeMode.contain}
-          /> */}
         </View>
 
-        {/* Welcome Section & Image */}
         <View style={styles.welcomeContainer}>
           <View style={styles.welcomeTextContainer}>
             <Typography size={26} style={styles.welcomeTitle}>Welcome Back</Typography>
@@ -70,70 +214,104 @@ export const LoginScreen = () => {
           </View>
         </View>
 
-        {/* Custom Tabs */}
         <CustomAuthTab
           tabs={[
             { id: 'email', label: 'Email' },
             { id: 'phone', label: 'Phone' },
           ]}
           activeTab={activeTab}
-          onTabChange={(id) => setActiveTab(id as 'email' | 'phone')}
+          onTabChange={(id) => {
+            setActiveTab(id as 'email' | 'phone');
+            setEmailOrPhone('');
+            setPassword('');
+            setShowPassField(false);
+          }}
         />
 
-        {/* Form Elements */}
         <View style={styles.formContainer}>
           {activeTab === 'email' ? (
-            <CommonInput
+            <EmailInputWithSuggestions
               placeholder="Enter email address"
-              autoCapitalize="none"
               value={emailOrPhone}
-              onChangeText={setEmailOrPhone}
+              onChangeText={changeIdentifier}
+              maxLength={100}
             />
           ) : (
             <PhoneInput
               placeholder="Enter Phone number"
               value={emailOrPhone}
-              onChangeText={setEmailOrPhone}
+              onChangeText={changeIdentifier}
+              onCountryChange={(_country, callingCode) => {
+                setCountryCode(`+${callingCode}`);
+              }}
             />
           )}
 
-          <CommonInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
-            rightIcon={
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                {showPassword ? (
-                  <Eye color={colors.darkShadeColorText} size={20} />
-                ) : (
-                  <EyeOff color={colors.darkShadeColorText} size={20} />
-                )}
+          {!showPassField && (
+            <View style={styles.buttonWrapper}>
+              <CommonButton
+                title="Next"
+                onPress={onNext}
+                loading={isBusy}
+                shrinkOnLoad
+                rightIcon={
+                  <View style={styles.nextIconWrapper}>
+                    <ArrowRight color={colors.white} size={14} />
+                  </View>
+                }
+                style={{ marginTop: 8 }}
+              />
+            </View>
+          )}
+
+          {showPassField && (
+            <>
+              <CommonInput
+                placeholder="Enter password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                autoCapitalize="none"
+                rightIcon={
+                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    {showPassword ? (
+                      <Eye color={colors.darkShadeColorText} size={20} />
+                    ) : (
+                      <EyeOff color={colors.darkShadeColorText} size={20} />
+                    )}
+                  </TouchableOpacity>
+                }
+              />
+
+              <TouchableOpacity style={styles.forgotRow} activeOpacity={0.7}>
+                <Typography color={colors.white} size={13} style={styles.forgotText}>
+                  Forgot Password?
+                </Typography>
               </TouchableOpacity>
-            }
-          />
 
-          <View style={styles.buttonWrapper}>
-            <CommonButton
-              title="Next"
-              onPress={handleLogin}
-              loading={isLoading}
-              shrinkOnLoad
-              rightIcon={<View style={styles.nextIconWrapper}><ArrowRight color={colors.white} size={14} /></View>}
-              style={{
-                marginTop: 8,
-              }}
-            />
-          </View>
+              <View style={styles.buttonWrapper}>
+                <CommonButton
+                  title="Login"
+                  onPress={onLogin}
+                  loading={loginMutation.isPending}
+                  shrinkOnLoad
+                  rightIcon={
+                    <View style={styles.nextIconWrapper}>
+                      <ArrowRight color={colors.white} size={14} />
+                    </View>
+                  }
+                  style={{ marginTop: 8 }}
+                />
+              </View>
+            </>
+          )}
 
-          {/* Divider */}
           <View style={styles.dividerContainer}>
             <View style={[styles.dividerLine, { backgroundColor: colors.inputBorderColor }]} />
             <Typography color={colors.grey} style={styles.dividerText}>Or</Typography>
             <View style={[styles.dividerLine, { backgroundColor: colors.inputBorderColor }]} />
           </View>
 
-          {/* Social Buttons */}
           <CommonButton
             title="Continue with Google"
             variant="outline"
@@ -161,15 +339,15 @@ export const LoginScreen = () => {
             style={[styles.socialButton]}
           />
 
-          <TouchableOpacity style={styles.footerLinkContainer} onPress={() => {
-            navigation.navigate('Signup')
-          }}>
+          <TouchableOpacity
+            style={styles.footerLinkContainer}
+            onPress={() => navigation.navigate('Signup')}
+          >
             <Typography color={colors.cyan} style={styles.footerLinkText} size={14}>
               Create a Coincode Account
             </Typography>
           </TouchableOpacity>
         </View>
-
       </ScrollView>
     </Screen>
   );
@@ -232,6 +410,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 4,
   },
+  forgotRow: {
+    alignSelf: 'flex-end',
+    marginBottom: 4,
+    marginTop: -4,
+  },
+  forgotText: {
+    fontFamily: fonts.medium,
+  },
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -253,7 +439,9 @@ const styles = StyleSheet.create({
     color: '#D1D5DC',
   },
   socialButton: {
-    backgroundColor: colors.inputBgColor, borderColor: colors.inputBorderColor, marginBottom: 15
+    backgroundColor: colors.inputBgColor,
+    borderColor: colors.inputBorderColor,
+    marginBottom: 15,
   },
   footerLinkContainer: {
     alignSelf: 'center',

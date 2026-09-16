@@ -16,8 +16,10 @@ import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../components/common/ImageAssets';
 import SignupScreen from '../../screens/public/SignupScreen';
 import AuthOtpVerify from '../../screens/public/AuthOtpVerify';
+import AuthVerification from '../../screens/public/AuthVerification';
 import SetPasswordScreen from '../../screens/public/SetPasswordScreen';
 import LandingPage from '../../screens/public/LandingPage';
+import { navigationRef } from '../../navigation/navigationRef';
 import { fonts } from '../../theme/fonts';
 import KycStep1 from '../../screens/private/kyc/KycStep1';
 import KycStep2 from '../../screens/private/kyc/KycStep2';
@@ -219,8 +221,17 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => 
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
-  AuthOtpVerify: { tempToken: string };
-  SetPassword: undefined;
+  SetPassword: {
+    signupType: 'email' | 'phone';
+    signUpId: string;
+    countryCode: string;
+    referCode?: string;
+  };
+  AuthOtpVerify: {
+    signId: string;
+    registeredBy: 'email' | 'phone';
+  };
+  AuthVerification: undefined;
   MainTabs: undefined;
   LandingPage: undefined;
   KycStep1: undefined;
@@ -356,14 +367,21 @@ export const RootNavigator = () => {
   };
 
   return (
-    <NavigationContainer theme={navigationTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+    <NavigationContainer
+      ref={navigationRef}
+      key={isAuthenticated ? 'app' : 'auth'}
+      theme={navigationTheme}
+    >
+      <Stack.Navigator
+        screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
+      >
         {!isAuthenticated ? (
           <>
             <Stack.Screen name="LandingPage" component={GuestTabs} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
             <Stack.Screen name="AuthOtpVerify" component={AuthOtpVerify} />
+            <Stack.Screen name="AuthVerification" component={AuthVerification} />
             <Stack.Screen name="SetPassword" component={SetPasswordScreen} />
             <Stack.Screen name="StakingDetails" component={StakingDetailsScreen} />
             <Stack.Screen name="MyProfile" component={MyProfileScreen} />

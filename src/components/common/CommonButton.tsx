@@ -76,7 +76,8 @@ export const CommonButton: React.FC<CommonButtonProps> = ({
   };
 
   const getTextColor = () => {
-    if (disabled) return colors.grey;
+    // Disabled bg is grey — keep title readable with white (slightly muted via opacity on wrap)
+    if (disabled) return colors.white;
     if (variant === 'primary') return colors.white;
     if (variant === 'secondary') return colors.white;
     if (variant === 'outline') return colors.white;
@@ -119,7 +120,14 @@ export const CommonButton: React.FC<CommonButtonProps> = ({
         <ActivityIndicator color={getTextColor()} />
       ) : (
         <>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: disabled ? 0.7 : 1,
+            }}
+          >
             {leftIcon && <View style={{ marginRight: 8 }}>{leftIcon}</View>}
             <Typography color={getTextColor()} align="center" style={{ fontFamily: fonts.semiBold, fontSize: 16, ...titleStyle }}>
               {title}

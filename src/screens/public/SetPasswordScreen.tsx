@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, TouchableOpacity, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { Typography } from '../../components/common/Typography';
 import { CommonButton } from '../../components/common/CommonButton';
@@ -8,27 +8,102 @@ import { fonts } from '../../theme/fonts';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../components/common/ImageAssets';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../app/navigation/RootNavigator';
 import { useAuthStore } from '../../store/authStore';
 import { Screen } from '../../components/common/Screen';
 import { colors } from '../../theme/colors';
+import {
+    useRegisterEmailMutation,
+    useRegisterPhoneMutation,
+} from '../../api/mutations/useSignupMutations';
+import { getSignupUsernamePart, isPasswordReadyForSignup } from '../../utils/validation';
+import { useToastStore } from '../../store/toastStore';
 
 const SetPasswordScreen = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const login = useAuthStore((state) => state.login);
+    const route = useRoute<RouteProp<RootStackParamList, 'SetPassword'>>();
+    const showToast = useToastStore((state) => state.showToast);
+    const setPendingVerification = useAuthStore((state) => state.setPendingVerification);
+
+    const registerEmailMutation = useRegisterEmailMutation();
+    const registerPhoneMutation = useRegisterPhoneMutation();
+
+    const { signupType, signUpId, countryCode, referCode = '' } = route.params;
+
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleConfirm = async () => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                login(); // Log the user in and go to MainTabs
-                resolve(true);
-            }, 2000);
-        });
+    const username = useMemo(
+        () => getSignupUsernamePart(signupType, signUpId),
+        [signupType, signUpId],
+    );
+
+    const isReady = useMemo(
+        () => isPasswordReadyForSignup(password, signupType, signUpId),
+        [password, signupType, signUpId],
+    );
+
+    const buildSignId = () => {
+        if (signupType === 'email') {
+            return signUpId.trim();
+        }
+        const digits = signUpId.replace(/\D/g, '');
+        return `${countryCode}${digits}`;
     };
+
+    const handleConfirm = async () => {
+        if (!isReady) {
+            showToast('Please meet all password requirements', 'error');
+            return;
+        }
+
+        try {
+            let response: any;
+
+            if (signupType === 'email') {
+                response = await registerEmailMutation.mutateAsync({
+                    email: signUpId.trim(),
+                    password,
+                    referral_code: referCode || '',
+                    token: '',
+                });
+            } else {
+                response = await registerPhoneMutation.mutateAsync({
+                    country_code: countryCode || '+91',
+                    phone: Number(signUpId.replace(/\D/g, '')),
+                    password,
+                    referral_code: referCode || '',
+                    token: '',
+                });
+            }
+
+            console.log('[SetPasswordScreen] register response:', response);
+
+            if (response?.success !== true) {
+                showToast(response?.message || 'Registration failed', 'error');
+                return;
+            }
+
+            const token = response?.token || response?.data?.token;
+            if (!token) {
+                showToast('Registration succeeded but no token received', 'error');
+                return;
+            }
+
+            setPendingVerification(token);
+
+            navigation.navigate('AuthOtpVerify', {
+                signId: buildSignId(),
+                registeredBy: signupType,
+            });
+        } catch {
+            // toast handled in mutation
+        }
+    };
+
+    const isLoading = registerEmailMutation.isPending || registerPhoneMutation.isPending;
 
     return (
         <Screen>
@@ -37,7 +112,6 @@ const SetPasswordScreen = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
                 <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-                    {/* Top Header Icons */}
                     <View style={styles.headerContainer}>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
                             <FastImage
@@ -53,7 +127,6 @@ const SetPasswordScreen = () => {
                         />
                     </View>
 
-                    {/* Illustration Image */}
                     <View style={styles.illustrationContainer}>
                         <FastImage
                             source={ImageAssets.setPasswordImg}
@@ -62,7 +135,6 @@ const SetPasswordScreen = () => {
                         />
                     </View>
 
-                    {/* Text Content */}
                     <View style={styles.textContainer}>
                         <Typography size={25} align="center" style={styles.title}>
                             Set Your Password
@@ -73,7 +145,6 @@ const SetPasswordScreen = () => {
                         </Typography>
                     </View>
 
-                    {/* Password Input */}
                     <View style={styles.inputContainer}>
                         <Typography color={colors.white} size={14} style={styles.inputLabel}>
                             Password
@@ -85,26 +156,33 @@ const SetPasswordScreen = () => {
                             secureTextEntry={!showPassword}
                             rightIcon={
                                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                                    {showPassword ? <Eye color={colors.darkShadeColorText} size={20} /> : <EyeOff color={colors.darkShadeColorText} size={20} />}
+                                    {showPassword ? (
+                                        <Eye color={colors.darkShadeColorText} size={20} />
+                                    ) : (
+                                        <EyeOff color={colors.darkShadeColorText} size={20} />
+                                    )}
                                 </TouchableOpacity>
                             }
                             containerStyle={styles.inputField}
                         />
                     </View>
 
-                    {/* Password Rules */}
-                    <PasswordRules password={password} username="user" />
+                    <PasswordRules password={password} username={username} />
 
-                    {/* Confirm Button */}
                     <View style={styles.buttonWrapper}>
                         <CommonButton
                             title="Confirm"
                             onPress={handleConfirm}
+                            loading={isLoading}
+                            disabled={!isReady || isLoading}
                             shrinkOnLoad
-                            rightIcon={<View style={styles.nextIconWrapper}><ArrowRight color={colors.white} size={14} /></View>}
+                            rightIcon={
+                                <View style={styles.nextIconWrapper}>
+                                    <ArrowRight color={colors.white} size={14} />
+                                </View>
+                            }
                         />
                     </View>
-
                 </ScrollView>
             </KeyboardAvoidingView>
         </Screen>

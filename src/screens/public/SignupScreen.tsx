@@ -1,44 +1,99 @@
-import React, { useRef, useState } from 'react';
-import { View, Animated, Easing, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Typography } from '../../components/common/Typography';
 import { Screen } from '../../components/common/Screen';
 import { useTheme } from '../../theme/ThemeProvider';
 import { CommonButton } from '../../components/common/CommonButton';
 import { CommonInput } from '../../components/common/CommonInput';
+import { EmailInputWithSuggestions } from '../../components/common/EmailInputWithSuggestions';
 import { PhoneInput } from '../../components/common/PhoneInput';
 import { fonts } from '../../theme/fonts';
 import { CustomAuthTab } from '../../components/common/CustomAuthTab';
-import { ChevronDown, ArrowRight, ArrowLeft } from 'lucide-react-native';
+import { ChevronDown, ChevronUp, ArrowRight } from 'lucide-react-native';
 import FastImage from 'react-native-fast-image';
 import { ImageAssets } from '../../components/common/ImageAssets';
 import { colors } from '../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
-
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../app/navigation/RootNavigator';
+import { useCheckIdentifierMutation } from '../../api/mutations/useSignupMutations';
+import { useToastStore } from '../../store/toastStore';
+import { validateEmail } from '../../utils/validation';
+import { getErrorMessage } from '../../api/errors';
 
 export const SignupScreen = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const showToast = useToastStore((state) => state.showToast);
+    const checkIdentifierMutation = useCheckIdentifierMutation();
+
     const [activeTab, setActiveTab] = useState<'email' | 'phone'>('email');
+    const [signUpId, setSignUpId] = useState('');
+    const [referCode, setReferCode] = useState('');
+    const [showReferral, setShowReferral] = useState(false);
+    const [countryCode, setCountryCode] = useState('+91');
 
     const handleSignup = async () => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                navigation.navigate('AuthOtpVerify');
-                resolve(true);
-            }, 2000);
-        });
+        const identifier = signUpId.trim();
+
+        if (!identifier) {
+            showToast(
+                activeTab === 'email' ? 'Please enter your email' : 'Please enter your phone number',
+                'error',
+            );
+            return;
+        }
+
+        if (activeTab === 'email' && !validateEmail(identifier)) {
+            showToast('Please enter a valid email address', 'error');
+            return;
+        }
+
+        if (activeTab === 'phone') {
+            const digits = identifier.replace(/\D/g, '');
+            if (digits.length < 8) {
+                showToast('Please enter a valid phone number', 'error');
+                return;
+            }
+        }
+
+        try {
+            const response: any = await checkIdentifierMutation.mutateAsync({
+                identifier,
+                kind: activeTab,
+                purpose: 'signup',
+                countryCode: activeTab === 'phone' ? countryCode : undefined,
+                referralCode: referCode.trim() || undefined,
+            });
+
+            console.log('[SignupScreen] checkIdentifier response:', response);
+
+            if (response?.referral?.success === false) {
+                showToast(response?.referral?.message || 'Invalid referral code', 'error');
+                return;
+            }
+
+            if (response?.success !== true) {
+                showToast(response?.message || 'Request failed', 'error');
+                return;
+            }
+
+            navigation.navigate('SetPassword', {
+                signupType: activeTab,
+                signUpId: identifier,
+                countryCode,
+                referCode: referCode.trim(),
+            });
+        } catch (error) {
+            showToast(getErrorMessage(error, 'Unable to verify details'), 'error');
+        }
     };
 
     return (
         <Screen>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                {/* Top Header Icons */}
                 <View style={styles.headerContainer}>
-                    <TouchableOpacity onPress={() => {
-                        navigation.goBack()
-                    }}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <FastImage
                             source={ImageAssets.authBackIcon}
                             style={styles.headerIcon}
@@ -53,7 +108,6 @@ export const SignupScreen = () => {
                     />
                 </View>
 
-                {/* Welcome Section & Image */}
                 <View style={styles.welcomeContainer}>
                     <View style={styles.welcomeTextContainer}>
                         <Typography size={26} style={styles.welcomeTitle}>Create Account</Typography>
@@ -70,54 +124,82 @@ export const SignupScreen = () => {
                     </View>
                 </View>
 
-                {/* Custom Tabs */}
                 <CustomAuthTab
                     tabs={[
                         { id: 'email', label: 'Email' },
                         { id: 'phone', label: 'Phone' },
                     ]}
                     activeTab={activeTab}
-                    onTabChange={(id) => setActiveTab(id as 'email' | 'phone')}
+                    onTabChange={(id) => {
+                        setActiveTab(id as 'email' | 'phone');
+                        setSignUpId('');
+                    }}
                 />
 
-                {/* Form Elements */}
                 <View style={styles.formContainer}>
                     {activeTab === 'email' ? (
-                        <CommonInput
+                        <EmailInputWithSuggestions
                             placeholder="Enter email address"
-                            autoCapitalize="none"
+                            value={signUpId}
+                            onChangeText={setSignUpId}
+                            maxLength={100}
                         />
                     ) : (
                         <PhoneInput
                             placeholder="Enter Phone number"
+                            value={signUpId}
+                            onChangeText={setSignUpId}
+                            onCountryChange={(_country, callingCode) => {
+                                setCountryCode(`+${callingCode}`);
+                            }}
                         />
                     )}
 
-                    <CommonInput
-                        placeholder="Referral code (optional)"
-                        rightIcon={<ChevronDown color={colors.darkShadeColorText} size={20} />}
-                    />
+                    <TouchableOpacity
+                        style={styles.referralToggle}
+                        onPress={() => setShowReferral((prev) => !prev)}
+                        activeOpacity={0.7}
+                    >
+                        <View style={styles.referralToggleRow}>
+                            <Typography color={colors.grey} size={14} style={styles.referralToggleText}>
+                                Referral code
+                            </Typography>
+                            <View style={styles.referralIconWrap}>
+                                {showReferral ? (
+                                    <ChevronUp color={colors.darkShadeColorText} size={16} />
+                                ) : (
+                                    <ChevronDown color={colors.darkShadeColorText} size={16} />
+                                )}
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+
+                    {showReferral && (
+                        <CommonInput
+                            placeholder="Referral code (optional)"
+                            value={referCode}
+                            onChangeText={setReferCode}
+                            autoCapitalize="none"
+                        />
+                    )}
 
                     <View style={styles.buttonWrapper}>
                         <CommonButton
                             title="Next"
                             onPress={handleSignup}
+                            loading={checkIdentifierMutation.isPending}
                             shrinkOnLoad
                             rightIcon={<View style={styles.nextIconWrapper}><ArrowRight color={colors.white} size={14} /></View>}
-                            style={{
-                                marginTop: 8,
-                            }}
+                            style={{ marginTop: 8 }}
                         />
                     </View>
 
-                    {/* Divider */}
                     <View style={styles.dividerContainer}>
                         <View style={[styles.dividerLine, { backgroundColor: colors.inputBorderColor }]} />
                         <Typography color={colors.darkShadeColorText} style={styles.dividerText}>Or log in with</Typography>
                         <View style={[styles.dividerLine, { backgroundColor: colors.inputBorderColor }]} />
                     </View>
 
-                    {/* Social Buttons */}
                     <CommonButton
                         title="Continue with Google"
                         variant="outline"
@@ -156,7 +238,6 @@ export const SignupScreen = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-
             </ScrollView>
         </Screen>
     );
@@ -178,17 +259,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingTop: 16,
         marginBottom: 24,
-    },
-    iconButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    bellIcon: {
-        width: 22,
-        height: 22,
     },
     welcomeContainer: {
         flexDirection: 'row',
@@ -224,6 +294,25 @@ const styles = StyleSheet.create({
     formContainer: {
         paddingHorizontal: 24,
     },
+    referralToggle: {
+        alignSelf: 'flex-start',
+        marginTop: 4,
+        marginBottom: 8,
+    },
+    referralToggleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flexWrap: 'nowrap',
+    },
+    referralToggleText: {
+        fontFamily: fonts.medium,
+        includeFontPadding: false,
+    },
+    referralIconWrap: {
+        marginLeft: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     buttonWrapper: {
         alignItems: 'center',
     },
@@ -254,7 +343,9 @@ const styles = StyleSheet.create({
         color: '#D1D5DC',
     },
     socialButton: {
-        backgroundColor: colors.inputBgColor, borderColor: colors.inputBorderColor, marginBottom: 15
+        backgroundColor: colors.inputBgColor,
+        borderColor: colors.inputBorderColor,
+        marginBottom: 15,
     },
     footerLinkContainer: {
         flexDirection: 'row',

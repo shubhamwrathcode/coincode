@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { Animated, StyleSheet, View, Text, SafeAreaView, Platform } from 'react-native';
 import { useToastStore } from '../../store/toastStore';
 import { useTheme } from '../../theme/ThemeProvider';
 import { CheckCircle, AlertCircle, Info } from 'lucide-react-native';
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     minWidth: '93%',
     maxWidth: '90%',
     elevation: 6,
-    marginTop: 20,
+    marginTop: Platform.OS==='ios'?-10: 20,
     borderWidth: 2,
     borderColor: '#151619'
   },
